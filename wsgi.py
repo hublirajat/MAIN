@@ -10,10 +10,10 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 import os
 import sys
 
-path = '/root/Documents/Workspace/RCT/fooding'
+path = '/remote/users/rhubli/stableProject/fooding'
 if path not in sys.path:
     sys.path.append(path)
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()

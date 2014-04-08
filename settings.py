@@ -30,11 +30,11 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
-    #'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    #'django.contrib.sessions',
-    #'django.contrib.messages',
+    'django.contrib.sessions',
+    'django.contrib.messages',
     #'django.contrib.staticfiles',
     'food',
 )
@@ -50,6 +50,13 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'fooding.urls'
 
+TEMPLATE_DIRS = (
+	'/remote/users/rhubli/stableProject/fooding/food/templates'
+    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+)
+
 WSGI_APPLICATION = 'fooding.wsgi.application'
 
 
@@ -59,7 +66,7 @@ WSGI_APPLICATION = 'fooding.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/root/Documents/Workspace/RCT/fooding/fooding/fooding.db',
+        'NAME': '/remote/users/rhubli/stableProject/fooding/fooding.db',
     }
 }
 
