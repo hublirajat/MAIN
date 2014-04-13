@@ -23,13 +23,30 @@ class Review(models.Model):
 
     def __unicode__(self):
         return self.comment
+    def reviewer_comments_event(self, text):
+        comment = text
+        sender = review.reviewer
+        event = review.event
 
-#class Notify(models.Model):
-#    event = models.ForeignKey(Event)
-#    sender = models.ForeignKey(User, related_name="sender")
-#    user = models.ForeignKey(User, related_name="userid")
-#    text = models.CharField(max_length=200)
+        notify = Notify()
+        notify.event = event
+        notify.sender = sender
+        notify.user = event.chef
+        notify.text = text
+        notify.save()
 
-#    def __unicode__(self):
-#        return self.text
+class Likes(models.Model):
+    event = models.ForeignKey(Event)
+    liker = models.ForeignKey(User, related_name='event_liker')
 
+    def __unicode__(self):
+        return '%s' % (self.liker)
+
+class Notify(models.Model):
+    event = models.ForeignKey(Event)
+    sender = models.ForeignKey(User, related_name="sender")
+    user = models.ForeignKey(User, related_name="userid")
+    text = models.CharField(max_length=200)
+
+    def __unicode__(self):
+        return self.text
