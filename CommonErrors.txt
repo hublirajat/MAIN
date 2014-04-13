@@ -1,0 +1,46 @@
+root@rajat-VirtualBox:~/Documents/Workspace/RCT/fooding/fooding# python manage.py sqlall food
+Traceback (most recent call last):
+  File "manage.py", line 10, in <module>
+    execute_from_command_line(sys.argv)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/management/__init__.py", line 399, in execute_from_command_line
+    utility.execute()
+  File "/usr/local/lib/python2.7/dist-packages/django/core/management/__init__.py", line 392, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/management/base.py", line 242, in run_from_argv
+    self.execute(*args, **options.__dict__)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/management/base.py", line 284, in execute
+    self.validate()
+  File "/usr/local/lib/python2.7/dist-packages/django/core/management/base.py", line 310, in validate
+    num_errors = get_validation_errors(s, app)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/management/validation.py", line 34, in get_validation_errors
+    for (app_name, error) in get_app_errors().items():
+  File "/usr/local/lib/python2.7/dist-packages/django/db/models/loading.py", line 196, in get_app_errors
+    self._populate()
+  File "/usr/local/lib/python2.7/dist-packages/django/db/models/loading.py", line 75, in _populate
+    self.load_app(app_name, True)
+  File "/usr/local/lib/python2.7/dist-packages/django/db/models/loading.py", line 99, in load_app
+    models = import_module('%s.models' % app_name)
+  File "/usr/local/lib/python2.7/dist-packages/django/utils/importlib.py", line 40, in import_module
+    __import__(name)
+  File "/root/Documents/Workspace/RCT/fooding/fooding/food/models.py", line 5, in <module>
+    class Event(models.Model):
+  File "/root/Documents/Workspace/RCT/fooding/fooding/food/models.py", line 10, in Event
+    review = models.ManyToManyField(food.Review)
+NameError: name 'food' is not defined
+
+Problem: Django Cyclic Dependencies
+Solution: review = models.ManyToManyField('Review'), Put the following class as a string
+
+
+Error2: root@rajat-VirtualBox:~/Documents/Workspace/RCT/fooding/fooding# python manage.py sqlall food
+CommandError: One or more models did not validate:
+food.event: Accessor for field 'chef' clashes with related m2m field 'User.event_set'. Add a related_name argument to the definition for 'chef'.
+food.event: Accessor for m2m field 'guests' clashes with related field 'User.event_set'. Add a related_name argument to the definition for 'guests'.
+food.event: Reverse query name for m2m field 'review' clashes with field 'Review.event'. Add a related_name argument to the definition for 'review'.
+food.review: "comment": CharFields require a "max_length" attribute that is a positive integer.
+food.review: Reverse query name for field 'event' clashes with m2m field 'Event.review'. Add a related_name argument to the definition for 'event'.
+
+Solution: chef = models.ForeignKey(User, related_name='event_chef')
+    guests = models.ManyToManyField(User, related_name='event_guests')
+
+Use related_name
