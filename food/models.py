@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+#Just testing GIT in eclipse! wohoo!
 
 # Create your models here.
 class Event(models.Model):
