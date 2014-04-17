@@ -19,8 +19,7 @@ urlpatterns = patterns('',
     url(r'^success/$', 'food.views.success', name='success'),
 	(r'^site_media/(?P<path>.*)$', 'django.views.static.serve',
         {'document_root': '/remote/users/cmarques/dev/fooding/staticfiles/'}),
+	(r'^login/$', 'food.views.login_user'),
 
     #url(r'^admin/', include(admin.site.urls)),
-) #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-#urlpatterns += staticfiles_urlpatterns()
+) 

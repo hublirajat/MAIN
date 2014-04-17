@@ -2,12 +2,15 @@
 from django.shortcuts import render_to_response
 from food.models import Event, Review
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 from django.forms.widgets import Input
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect
 from django import forms
 from django.template.context import RequestContext
 from django.contrib.auth.middleware import AuthenticationMiddleware
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 
@@ -18,7 +21,8 @@ def indexview(request):
 def myFirstview(request):
 	variables = {"members" : "Rajat"}
 	return render_to_response("myfirst.html", variables)
-	
+
+@login_required
 def insertview(request):
 	#title = request.GET[ 'title' ]
 	#description = request.GET[ 'description' ]
@@ -88,7 +92,7 @@ def registerNewUser(request):
 			# we now register the user
 			user = User.objects.create_user(username=username,email=email,password=password)
 			
-			return redirect('success') # Redirect after POST
+			return render_to_response('index.html', context_instance=RequestContext(request))
 	else:
 		form = RegistrationForm() # An unbound form
 		return render_to_response('form.html', {'form' : form}, context_instance=RequestContext(request))
@@ -96,3 +100,24 @@ def registerNewUser(request):
 
 def success(request):
 	return HttpResponse('success')
+
+def login_user(request):
+	#logout(request)
+	username = password = ''
+	if request.POST:
+		username = request.POST['username']
+		password = request.POST['password']
+		
+		num_users = User.objects.filter(username = username).count()
+		if num_users == 0:
+			messages.error(request, 'User ' + username + ' doesnt exist!')
+		else:
+			user = authenticate(username=username, password=password)
+			
+			if user is not None:
+				if user.is_active:
+					login(request, user)
+					return redirect('success')
+			else:
+				messages.error(request, 'Wrong password for user ' + username)
+	return render_to_response('index.html', context_instance=RequestContext(request))
