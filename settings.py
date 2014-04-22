@@ -12,8 +12,10 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-LOGIN_REDIRECT_URL = '/login/'
-LOGIN_URL = '/login/'
+AUTH_PROFILE_MODULE = "food.UserProfile"
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -37,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+	'social_auth',
     #'django.contrib.staticfiles',
     'food',
 )

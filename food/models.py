@@ -51,3 +51,14 @@ class Notify(models.Model):
 
     def __unicode__(self):
         return self.text
+
+class UserProfile(models.Model):  
+	user = models.ForeignKey(User, unique=True)
+	firstName = models.CharField(max_length=30)
+	lastName = models.CharField(max_length=30)
+	#location = models.CharField(max_length=140)  
+	#gender = models.CharField(max_length=140)  
+	#profile_picture = models.ImageField(upload_to='thumbpath', blank=True)
+
+	def __unicode__(self):
+		return u'Profile of user: %s' % self.user.username

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="/site_media/css/styles.css">
+	<link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'>
+</head>
+<body id="css-zen-garden">
+<div class="page-wrapper">
+
+	<section class="intro" id="zen-intro">
+		<header role="banner">
+			<h1>CSS Zen Garden</h1>
+			<h2>The Beauty of <abbr title="Cascading Style Sheets">CSS</abbr> Design</h2>
+		</header>
+		</div>	
+	</section>
+	
+</div>
+<div class="summary">
+	<h2> Register </h2>
+    <form id="register" action="{% url register %}" method="post" class="niceform" novalidate>{% csrf_token %}
+        <dl>
+            <dt> Username : </dt>
+            <dd>{{ form.username }}</dd>
+            <dd>{{ form.username.errors }}</dd>
+        </dl>
+        <dl>
+            <dt> First Name : </dt>
+            <dd>{{ form.firstname }}</dd>
+            <dd>{{ form.firstname.errors }}</dd>
+        </dl>
+		<dl>
+            <dt> Last Name : </dt>
+            <dd>{{ form.lastname }}</dd>
+            <dd>{{ form.lastname.errors }}</dd>
+        </dl>
+        <dl>
+            <dt> E-Mail : </dt>
+            <dd>{{ form.email }}</dd>
+            <dd>{{ form.email.errors }}</dd>
+        </dl>
+        <dl>
+            <dt> Password : </dt>
+            <dd>{{ form.password }}</dd>
+            <dd>{{ form.password.errors }}</dd>
+        </dl>
+        <dl>
+            <dt> Password Confirmation : </dt>
+            <dd>{{ form.passwordConfirmation }}</dd>
+            <dd>{{ form.passwordConfirmation.errors }}</dd>
+        </dl>
+        <br>
+		<br>
+		<br>
+		<dl>
+			<dd></dd>
+			<dd>
+			<div class="registerButtons">
+				<input type="submit" value="Register" class="button" />
+			</div>
+			</dd>
+		</dl>
+    </form>
+</div>
+</body>
+</html>

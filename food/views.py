@@ -1,6 +1,6 @@
 #from django.shortcuts import render
 from django.shortcuts import render_to_response
-from food.models import Event, Review
+from food.models import Event, Review, UserProfile
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.forms.widgets import Input
@@ -11,8 +11,11 @@ from django.template.context import RequestContext
 from django.contrib.auth.middleware import AuthenticationMiddleware
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db import models
 
-# Create your views here.
+def logout_user(request):
+	logout(request)
+	return render_to_response("index.html")
 
 def indexview(request):
 	variables = {"members" : "Rajat"}
@@ -26,7 +29,7 @@ def myFirstview(request):
 def insertview(request):
 	#title = request.GET[ 'title' ]
 	#description = request.GET[ 'description' ]
-	variables = {"members" : "Rajat"}
+	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName}
 	return render_to_response("insert.html", variables)
 
 class Html5EmailInput(Input):
@@ -91,18 +94,19 @@ def registerNewUser(request):
 			
 			# we now register the user
 			user = User.objects.create_user(username=username,email=email,password=password)
+			profile = UserProfile.objects.create(user=user,firstName=firstname,lastName=lastname)
 			
 			return render_to_response('index.html', context_instance=RequestContext(request))
 	else:
 		form = RegistrationForm() # An unbound form
-		return render_to_response('form.html', {'form' : form}, context_instance=RequestContext(request))
-	return render_to_response('form.html', {'form' : form}, context_instance=RequestContext(request))
+		return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
+	return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 
 def success(request):
 	return HttpResponse('success')
 
 def login_user(request):
-	#logout(request)
+	logout(request)
 	username = password = ''
 	if request.POST:
 		username = request.POST['username']
@@ -117,7 +121,7 @@ def login_user(request):
 			if user is not None:
 				if user.is_active:
 					login(request, user)
-					return redirect('success')
+					reverse('insertview')
 			else:
 				messages.error(request, 'Wrong password for user ' + username)
 	return render_to_response('index.html', context_instance=RequestContext(request))

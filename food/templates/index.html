@@ -1,62 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Register</title>
+    <title>Fooding Login</title>
     <link rel="stylesheet" type="text/css" href="/site_media/css/styles.css">
 </head>
-<body id="css-zen-garden">
+<body>
 <div class="page-wrapper">
 
 	<section class="intro" id="zen-intro">
 		<header role="banner">
-			<h1>CSS Zen Garden</h1>
 		</header>
-		</div>	
 	</section>
-	
 </div>
 
 <h1> Fooding </h1>
 <div class="loginbox">
 {% block main %}
-<div id="login">
 <form class="form-horizontal" name="LoginForm" action="/login/" method="post">
 {% csrf_token %}
 {% if next %}
 <input type="hidden" name="next" value="{{ next }}" />
 {% endif %}
-<div class="control-group">
+<div class="loginParameters">
 <label class="control-label" for="username">Username</label>
-<div class="controls">
 <input type="text" id="username" name="username"  placeholder="Username">
 </div>
-</div>
-<div class="control-group">
+<div class="loginParameters">
 <label class="control-label" for="password">Password</label>
-<div class="controls">
 <input type="password" name="password" id="password" placeholder="Password">
 </div>
-</div>
-<div class="control-group">
-<div class="controls">
-<button type="submit" class="btn">Login</button>
-</div>
+<div class="loginButtons">
+<input type="submit" value="Login" class="button" />
+<a href="/register/" class="button">Register</a>
 </div>
 </form>
-</div>
 {% endblock %}
-<form action="/register/">
-    <input type="submit" value="Register">
-</form>
 </div>
-<div class="errorMessage">
+<div class="facebookButtons">
+<a class="buttonFB" href="/facebookLogin/"><span></span>Login with Facebook</a>
+</div>
 {% if messages %}
-<ul class="messages">
+<div class="messages">
     {% for message in messages %}
     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
-</ul>
-{% endif %}
 </div>
+{% endif %}
 </body>
 </html>

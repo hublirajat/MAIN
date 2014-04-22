@@ -31,25 +31,19 @@
     border-bottom: 6px solid transparent;
 }
 
-.messages { border:1px solid #C8DCC2; margin:1em 0;}
+.messages { margin:1em 0; width:auto; position:relative; margin-top:5%;}
 .messages ul .debug{ background: #EEFAEA; padding: 0.5em, 0 0.5em 0; list-style: none;}
 .messages ul .info{ background: #EEFAEA; padding: 0.5em, 0 0.5em 0; list-style: none;}
 .messages ul .success{ background: #EEFAEA; padding: 0.5em, 0 0.5em 0; list-style: none;}
 .messages ul .warning{ background: #FF3333; padding: 0.5em, 0 0.5em 0; list-style: none;}
-.messages ul .error{ background: #FF3333; padding: 5px, 0 5px 0; list-style: none;}
+.messages.error {
+color: #D8000C;
+background-color: #FFBABA;
+background-image: url('/site_media/img/error.png');
+padding: 0.5em, 0 0.5em 0; list-style: none;
+}
 .messages ul li { background: none; padding-left: 5px; padding-top: 8px; padding-bottom: 8px;font-size: 1.2em;}
 
-/* css Zen Garden default style v1.02 */
-/* css released under Creative Commons License - http://creativecommons.org/licenses/by-nc-sa/1.0/  */
-
-/* This file based on 'Tranquille' by Dave Shea */
-/* You may use this file as a foundation for any new work, but you may find it easier to start from scratch. */
-/* Not all elements are defined in this file, so you'll most likely want to refer to the xhtml as well. */
-
-/* Your images should be linked as if the CSS file sits in the same folder as the images. ie. no paths. */
-
-
-/* basic elements */
 html {
 	margin: 0;
 	padding: 0;
@@ -85,11 +79,20 @@ abbr {
 	border-bottom: none;
 	}
 
+.user_panel
+{
+	font-family: 'Montserrat', sans-serif;
+	font-size:100%;
+	text-align:justify;
+	margin-left:90%;
+	color: #7D775C;
+}
 
 /* specific divs */
 .page-wrapper { 
 	background: url(/site_media/img/banner3.jpg) no-repeat;
 	background-position:center;
+	width:100%;
 	}
 
 .intro { 
@@ -100,8 +103,14 @@ abbr {
 h1 {
 	font-family: 'Montserrat', sans-serif;
 	font-size:1000%;
-	text-align:justify;
-	margin-left:17%;
+	color: #7D775C;
+	text-align:center;
+}
+
+h2{
+	font-family: 'Montserrat', sans-serif;
+	font-size:200%;
+	text-align:center;
 	color: #7D775C;
 }
 
@@ -137,8 +146,6 @@ header {
 
 .summary {
 	position:absolute;
-	border-style:solid;
-	border-width:1px;
 	top: 25%;
     left: 30%;
 	width: 35%;
@@ -158,11 +165,32 @@ header {
 	}
 	
 .loginbox {
-	position:absolute;
+	position:relative;
 	top: 52%;
-    left: 42%;
-	width:100%;
-	}
+	left: 42%;
+	width:50%;
+}
+
+.loginParameters {
+	position:relative;
+	padding: 2px;
+}	
+
+.loginButtons {
+	float:left;
+	margin-top:1%;
+	margin-right:5%;
+}
+
+.registerButtons {
+	margin-top:1%;
+	margin-left:200%;
+}	
+
+.facebookButtons {
+	margin-top:5%;
+	margin-left:40%;
+}		
 	
 footer { 
 	text-align: center; 
@@ -257,15 +285,131 @@ src: url(/site_media/fonts/CaviarDreams.ttf);
   box-shadow: rgba(255,255,255,0.8) 1px 0px 0px;
 }
 
-.errorMessage {
-  float:center;
-  width:20%;
-  background-color:#660000;
-  color:white;
-  border-right:1px solid black;
-  box-shadow: rgba(255,255,255,0.8) 1px 0px 0px;
-  margin-left:36%;
-  margin-top:15%;
-  font-family: 'Montserrat', sans-serif;
-  font-size:80%;
+.info, .success, .warning, .error, .validation {
+border: 1px solid;
+margin: 10px 0px;
+padding:15px 10px 15px 50px;
+background-repeat: no-repeat;
+background-position: 10px center;
+}
+.info {
+color: #00529B;
+background-color: #BDE5F8;
+background-image: url('/site_media/img/info.png');
+}
+.success {
+color: #4F8A10;
+background-color: #DFF2BF;
+background-image:url('/site_media/img/success.png');
+}
+.warning {
+color: #9F6000;
+background-color: #FEEFB3;
+background-image: url('/site_media/img/warning.png');
+}
+.error {
+color: #D8000C;
+background-color: #FFBABA;
+background-image: url('/site_media/img/error.png');
+}
+.validation {
+color: #D63301;
+background-color: #FFCCBA;
+background-image: url('/site_media/img/validation.png');
+}
+
+.button {
+	-moz-box-shadow:inset 0px 1px 0px 0px #c1ed9c;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #c1ed9c;
+	box-shadow:inset 0px 1px 0px 0px #c1ed9c;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #9dce2c), color-stop(1, #8cb82b) );
+	background:-moz-linear-gradient( center top, #9dce2c 5%, #8cb82b 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#9dce2c', endColorstr='#8cb82b');
+	background-color:#9dce2c;
+	-webkit-border-top-left-radius:20px;
+	-moz-border-radius-topleft:20px;
+	border-top-left-radius:20px;
+	-webkit-border-top-right-radius:20px;
+	-moz-border-radius-topright:20px;
+	border-top-right-radius:20px;
+	-webkit-border-bottom-right-radius:20px;
+	-moz-border-radius-bottomright:20px;
+	border-bottom-right-radius:20px;
+	-webkit-border-bottom-left-radius:20px;
+	-moz-border-radius-bottomleft:20px;
+	border-bottom-left-radius:20px;
+	text-indent:0px;
+	border:1px solid #83c41a;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Trebuchet MS;
+	font-size:14px;
+	font-weight:bold;
+	font-style:normal;
+	height:32px;
+	line-height:32px;
+	width:114px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #689324;
+}
+.button:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #8cb82b), color-stop(1, #9dce2c) );
+	background:-moz-linear-gradient( center top, #8cb82b 5%, #9dce2c 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#8cb82b', endColorstr='#9dce2c');
+	background-color:#8cb82b;
+}.button:active {
+	position:relative;
+	top:1px;
+}
+
+.buttonFB {
+	-moz-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #5e85d1), color-stop(1, #47649f) );
+	background:-moz-linear-gradient( center top, #5e85d1 5%, #47649f 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#5e85d1', endColorstr='#47649f');
+	background-color:#5e85d1;
+	-webkit-border-top-left-radius:20px;
+	-moz-border-radius-topleft:20px;
+	border-top-left-radius:20px;
+	-webkit-border-top-right-radius:20px;
+	-moz-border-radius-topright:20px;
+	border-top-right-radius:20px;
+	-webkit-border-bottom-right-radius:20px;
+	-moz-border-radius-bottomright:20px;
+	border-bottom-right-radius:20px;
+	-webkit-border-bottom-left-radius:20px;
+	-moz-border-radius-bottomleft:20px;
+	border-bottom-left-radius:20px;
+	text-indent:0;
+	border:1px solid #337fed;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Trebuchet MS;
+	font-size:15px;
+	font-weight:bold;
+	font-style:normal;
+	height:50px;
+	line-height:50px;
+	width:300px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #1570cd;
+}
+
+.buttonFB  span{
+padding-left: 36px;
+background: url('/site_media/img/facebook.png') no-repeat;
+}
+
+.buttonFB:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #47649f), color-stop(1, #5e85d1) );
+	background:-moz-linear-gradient( center top, #47649f 5%, #5e85d1 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#47649f', endColorstr='#5e85d1');
+	background-color:#47649f;
+}.buttonFB:active {
+	position:relative;
+	top:1px;
 }
