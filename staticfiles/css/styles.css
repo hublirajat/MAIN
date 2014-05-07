@@ -154,6 +154,38 @@ header {
 	font: italic 1.1em/2.2 georgia; 
 	text-align: center;
 	}
+	
+.createEvent {
+position:absolute;
+top: 25%;
+left: 50%;
+width: 35%;
+}
+.createEvent p {
+font: italic 1.1em/2.2 georgia; 
+text-align: right;
+}
+
+.displayEvents {
+position:absolute;
+top: 25%;
+left: 10%;
+width: 35%;
+}
+.displayEvents p {
+font: italic 1.1em/2.2 georgia; 
+text-align: left;
+}
+
+.welcomeHeader {
+position:absolute;
+top: 15%;
+width: 100%;
+}
+.welcomeHeader p {
+font: italic 1.1em/2.2 georgia; 
+text-align: left;
+}
 
 .preamble {
 	clear: right; 

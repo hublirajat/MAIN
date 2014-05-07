@@ -1,9 +1,5 @@
 from django.conf.urls.defaults import *
 from django.contrib import admin
-#from django.conf.urls.static import static
-#from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-#from food import settings
-
 
 admin.autodiscover()
 
@@ -13,6 +9,7 @@ urlpatterns = patterns('',
 	(r'myFirstview', 'food.views.myFirstview'),
     url(r'^insertview/$', 'food.views.insertview', name='insertview'),
 	url(r'^register/$', 'food.views.registerNewUser', name='register'),
+	url(r'^createEvent/$', 'food.views.createEvent', name='createEvent'),
     url(r'^success/$', 'food.views.success', name='success'),
 	(r'^site_media/(?P<path>.*)$', 'django.views.static.serve',
         {'document_root': '/remote/users/cmarques/dev/fooding/staticfiles/'}),

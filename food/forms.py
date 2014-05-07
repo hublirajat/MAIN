@@ -1,8 +1,16 @@
 from django import forms
 from django.forms.widgets import Input
+from django.contrib.auth.models import User
+import datetime   
 
 class Html5EmailInput(Input):
     input_type = 'email'
+
+# this class represents the event creation form and its validation methods
+class EventCreationForm(forms.Form):
+	title = forms.CharField(max_length=100)
+	description = forms.CharField(max_length=300)
+	date = forms.DateTimeField(initial=datetime.datetime.now)
 
 #this class represents the registration form and its validation methods
 class RegistrationForm(forms.Form):

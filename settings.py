@@ -39,7 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-	'social_auth',
+	#'social_auth',
     #'django.contrib.staticfiles',
     'food',
 )

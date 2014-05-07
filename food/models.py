@@ -1,21 +1,21 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-#Just testing GIT in eclipse! wohoo!
-
 # Create your models here.
+# this class models an Event
 class Event(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.CharField(max_length=200)
-    chef = models.ForeignKey(User, related_name='event_chef')
-    guests = models.ManyToManyField(User, related_name='event_guests')
+	title = models.CharField(max_length=100)
+	description = models.CharField(max_length=200)
+	chef = models.ForeignKey(User, related_name='event_chef')
+	guests = models.ManyToManyField(User, related_name='event_guests')
     #reviews = models.ForeignKey('Review')
-    creation_timestamp = models.DateTimeField(auto_now_add=True)
+	creation_timestamp = models.DateTimeField(auto_now_add=True)
+	dateOfEvent = models.DateTimeField(auto_now_add=True)
 
-    def __unicode__(self):
-        return self.description
+	def __unicode__(self):
+		return self.description
 
-
+# this class models a review 
 class Review(models.Model):
     comment = models.CharField(max_length=500)
     event = models.ForeignKey(Event)
@@ -36,6 +36,7 @@ class Review(models.Model):
         notify.text = text
         notify.save()
 
+# this class models a like
 class Likes(models.Model):
     event = models.ForeignKey(Event)
     liker = models.ForeignKey(User, related_name='event_liker')
@@ -43,6 +44,7 @@ class Likes(models.Model):
     def __unicode__(self):
         return '%s' % (self.liker)
 
+# this class models a notification
 class Notify(models.Model):
     event = models.ForeignKey(Event)
     sender = models.ForeignKey(User, related_name="sender")
@@ -52,6 +54,7 @@ class Notify(models.Model):
     def __unicode__(self):
         return self.text
 
+# this class models the user profile - it extends the regular User class, in order to add more fields
 class UserProfile(models.Model):  
 	user = models.ForeignKey(User, unique=True)
 	firstName = models.CharField(max_length=30)

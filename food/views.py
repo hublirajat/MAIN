@@ -1,4 +1,3 @@
-#from django.shortcuts import render
 from django.shortcuts import render_to_response
 from food.models import Event, Review, UserProfile
 from django.contrib.auth.models import User
@@ -12,7 +11,14 @@ from django.contrib.auth.middleware import AuthenticationMiddleware
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import models
+from django.core.urlresolvers import reverse
+from food.forms import EventCreationForm
+from food.forms import RegistrationForm
+from datetime import datetime
 
+############################################################################################################################################
+# These methods are not being used (yet) ###################################################################################################		
+############################################################################################################################################
 def logout_user(request):
 	logout(request)
 	return render_to_response("index.html")
@@ -25,60 +31,16 @@ def myFirstview(request):
 	variables = {"members" : "Rajat"}
 	return render_to_response("myfirst.html", variables)
 
-@login_required
+#@login_required
 def insertview(request):
-	#title = request.GET[ 'title' ]
-	#description = request.GET[ 'description' ]
 	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName}
 	return render_to_response("insert.html", variables)
 
+############################################################################################################################################
+
+# this class represents the email input form field for validation
 class Html5EmailInput(Input):
     input_type = 'email'
-
-#this class represents the registration form and its validation methods
-class RegistrationForm(forms.Form):
-	username = forms.CharField(max_length=30)
-	firstname = forms.CharField(max_length=30)
-	lastname = forms.CharField(max_length=30)
-	email = forms.EmailField(max_length=50, widget=Html5EmailInput())
-	password = forms.CharField(max_length=50, widget=forms.PasswordInput())
-	passwordConfirmation = forms.CharField(max_length=50, widget=forms.PasswordInput())
-	
-	# validation method for password field - check if length is 8 chars long at least
-	def clean_password(self):
-		password = self.cleaned_data['password']
-		length = len(password)
-		if length < 8:
-			raise forms.ValidationError("Password has to be at least 8 characters long.")
-		return password
-	
-	# validation method for username field - check if the user doesnt already exist in db
-	def clean_username(self):
-		username = self.cleaned_data['username']
-		user = User()
-		try:
-			user = User.objects.get(username=username)
-		except user.DoesNotExist:
-			return username
-		raise forms.ValidationError(u'Username "%s" is already in use.' % username)
-		
-	# validation method for email - check if the email doesnt already exist in db
-	def clean_email(self):
-		email = self.cleaned_data['email']
-		user = User()
-		try:
-			user = User.objects.get(email=email)
-		except user.DoesNotExist:
-			return email
-		raise forms.ValidationError(u'Email "%s" is already in use.' % email)
-	
-	# validation method for password confirmation - check if the password and its confirmation match
-	def clean_passwordConfirmation(self):
-		passwordConfirmation = self.cleaned_data['passwordConfirmation']
-		password = self.cleaned_data['password']
-		if password != passwordConfirmation:
-			raise forms.ValidationError("Passwords dont match.")
-		return password
 		
 # method to register a new user - first checks if the form is valid and then registers a new user
 def registerNewUser(request):
@@ -102,26 +64,68 @@ def registerNewUser(request):
 		return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 	return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 
+# method to create a new event on the dashboard
+def createEvent(request):
+	if request.method == 'POST':
+		form = EventCreationForm(request.POST)
+		if form.is_valid():
+			title = form.cleaned_data['title']
+			description = form.cleaned_data['description']
+			date = form.cleaned_data['date']
+			
+			#we retrieve the username which will be the chef
+			theUser = User.objects.get(username=request.user.username)
+			
+			#we create an event and save it in the db
+			event = Event.objects.create(title=title, description=description, chef=theUser, creation_timestamp=datetime.now(), dateOfEvent=date)
+			event.save()
+			
+			#we retrieve all events associated to the user to pass it to the frontend
+			e = Event.objects.filter(chef=theUser)
+			
+			#we fill out the variables dictionary to pass it to the frontend
+			variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form}
+			return render_to_response('insert.html',variables)
+	else: # we create an empty form
+		form = EventCreationForm()
+		variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form}
+		return render_to_response('insert.html',variables)
+	return form # return empty form if everything goes wrong
+
+# generic success method, not being used at all
 def success(request):
 	return HttpResponse('success')
 
+# this method represents the login request
 def login_user(request):
-	logout(request)
+	logout(request) # logout any logged in user
 	username = password = ''
 	if request.POST:
 		username = request.POST['username']
 		password = request.POST['password']
 		
+		#check if input username exists, or needs to be created
 		num_users = User.objects.filter(username = username).count()
 		if num_users == 0:
-			messages.error(request, 'User ' + username + ' doesnt exist!')
+			messages.error(request, 'User ' + username + ' doesnt exist! Please register before logging in!')
 		else:
+			#authenticate the user
 			user = authenticate(username=username, password=password)
 			
 			if user is not None:
 				if user.is_active:
+					# login user
 					login(request, user)
-					reverse('insertview')
+					
+					# get all events associated to the user
+					e = Event.objects.filter(chef=user)
+					
+					# create an empty form
+					form = createEvent(request)
+					
+					# fill out the variables dictionary to pass to the front end
+					variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form}
+					return render_to_response('insert.html', variables)
 			else:
 				messages.error(request, 'Wrong password for user ' + username)
 	return render_to_response('index.html', context_instance=RequestContext(request))
