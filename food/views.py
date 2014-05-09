@@ -88,10 +88,22 @@ def createEvent(request):
 			return render_to_response('insert.html',variables)
 	else: # we create an empty form
 		form = EventCreationForm()
-		variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form}
-		return render_to_response('insert.html',variables)
+		return form
 	return form # return empty form if everything goes wrong
 
+def deleteEvent(request, event_id):
+	Event.objects.filter(pk=event_id).delete()
+	
+	#we retrieve the username which will be the chef
+	theUser = User.objects.get(username=request.user.username)
+	# get all events associated to the user
+	e = Event.objects.filter(chef=theUser)
+	# create an empty form
+	form = createEvent(request)	
+	# fill out the variables dictionary to pass to the front end
+	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form}
+	return render_to_response('insert.html', variables) 
+	
 # generic success method, not being used at all
 def success(request):
 	return HttpResponse('success')

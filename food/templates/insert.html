@@ -3,6 +3,23 @@
 <head>
     <title>Fooding Dashboard</title>
     <link rel="stylesheet" type="text/css" href="/site_media/css/styles.css">
+	<meta charset="utf-8">
+	<title>jQuery UI Datepicker - Default functionality</title>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	<link rel="stylesheet" href="/resources/demos/style.css">
+	<script type="text/javascript">
+	  $(function() {
+		$( ".datepicker" ).datepicker({
+		  changeMonth: true,
+		  changeYear: true,
+		  yearRange: "1900:2012",
+		  // You can put more options here.
+
+		});
+	  });
+	</script>
 </head>
 <body id="css-zen-garden">
 <div class="page-wrapper">
@@ -26,6 +43,7 @@
 <ul>
 {% for event in events %}
     <li>on {{ event.dateOfEvent }} : {{ event.title }} - {{event.description}}</li>
+	<td><a href="{% url food.views.deleteEvent event_id=event.pk %}">Delete</a></td> 
 {% endfor %}
 </ul>
 </div>
@@ -45,7 +63,7 @@
 		<dl>
             <dt> Date : </dt>
             <dd>{{ form.date }}</dd>
-            <!--<dd>{{ form.date.errors }}</dd>-->
+            <dd>{{ form.date.errors }}</dd>
         </dl>
         <br>
 		<br>
