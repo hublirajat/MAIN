@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fooding Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/site_media/css/styles.css">
+    <meta charset="utf-8">
+    <title>jQuery UI Datepicker - Default functionality</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script type="text/javascript">
+      $(function() {
+        $( ".datepicker" ).datepicker({
+          changeMonth: true,
+          changeYear: true,
+          yearRange: "1900:2012",
+          // You can put more options here.
+
+        });
+      });
+    </script>
+</head>
+<body id="css-zen-garden">
+<div class="page-wrapper">
+    <section class="intro" id="zen-intro">
+        <header role="banner">
+            <h1></h1>
+            <div class="user_panel">
+                <a href="/logout/">Logout</a>
+            </div>
+        </header>
+        </div>
+    </section>
+</div>
+<div class = "welcomeHeader">
+<h2> Thanks {{ firstname }} {{ lastname }} for joining this Event </h2>
+</div>
+<div class ="viewEvent">
+<p> Here are some details for the Event : </p>
+<ul>
+<li>{{ event.title }} - {{event.description}}</li>
+<td>Date and Time of the Event: {{ event.dateOfEvent }}</td><br>
+<td>Created by {{event.chef}}</td><br>
+{% for guest in guests %}
+    <td>Participants: {{guest}}</td><br>
+{% endfor %}
+
+</ul>
+</div>
+</body>
+</html>

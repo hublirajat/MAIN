@@ -17,7 +17,7 @@ from food.forms import RegistrationForm
 from datetime import datetime
 
 ############################################################################################################################################
-# These methods are not being used (yet) ###################################################################################################		
+# These methods are not being used (yet) ###################################################################################################
 ############################################################################################################################################
 def logout_user(request):
 	logout(request)
@@ -26,7 +26,7 @@ def logout_user(request):
 def indexview(request):
 	variables = {"members" : "Rajat"}
 	return render_to_response("index.html", variables)
-	
+
 def myFirstview(request):
 	variables = {"members" : "Rajat"}
 	return render_to_response("myfirst.html", variables)
@@ -41,7 +41,7 @@ def insertview(request):
 # this class represents the email input form field for validation
 class Html5EmailInput(Input):
     input_type = 'email'
-		
+
 # method to register a new user - first checks if the form is valid and then registers a new user
 def registerNewUser(request):
 	if request.method == 'POST': # If the form has been submitted...
@@ -53,11 +53,11 @@ def registerNewUser(request):
 			email = form.cleaned_data['email']
 			password = form.cleaned_data['password']
 			passwordConfirmation = form.cleaned_data['passwordConfirmation']
-			
+
 			# we now register the user
 			user = User.objects.create_user(username=username,email=email,password=password)
 			profile = UserProfile.objects.create(user=user,firstName=firstname,lastName=lastname)
-			
+
 			return render_to_response('index.html', context_instance=RequestContext(request))
 	else:
 		form = RegistrationForm() # An unbound form
@@ -72,17 +72,17 @@ def createEvent(request):
 			title = form.cleaned_data['title']
 			description = form.cleaned_data['description']
 			date = form.cleaned_data['date']
-			
+
 			#we retrieve the username which will be the chef
 			theUser = User.objects.get(username=request.user.username)
-			
+
 			#we create an event and save it in the db
 			event = Event.objects.create(title=title, description=description, chef=theUser, creation_timestamp=datetime.now(), dateOfEvent=date)
 			event.save()
-			
+
 			#we retrieve all events associated to the user to pass it to the frontend
 			e = Event.objects.filter(chef=theUser)
-			
+
 			#we fill out the variables dictionary to pass it to the frontend
 			variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form}
 			return render_to_response('insert.html',variables)
@@ -91,19 +91,43 @@ def createEvent(request):
 		return form
 	return form # return empty form if everything goes wrong
 
+def viewEvent(request, event_id):
+	e2 = Event.objects.get(pk=event_id)
+	guests2 = e2.guests.all()
+	variables = {"event" : e2, "guests" : guests2}
+	return render_to_response('viewEvent.html', variables)
+
+def searchEvents(request):
+
+	e1 = Event.objects.filter()
+	variables = { "outputEvents" : e1}
+	return render_to_response('searchEventsResults.html',variables)
+
+def participateInEvents(request, event_id):
+
+	e3 = Event.objects.get(pk=event_id)
+	theUser = User.objects.get(username=request.user.username)
+	e3.guests.add(theUser)
+	e3.save()
+
+	guests = e3.guests.all()
+	#e33 = Event.objects.filter(pk=event_id)
+	variables = { "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "event" : e3, "guests" : guests}
+	return render_to_response('joinResult.html',variables)
+
 def deleteEvent(request, event_id):
 	Event.objects.filter(pk=event_id).delete()
-	
+
 	#we retrieve the username which will be the chef
 	theUser = User.objects.get(username=request.user.username)
 	# get all events associated to the user
 	e = Event.objects.filter(chef=theUser)
 	# create an empty form
-	form = createEvent(request)	
+	form = createEvent(request)
 	# fill out the variables dictionary to pass to the front end
 	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form}
-	return render_to_response('insert.html', variables) 
-	
+	return render_to_response('insert.html', variables)
+
 # generic success method, not being used at all
 def success(request):
 	return HttpResponse('success')
@@ -115,7 +139,7 @@ def login_user(request):
 	if request.POST:
 		username = request.POST['username']
 		password = request.POST['password']
-		
+
 		#check if input username exists, or needs to be created
 		num_users = User.objects.filter(username = username).count()
 		if num_users == 0:
@@ -123,18 +147,18 @@ def login_user(request):
 		else:
 			#authenticate the user
 			user = authenticate(username=username, password=password)
-			
+
 			if user is not None:
 				if user.is_active:
 					# login user
 					login(request, user)
-					
+
 					# get all events associated to the user
 					e = Event.objects.filter(chef=user)
-					
+
 					# create an empty form
 					form = createEvent(request)
-					
+
 					# fill out the variables dictionary to pass to the front end
 					variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form}
 					return render_to_response('insert.html', variables)
