@@ -31,9 +31,9 @@
 				<a href="/logout/">Logout</a>
 			</div>
 		</header>
-		</div>	
+		</div>
 	</section>
-	
+
 </div>
 <div class = "welcomeHeader">
 <h2> Hello {{ firstname }} {{ lastname }}! Welcome to the Fooding Dashboard </h2>
@@ -43,13 +43,14 @@
 <ul>
 {% for event in events %}
     <li>on {{ event.dateOfEvent }} : {{ event.title }} - {{event.description}}</li>
-	<td><a href="{% url food.views.deleteEvent event_id=event.pk %}">Delete</a></td> 
+    <td><a href="{% url "food.views.viewEvent" event_id=event.pk %}">See Event</a></td>
+	<td><a href="{% url "food.views.deleteEvent" event_id=event.pk %}">Delete</a></td>
 {% endfor %}
 </ul>
 </div>
 <div class="createEvent">
 	<h2> Create an Event </h2>
-    <form id="createEvent" action="{% url food.views.createEvent %}" method="post" class="niceform" novalidate>{% csrf_token %}
+    <form id="createEvent" action="{% url "food.views.createEvent" %}" method="post" class="niceform" novalidate>{% csrf_token %}
         <dl>
             <dt> Title : </dt>
             <dd>{{ form.title }}</dd>
@@ -67,7 +68,6 @@
         </dl>
         <br>
 		<br>
-		<br>
 		<dl>
 			<dd></dd>
 			<dd>
@@ -77,6 +77,25 @@
 			</dd>
 		</dl>
     </form>
+</div>
+<div class ="currentEvents">
+<p> Here are some Current Events : </p>
+<ul>
+{% for event in outputEvents %}
+    <li>on {{ event.dateOfEvent }} : {{ event.title }} - {{event.description}}</li>
+    <td><a href="{% url "food.views.viewEvent" event_id=event.pk %}">See Event</a></td>
+{% endfor %}
+</ul>
+<form id="searchEvents" action="{% url "food.views.searchEvents" %}" method="post" class="niceform" novalidate>{% csrf_token %}
+    <dl>
+        <dd></dd>
+        <dd>
+        <div class="registerButtons">
+            <input type="submit" value="Search Events" class="button" />
+        </div>
+        </dd>
+    </dl>
+</form>
 </div>
 </body>
 </html>
