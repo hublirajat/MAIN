@@ -15,6 +15,10 @@ from django.core.urlresolvers import reverse
 from food.forms import EventCreationForm
 from food.forms import RegistrationForm
 from datetime import datetime
+import urllib
+import urllib2
+import settings
+import json
 
 ############################################################################################################################################
 # These methods are not being used (yet) ###################################################################################################
@@ -72,12 +76,16 @@ def createEvent(request):
 			title = form.cleaned_data['title']
 			description = form.cleaned_data['description']
 			date = form.cleaned_data['date']
+			address = form.cleaned_data['address']
 
+			#retrieve the coordinates of the given address
+			coordinates = get_coordinates(address)
+			
 			#we retrieve the username which will be the chef
 			theUser = User.objects.get(username=request.user.username)
 
 			#we create an event and save it in the db
-			event = Event.objects.create(title=title, description=description, chef=theUser, creation_timestamp=datetime.now(), dateOfEvent=date)
+			event = Event.objects.create(title=title, description=description, chef=theUser, creation_timestamp=datetime.now(), dateOfEvent=date, address=address, latitude=coordinates[0], longitude=coordinates[1])
 			event.save()
 
 			#we retrieve all events associated to the user to pass it to the frontend
@@ -94,13 +102,13 @@ def createEvent(request):
 def viewEvent(request, event_id):
 	e2 = Event.objects.get(pk=event_id)
 	guests2 = e2.guests.all()
-	variables = {"event" : e2, "guests" : guests2}
+	variables = {"event" : e2, "guests" : guests2, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName}
 	return render_to_response('viewEvent.html', variables)
 
 def searchEvents(request):
 
 	e1 = Event.objects.filter()
-	variables = { "outputEvents" : e1}
+	variables = { "outputEvents" : e1, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName}
 	return render_to_response('searchEventsResults.html',variables)
 
 def participateInEvents(request, event_id):
@@ -165,3 +173,15 @@ def login_user(request):
 			else:
 				messages.error(request, 'Wrong password for user ' + username)
 	return render_to_response('index.html', context_instance=RequestContext(request))
+	
+def get_coordinates(location):
+	location = urllib.quote_plus(location)
+	request = "http://maps.google.com/maps/api/geocode/json?address=" + location
+	data = urllib2.urlopen(request)
+	djson = data.read()
+	myData = json.loads(djson)
+	latitude = myData['results'][0]['geometry']['location']['lat']
+	longitude = myData['results'][0]['geometry']['location']['lng']
+	coordinates = (latitude,longitude)
+	print coordinates
+	return coordinates

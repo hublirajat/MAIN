@@ -11,6 +11,9 @@ class Event(models.Model):
     #reviews = models.ForeignKey('Review')
 	creation_timestamp = models.DateTimeField(auto_now_add=True)
 	dateOfEvent = models.DateTimeField(auto_now_add=True)
+	address = models.CharField(max_length=200)
+	latitude = models.FloatField(max_length=100)
+	longitude = models.FloatField(max_length=100)
 
 	def __unicode__(self):
 		return self.description

@@ -12,6 +12,7 @@ class EventCreationForm(forms.Form):
 	description = forms.CharField(max_length=300)
 	# this field is using a widget -> jquery datepicker (defined as a javascript in the template header)
 	date = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker'}))
+	address = forms.CharField(max_length=200)
 
 #this class represents the registration form and its validation methods
 class RegistrationForm(forms.Form):

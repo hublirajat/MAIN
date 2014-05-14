@@ -34,7 +34,7 @@
     </section>
 </div>
 <div class = "welcomeHeader">
-<h2> Hello {{ firstname }} {{ lastname }}! Welcome to the Fooding Dashboard </h2>
+<h2> Hello {{ firstname }} {{ lastname }}! </h2>
 </div>
 <div class ="viewEvent">
 <p> Here are some details for the Event : </p>
@@ -45,7 +45,7 @@
 {% for guest in guests %}
     <td>Participants: {{guest}}</td><br>
 {% endfor %}
-<td><a href="{% url "food.views.participateInEvents" event_id=event.pk %}">Participate</a></td>
+<td><a href="{% url food.views.participateInEvents event_id=event.pk %}">Participate</a></td>
 
 </ul>
 </div>
