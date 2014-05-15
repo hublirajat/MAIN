@@ -76,23 +76,36 @@ def createEvent(request):
 			title = form.cleaned_data['title']
 			description = form.cleaned_data['description']
 			date = form.cleaned_data['date']
+			print date
 			address = form.cleaned_data['address']
-
-			#retrieve the coordinates of the given address
-			coordinates = get_coordinates(address)
+			zipCode = form.cleaned_data['zipCode']
+			country = form.cleaned_data['country']
+			cuisineType = form.cleaned_data['cuisineType']
 			
 			#we retrieve the username which will be the chef
 			theUser = User.objects.get(username=request.user.username)
-
-			#we create an event and save it in the db
-			event = Event.objects.create(title=title, description=description, chef=theUser, creation_timestamp=datetime.now(), dateOfEvent=date, address=address, latitude=coordinates[0], longitude=coordinates[1])
-			event.save()
+		
+			#retrieve the coordinates of the given address
+			coordinates = get_coordinates(request,address,zipCode,country)
+			print coordinates
 
 			#we retrieve all events associated to the user to pass it to the frontend
 			e = Event.objects.filter(chef=theUser)
 
+			allEvents = Event.objects.all()
 			#we fill out the variables dictionary to pass it to the frontend
-			variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form}
+			variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form, "allEvents" : allEvents}
+			
+			fullAddress = address + ", " + zipCode + ", " + country
+			
+			#we create an event and save it in the db
+			if(coordinates[0] != 0 or coordinates [1] != 0):
+				event = Event.objects.create(title=title, description=description, chef=theUser, creation_timestamp=datetime.now(), dateOfEvent=date, address=fullAddress, latitude=coordinates[0], longitude=coordinates[1],cuisineType=cuisineType)
+				event.save()
+			else:
+				messages.error(request, "The address you're looking for doesn't exist! ")
+				return render_to_response('insert.html', variables, context_instance=RequestContext(request))
+
 			return render_to_response('insert.html',variables)
 	else: # we create an empty form
 		form = EventCreationForm()
@@ -166,6 +179,8 @@ def login_user(request):
 
 					# create an empty form
 					form = createEvent(request)
+					
+					allEvents = Event.objects.all()
 
 					# fill out the variables dictionary to pass to the front end
 					variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form}
@@ -174,14 +189,21 @@ def login_user(request):
 				messages.error(request, 'Wrong password for user ' + username)
 	return render_to_response('index.html', context_instance=RequestContext(request))
 	
-def get_coordinates(location):
-	location = urllib.quote_plus(location)
-	request = "http://maps.google.com/maps/api/geocode/json?address=" + location
-	data = urllib2.urlopen(request)
+def get_coordinates(request,address,zipCode,country):
+	coordinates = (0,0)
+	address = urllib.quote_plus(address)
+	httpRequest = "http://maps.google.com/maps/api/geocode/json?address=" + address + "," + zipCode + "," + country
+	print httpRequest
+	data = urllib2.urlopen(httpRequest)
 	djson = data.read()
 	myData = json.loads(djson)
-	latitude = myData['results'][0]['geometry']['location']['lat']
-	longitude = myData['results'][0]['geometry']['location']['lng']
-	coordinates = (latitude,longitude)
-	print coordinates
-	return coordinates
+	print myData
+	print 'before'
+	if(myData['status'] == 'OK'):
+		latitude = myData['results'][0]['geometry']['location']['lat']
+		longitude = myData['results'][0]['geometry']['location']['lng']
+		coordinates = (latitude,longitude)
+		print coordinates
+		return coordinates
+	else:
+		return coordinates

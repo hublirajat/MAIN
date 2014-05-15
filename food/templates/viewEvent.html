@@ -14,7 +14,7 @@
         $( ".datepicker" ).datepicker({
           changeMonth: true,
           changeYear: true,
-          yearRange: "1900:2012",
+          yearRange: "2014:2099",
           // You can put more options here.
 
         });
@@ -37,10 +37,12 @@
 <h2> Hello {{ firstname }} {{ lastname }}! </h2>
 </div>
 <div class ="viewEvent">
-<p> Here are some details for the Event : </p>
+<p> Here are the details for the Event : </p>
 <ul>
 <li>{{ event.title }} - {{event.description}}</li>
+<td>Cuisine : {{event.cuisineType}}</td><br>
 <td>Date and Time of the Event: {{ event.dateOfEvent }}</td><br>
+<td>Address : {{ event.address }}</td><br>
 <td>Created by {{event.chef}}</td><br>
 {% for guest in guests %}
     <td>Participants: {{guest}}</td><br>

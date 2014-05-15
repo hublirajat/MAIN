@@ -14,7 +14,7 @@
 		$( ".datepicker" ).datepicker({
 		  changeMonth: true,
 		  changeYear: true,
-		  yearRange: "1900:2012",
+		  yearRange: "2014:2099",
 		  // You can put more options here.
 
 		});
@@ -56,7 +56,7 @@
 <p> Your events : </p>
 <ul>
 {% for event in events %}
-    <li>on {{ event.dateOfEvent }} : {{ event.title }} - {{event.description}} - {{event.address}}</li>
+    <li>on {{ event.dateOfEvent }} : {{ event.title }} - {{event.address}}</li>
     <td><a href="{% url food.views.viewEvent event_id=event.pk %}">See Event</a></td>
 	<td><a href="{% url food.views.deleteEvent event_id=event.pk %}">Delete</a></td>
 {% endfor %}
@@ -78,29 +78,46 @@
 		<dl>
             <dt> Date : </dt>
             <dd>{{ form.date }}</dd>
-            <dd>{{ form.date.errors }}</dd>
+            <!--<dd>{{ form.date.errors }}</dd>-->
         </dl>
 		<dl>
-            <dt> Address : </dt>
-            <dd>{{ form.address }}</dd>
-            <!--<dd>{{ form.address.errors }}</dd>-->
+            <dt> Cuisine : </dt>
+            <dd>{{ form.cuisineType }}</dd>
+            <!--<dd>{{ form.date.errors }}</dd>-->
         </dl>
+		<table align = "right">
+            <tr> 
+			<td > Address : </td>
+			</tr>
+			<br>
+			<tr>
+			<td> Street </td><td> Zip/Postal Code </td>
+			</tr>
+			<br>
+			<tr>
+            <td>{{ form.address }}</td><td>{{ form.zipCode }}</td>
+			<!--<td>{{ form.zipCode.errors }}</td>-->
+			</tr>
+            <!--<dd>{{ form.address.errors }}</dd>-->
+			<tr>
+            <td> Country : </td>
+            <td>{{ form.country }}</td>
+			</tr>
+            <!--<dd>{{ form.address.errors }}</dd>-->
         <br>
 		<br>
-		<dl>
-			<dd></dd>
-			<dd>
-			<div class="registerButtons">
-				<input type="submit" value="Create Event" class="button" />
-			</div>
-			</dd>
-		</dl>
+		<tr>
+		<td>
+		<input type="submit" value="Create Event" class="button" />
+		</td>
+		</tr>
+					</table>
     </form>
 </div>
 <div class ="currentEvents">
 <p> Here are some Current Events : </p>
 <ul>
-{% for event in outputEvents %}
+{% for event in allEvents %}
     <li>on {{ event.dateOfEvent }} : {{ event.title }} - {{event.description}}</li>
     <td><a href="{% url "food.views.viewEvent" event_id=event.pk %}">See Event</a></td>
 {% endfor %}
@@ -116,7 +133,14 @@
     </dl>
 </form>
 </div>
-<div id="map_canvas">
-</div>
+<!--<div id="map_canvas">
+</div>-->
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 </body>
 </html>

@@ -10,10 +10,11 @@ class Event(models.Model):
 	guests = models.ManyToManyField(User, related_name='event_guests')
     #reviews = models.ForeignKey('Review')
 	creation_timestamp = models.DateTimeField(auto_now_add=True)
-	dateOfEvent = models.DateTimeField(auto_now_add=True)
+	dateOfEvent = models.DateTimeField()
 	address = models.CharField(max_length=200)
 	latitude = models.FloatField(max_length=100)
 	longitude = models.FloatField(max_length=100)
+	cuisineType = models.CharField(max_length=200)
 
 	def __unicode__(self):
 		return self.description
