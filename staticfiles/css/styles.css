@@ -166,6 +166,17 @@ font: italic 1.1em/2.2 georgia;
 text-align: right;
 }
 
+.allEvents {
+position:absolute;
+top: 70%;
+left: 10%;
+width: 35%;
+}
+.allEvents p {
+font: italic 1.1em/2.2 georgia; 
+text-align: right;
+}
+
 .displayEvents {
 position:absolute;
 top: 25%;
@@ -479,9 +490,4 @@ background: url('/site_media/img/facebook.png') no-repeat;
 	top:1px;
 }
 
-#map_canvas{
-		margin-top:20%;
-		margin-left:10%;
-        width: 500px;
-        height: 400px;
-      }
+#map { height: 20%; width: 20%; position: absolute; margin-top:20%; margin-left:10%;}

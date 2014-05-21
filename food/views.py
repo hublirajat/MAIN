@@ -145,8 +145,10 @@ def deleteEvent(request, event_id):
 	e = Event.objects.filter(chef=theUser)
 	# create an empty form
 	form = createEvent(request)
+	
+	allEvents = Event.objects.all()
 	# fill out the variables dictionary to pass to the front end
-	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form}
+	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form, "allEvents" : allEvents}
 	return render_to_response('insert.html', variables)
 
 # generic success method, not being used at all
@@ -183,7 +185,7 @@ def login_user(request):
 					allEvents = Event.objects.all()
 
 					# fill out the variables dictionary to pass to the front end
-					variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form}
+					variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form, "allEvents" : allEvents}
 					return render_to_response('insert.html', variables)
 			else:
 				messages.error(request, 'Wrong password for user ' + username)

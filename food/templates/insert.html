@@ -8,7 +8,8 @@
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-	<link rel="stylesheet" href="/resources/demos/style.css">
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
 	<script type="text/javascript">
 	  $(function() {
 		$( ".datepicker" ).datepicker({
@@ -16,24 +17,11 @@
 		  changeYear: true,
 		  yearRange: "2014:2099",
 		  // You can put more options here.
-
 		});
 	  });
 	</script>
-<!--<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>-->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmKq0adRXY9Qswr-G8whkRWUlC7uhI8ds&sensor=SET_TO_TRUE_OR_FALSE" type="text/javascript"></script>
-    <script>
-      function initialize() {
-        var map_canvas = document.getElementById('map_canvas');
-        var map_options = {
-          center: new google.maps.LatLng(44.5403, -78.5463),
-          zoom: 8,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        }
-        var map = new google.maps.Map(map_canvas, map_options)
-      }
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
+
+ 
 </head>
 <body id="css-zen-garden">
 <div class="page-wrapper">
@@ -114,27 +102,160 @@
 					</table>
     </form>
 </div>
-<div class ="currentEvents">
-<p> Here are some Current Events : </p>
-<ul>
-{% for event in allEvents %}
-    <li>on {{ event.dateOfEvent }} : {{ event.title }} - {{event.description}}</li>
-    <td><a href="{% url "food.views.viewEvent" event_id=event.pk %}">See Event</a></td>
-{% endfor %}
 </ul>
-<form id="searchEvents" action="{% url food.views.searchEvents %}" method="post" class="niceform" novalidate>{% csrf_token %}
+<form id="searchEvents" action="{% url food.views.searchEvents %}" method="post" class="allEvents" novalidate>{% csrf_token %}
     <dl>
         <dd></dd>
         <dd>
         <div class="registerButtons">
-            <input type="submit" value="Search Events" class="button" />
+            <input type="submit" value="See All Events" class="button" />
         </div>
         </dd>
     </dl>
 </form>
 </div>
-<!--<div id="map_canvas">
-</div>-->
+	<div id="map" style="width: 600px; height: 400px"></div>
+
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+	<script>
+	/*
+	 * This code is representing a map mashup on the HTML page
+	 */
+	
+	//Representing the user icon on the map
+	var userIcon = L.icon({
+		iconUrl: '/site_media/img/markers/userMarker.png',
+
+		iconSize:     [40, 40], // size of the icon
+	});
+	
+	var africanMarker = L.icon({
+		iconUrl: '/site_media/img/markers/africanMarker.png',
+
+		iconSize:     [36, 51], // size of the icon
+		iconAnchor: [17, 51],
+	});
+	
+	var angloSaxonMarker = L.icon({
+		iconUrl: '/site_media/img/markers/angloSaxonMarker.png',
+
+		iconSize:     [36, 51], // size of the icon
+		iconAnchor: [17, 51],
+	});
+	
+	var arabMarker = L.icon({
+		iconUrl: '/site_media/img/markers/arabMarker.png',
+
+		iconSize:     [36, 51], // size of the icon
+		iconAnchor: [17, 51],
+	});
+	
+	var asianMarker = L.icon({
+		iconUrl: '/site_media/img/markers/asianMarker.png',
+
+		iconSize:     [36, 51], // size of the icon
+		iconAnchor: [17, 51],
+	});
+	
+	var bbqMarker = L.icon({
+		iconUrl: '/site_media/img/markers/bbqMarker.png',
+
+		iconSize:     [36, 51], // size of the icon
+		iconAnchor: [17, 51],
+	});
+	
+	var mediterraneanMarker = L.icon({
+	iconUrl: '/site_media/img/markers/mediterraneanMarker.png',
+
+	iconSize:     [36, 51], // size of the icon
+	iconAnchor: [17, 51],
+	});
+	
+	// This function returns the user location (coordinates) from the browser itself
+	function getLocation()
+	{
+	if (navigator.geolocation)
+		{
+			navigator.geolocation.getCurrentPosition(drawMap);
+		}
+	else{alert("Geolocation is not supported by this browser.");}
+	}
+
+	// This function is using the geolocation coordinates to draw the map
+	function drawMap(position) {
+	
+	var latitude = position.coords.latitude;
+	var longitude = position.coords.longitude;
+
+	// here we define the map with the user's location center and zoom factor of 10
+	var map = L.map('map').setView([latitude, longitude], 10);
+	L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+		id: 'examples.map-i86knfo3'
+	}).addTo(map);
+
+	// here we add the marker representing the user's location
+	L.marker([latitude, longitude], {icon: userIcon}).addTo(map)
+		.bindPopup("You are here!").openPopup();
+		
+	// for each event on the DB we draw a new marker
+	{% for event in allEvents %}
+		if("{{ event.cuisineType }}" == "African")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: africanMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Anglo-Saxon")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: angloSaxonMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Arab")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: arabMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Asian")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: asianMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Barbecue")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: bbqMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Mediterranean")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: mediterraneanMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}]).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+	{% endfor %}
+
+	var popup = L.popup();
+
+	// this function deals with the onClick event
+	function onMapClick(e) {
+		popup
+			.setLatLng(e.latlng)
+			.setContent("You clicked the map at " + e.latlng.toString())
+			.openOn(map);
+	}
+
+	map.on('click', onMapClick);
+	}
+
+	getLocation();
+	
+	</script>
+
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
