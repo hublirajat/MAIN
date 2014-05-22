@@ -4,12 +4,13 @@
     <title>Fooding Dashboard</title>
     <link rel="stylesheet" type="text/css" href="/site_media/css/styles.css">
 	<meta charset="utf-8">
-	<title>jQuery UI Datepicker - Default functionality</title>
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+	<title>jQuery UI Datepicker - Default functionality</title>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+	<script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 	<script type="text/javascript">
 	  $(function() {
 		$( ".datepicker" ).datepicker({
@@ -19,6 +20,20 @@
 		  // You can put more options here.
 		});
 	  });
+	</script>
+	<script type="text/javascript">
+	 
+	$(document).ready(function(){
+	 
+			$(".createEvent").hide();
+			$(".show_hide").show();
+	 
+		$('.show_hide').click(function(){
+		$(".createEvent").slideToggle();
+		});
+	 
+	});
+	 
 	</script>
 
  
@@ -39,6 +54,10 @@
 </div>
 <div class = "welcomeHeader">
 <h2> Hello {{ firstname }} {{ lastname }}! Welcome to the Fooding Dashboard </h2>
+</div>
+<div class="dashboardMenu">
+<a href="#" class="show_hide">Create Event</a> &nbsp; <a href="/searchEvents/">All Events</a>
+
 </div>
 <div class ="displayEvents">
 <p> Your events : </p>
@@ -103,16 +122,6 @@
     </form>
 </div>
 </ul>
-<form id="searchEvents" action="{% url food.views.searchEvents %}" method="post" class="allEvents" novalidate>{% csrf_token %}
-    <dl>
-        <dd></dd>
-        <dd>
-        <div class="registerButtons">
-            <input type="submit" value="See All Events" class="button" />
-        </div>
-        </dd>
-    </dl>
-</form>
 </div>
 	<div id="map" style="width: 600px; height: 400px"></div>
 
@@ -127,49 +136,45 @@
 		iconUrl: '/site_media/img/markers/userMarker.png',
 
 		iconSize:     [40, 40], // size of the icon
+		popupAnchor:[0,-20],
 	});
 	
-	var africanMarker = L.icon({
-		iconUrl: '/site_media/img/markers/africanMarker.png',
-
-		iconSize:     [36, 51], // size of the icon
-		iconAnchor: [17, 51],
+	//Representing the user icon on the map
+	var homeIcon = L.icon({
+		iconUrl: '/site_media/img/markers/homeMarker.png',
+		iconSize:     [36, 51],
+        iconAnchor: [17, 51],
+		popupAnchor:[0,-31],
 	});
 	
-	var angloSaxonMarker = L.icon({
-		iconUrl: '/site_media/img/markers/angloSaxonMarker.png',
-
-		iconSize:     [36, 51], // size of the icon
-		iconAnchor: [17, 51],
+	var cuisineIcon = L.Icon.extend({
+    options: {
+        iconSize:     [36, 51],
+        iconAnchor: [17, 51],
+		popupAnchor:[0,-31],
+    }
 	});
 	
-	var arabMarker = L.icon({
-		iconUrl: '/site_media/img/markers/arabMarker.png',
-
-		iconSize:     [36, 51], // size of the icon
-		iconAnchor: [17, 51],
-	});
-	
-	var asianMarker = L.icon({
-		iconUrl: '/site_media/img/markers/asianMarker.png',
-
-		iconSize:     [36, 51], // size of the icon
-		iconAnchor: [17, 51],
-	});
-	
-	var bbqMarker = L.icon({
-		iconUrl: '/site_media/img/markers/bbqMarker.png',
-
-		iconSize:     [36, 51], // size of the icon
-		iconAnchor: [17, 51],
-	});
-	
-	var mediterraneanMarker = L.icon({
-	iconUrl: '/site_media/img/markers/mediterraneanMarker.png',
-
-	iconSize:     [36, 51], // size of the icon
-	iconAnchor: [17, 51],
-	});
+	var africanMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/africanMarker.png'}),
+    angloSaxonMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/angloSaxonMarker.png'}),
+    arabMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/arabMarker.png'}),
+	asianMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/asianMarker.png'}),
+	bbqMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/bbqMarker.png'}),
+	continentalMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/continentalMarker.png'}),
+	experimentalMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/experimentalMarker.png'}),
+	fusionMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/fusionMarker.png'}),
+	indianMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/indianMarker.png'}),
+	italianMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/italianMarker.png'}),
+	kosherMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/kosherMarker.png'}),
+	mediterraneanMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/mediterraneanMarker.png'}),
+	mexicanMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/mexicanMarker.png'}),
+	middleEastMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/middleEastMarker.png'}),
+	nordicMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/nordicMarker.png'}),
+	nouvelleMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/nouvelleMarker.png'}),
+	oceanianMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/oceanianMarker.png'}),
+	sushiMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/sushiMarker.png'}),
+	vegetarianMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/vegetarianMarker.png'}),
+	veganMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/veganMarker.png'});
 	
 	// This function returns the user location (coordinates) from the browser itself
 	function getLocation()
@@ -203,7 +208,12 @@
 		
 	// for each event on the DB we draw a new marker
 	{% for event in allEvents %}
-		if("{{ event.cuisineType }}" == "African")
+		if({{event.chef.id}} == {{userId}})
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: homeIcon}).addTo(map)
+		.bindPopup(" This event is yours! <br> <a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "African")
 		{
 			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: africanMarker}).addTo(map)
 		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
@@ -228,9 +238,79 @@
 			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: bbqMarker}).addTo(map)
 		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
+		else if("{{ event.cuisineType }}" == "Continental")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: continentalMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Experimental")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: experimentalMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Fusion")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: fusionMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Indian")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: indianMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Italian")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: italianMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Kosher")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: kosherMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
 		else if("{{ event.cuisineType }}" == "Mediterranean")
 		{
 			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: mediterraneanMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Mexican")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: mexicanMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Middle-East")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: middleEastMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Nordic")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: nordicMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Nouvelle")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: nouvelleMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Oceanian")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: oceanianMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Sushi")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: sushiMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Vegetarian")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: vegetarianMarker}).addTo(map)
+		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		}
+		else if("{{ event.cuisineType }}" == "Vegan")
+		{
+			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: veganMarker}).addTo(map)
 		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else{

@@ -37,7 +37,17 @@ def myFirstview(request):
 
 #@login_required
 def insertview(request):
-	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName}
+	#we retrieve the username which will be the chef
+	theUser = User.objects.get(username=request.user.username)
+	
+	#we retrieve all events associated to the user to pass it to the frontend
+	e = Event.objects.filter(chef=theUser)
+
+	allEvents = Event.objects.all()
+	
+	form = EventCreationForm()
+	
+	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
 	return render_to_response("insert.html", variables)
 
 ############################################################################################################################################
@@ -94,7 +104,7 @@ def createEvent(request):
 
 			allEvents = Event.objects.all()
 			#we fill out the variables dictionary to pass it to the frontend
-			variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form, "allEvents" : allEvents}
+			variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
 			
 			fullAddress = address + ", " + zipCode + ", " + country
 			
@@ -115,13 +125,13 @@ def createEvent(request):
 def viewEvent(request, event_id):
 	e2 = Event.objects.get(pk=event_id)
 	guests2 = e2.guests.all()
-	variables = {"event" : e2, "guests" : guests2, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName}
+	variables = {"event" : e2, "guests" : guests2, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id}
 	return render_to_response('viewEvent.html', variables)
 
 def searchEvents(request):
 
 	e1 = Event.objects.filter()
-	variables = { "outputEvents" : e1, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName}
+	variables = { "outputEvents" : e1, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id}
 	return render_to_response('searchEventsResults.html',variables)
 
 def participateInEvents(request, event_id):
@@ -148,7 +158,7 @@ def deleteEvent(request, event_id):
 	
 	allEvents = Event.objects.all()
 	# fill out the variables dictionary to pass to the front end
-	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form, "allEvents" : allEvents}
+	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
 	return render_to_response('insert.html', variables)
 
 # generic success method, not being used at all
@@ -183,9 +193,11 @@ def login_user(request):
 					form = createEvent(request)
 					
 					allEvents = Event.objects.all()
+					
+					print "user id" + str(request.user.id)
 
 					# fill out the variables dictionary to pass to the front end
-					variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "events" : e, "form" : form, "allEvents" : allEvents}
+					variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
 					return render_to_response('insert.html', variables)
 			else:
 				messages.error(request, 'Wrong password for user ' + username)

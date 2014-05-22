@@ -28,6 +28,9 @@
             <h1></h1>
             <div class="user_panel">
                 <a href="/logout/">Logout</a>
+				<br>
+				<br>
+				<a href="/insertview/">Home</a>
             </div>
         </header>
         </div>
@@ -42,6 +45,9 @@
 {% for event in outputEvents %}
     <li>on {{ event.dateOfEvent }} : {{ event.title }} - {{event.description}}</li>
     <td><a href="{% url food.views.viewEvent event_id=event.pk %}">See Event</a></td>
+	 {% if event.chef.id == userId %}
+		<td><a href="{% url food.views.deleteEvent event_id=event.pk %}">Delete</a></td>
+	{% endif %} 
 {% endfor %}
 </ul>
 </div>
