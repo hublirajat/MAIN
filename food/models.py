@@ -14,7 +14,13 @@ class Event(models.Model):
 	address = models.CharField(max_length=200)
 	latitude = models.FloatField(max_length=100)
 	longitude = models.FloatField(max_length=100)
-	cuisineType = models.CharField(max_length=200)
+	cuisineType = models.CharField(max_length=100)
+	mealType = models.CharField(max_length=100)
+	menuEntree = models.CharField(max_length=100)
+	menuFirstCourse = models.CharField(max_length=100)
+	menuSecondCourse = models.CharField(max_length=100)
+	menuDessert = models.CharField(max_length=100)
+	numberOfParticipants = models.IntegerField(max_length=100)
 
 	def __unicode__(self):
 		return self.description

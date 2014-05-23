@@ -19,6 +19,7 @@ import urllib
 import urllib2
 import settings
 import json
+from django.db.models import Q 
 
 ############################################################################################################################################
 # These methods are not being used (yet) ###################################################################################################
@@ -91,6 +92,12 @@ def createEvent(request):
 			zipCode = form.cleaned_data['zipCode']
 			country = form.cleaned_data['country']
 			cuisineType = form.cleaned_data['cuisineType']
+			mealType = form.cleaned_data['mealType']
+			entreeInput = form.cleaned_data['entreeInput']
+			firstCourseInput = form.cleaned_data['firstCourseInput']
+			secondCourseInput = form.cleaned_data['secondCourseInput']
+			dessertInput = form.cleaned_data['dessertInput']
+			participantNumber = form.cleaned_data['participantNumber']
 			
 			#we retrieve the username which will be the chef
 			theUser = User.objects.get(username=request.user.username)
@@ -110,7 +117,7 @@ def createEvent(request):
 			
 			#we create an event and save it in the db
 			if(coordinates[0] != 0 or coordinates [1] != 0):
-				event = Event.objects.create(title=title, description=description, chef=theUser, creation_timestamp=datetime.now(), dateOfEvent=date, address=fullAddress, latitude=coordinates[0], longitude=coordinates[1],cuisineType=cuisineType)
+				event = Event.objects.create(title=title, description=description, chef=theUser, creation_timestamp=datetime.now(), dateOfEvent=date, address=fullAddress, latitude=coordinates[0], longitude=coordinates[1],cuisineType=cuisineType,mealType=mealType,menuEntree=entreeInput,menuFirstCourse=firstCourseInput,menuSecondCourse=secondCourseInput,menuDessert=dessertInput,numberOfParticipants=participantNumber)
 				event.save()
 			else:
 				messages.error(request, "The address you're looking for doesn't exist! ")
@@ -124,8 +131,9 @@ def createEvent(request):
 
 def viewEvent(request, event_id):
 	e2 = Event.objects.get(pk=event_id)
+	allEvents = Event.objects.all()
 	guests2 = e2.guests.all()
-	variables = {"event" : e2, "guests" : guests2, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id}
+	variables = {"event" : e2, "guests" : guests2, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "user" : request.user, "allEvents" : allEvents}
 	return render_to_response('viewEvent.html', variables)
 
 def searchEvents(request):
@@ -187,17 +195,18 @@ def login_user(request):
 					login(request, user)
 
 					# get all events associated to the user
-					e = Event.objects.filter(chef=user)
-
+					e = Event.objects.filter(chef=user).order_by('dateOfEvent')
+					e1 = Event.objects.filter(guests=user).order_by('dateOfEvent')
+					e2 = e | e1
+				
+					
 					# create an empty form
 					form = createEvent(request)
 					
 					allEvents = Event.objects.all()
-					
-					print "user id" + str(request.user.id)
 
 					# fill out the variables dictionary to pass to the front end
-					variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
+					variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e2, "form" : form, "allEvents" : allEvents}
 					return render_to_response('insert.html', variables)
 			else:
 				messages.error(request, 'Wrong password for user ' + username)

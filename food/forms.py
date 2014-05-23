@@ -8,19 +8,27 @@ countryList = ([('Afghanistan','Afghanistan'), ('Albania','Albania'), ('Algeria'
 
 cuisineTypeList = ([('African','African'), ('Anglo-Saxon','Anglo-Saxon'), ('Arab','Arab'), ('Asian','Asian'), ('Barbecue','Barbecue'), ('Continental','Continental'), ('Experimental','Experimental'), ('Fusion','Fusion'), ('Indian','Indian'), ('Italian','Italian'), ('Kosher','Kosher'), ('Mediterranean','Mediterranean'), ('Mexican','Mexican'), ('Middle-East','Middle-East'),  ('Nordic','Nordic'),  ('Nouvelle','Nouvelle'),  ('Oceanian','Oceanian'),  ('Sushi','Sushi'),  ('Vegan','Vegan'), ('Vegetarian','Vegetarian'),])
 
+mealTypeList = ([('Breakfast','Breakfast'), ('Lunch','Lunch'), ('Dinner','Dinner'), ('Brunch','Brunch'), ('Snack','Snack'),])
+
 class Html5EmailInput(Input):
     input_type = 'email'
 
 # this class represents the event creation form and its validation methods
 class EventCreationForm(forms.Form): 
-	title = forms.CharField(max_length=100)
-	description = forms.CharField(max_length=300)
+	title = forms.CharField(max_length=100, required=True)
+	description = forms.CharField(max_length=300, required=True)
 	# this field is using a widget -> jquery datepicker (defined as a javascript in the template header)
 	date = forms.DateField(widget=forms.TextInput(attrs={'class':'datepicker'}))
 	cuisineType = forms.ChoiceField(choices=cuisineTypeList, initial='African', required = True,)
+	mealType = forms.ChoiceField(choices=mealTypeList, initial='Breakfast', required = True,)
 	address = forms.CharField(max_length=200)
 	zipCode = forms.CharField(max_length=5)
 	country = forms.ChoiceField(choices=countryList, initial='France', required = True,)
+	entreeInput = forms.CharField(max_length=100)
+	firstCourseInput = forms.CharField(max_length=100)
+	secondCourseInput = forms.CharField(max_length=100)
+	dessertInput = forms.CharField(max_length=100)
+	participantNumber = forms.ChoiceField(choices=((str(x), x) for x in range(1,100)))
 	
 	def clean_zipCode(self):
 		zipCode = self.cleaned_data['zipCode']

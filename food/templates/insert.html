@@ -33,7 +33,22 @@
 		});
 	 
 	});
-	 
+	
+	$(function() {
+		$('#cbshowEntree').click(function(){
+		   $('#divshowEntree').toggle(this.checked);
+		});
+		$('#cbshowFirstCourse').click(function(){
+		   $('#divshowFirstCourse').toggle(this.checked);
+		});
+		$('#cbshowSecondCourse').click(function(){
+		   $('#divshowSecondCourse').toggle(this.checked);
+		});
+		$('#cbshowDessert').click(function(){
+		   $('#divshowDessert').toggle(this.checked);
+		});
+        });
+
 	</script>
 
  
@@ -60,12 +75,18 @@
 
 </div>
 <div class ="displayEvents">
-<p> Your events : </p>
+<p> Upcoming events for you : </p>
 <ul>
 {% for event in events %}
-    <li>on {{ event.dateOfEvent }} : {{ event.title }} - {{event.address}}</li>
+	{% if event.chef.id == userId %}
+    <li><b>on {{ event.dateOfEvent }} : {{ event.title }} - {{event.address}}</b></li>
+	{% else %}
+	<li>on {{ event.dateOfEvent }} : {{ event.title }} - {{event.address}}</li>
+	{% endif %}
     <td><a href="{% url food.views.viewEvent event_id=event.pk %}">See Event</a></td>
+	{% if event.chef.id == userId %}
 	<td><a href="{% url food.views.deleteEvent event_id=event.pk %}">Delete</a></td>
+	{% endif %}
 {% endfor %}
 </ul>
 </div>
@@ -90,6 +111,41 @@
 		<dl>
             <dt> Cuisine : </dt>
             <dd>{{ form.cuisineType }}</dd>
+            <!--<dd>{{ form.date.errors }}</dd>-->
+        </dl>
+		<dl>
+            <dt> Meal Type : </dt>
+            <dd>{{ form.mealType }}</dd>
+            <!--<dd>{{ form.date.errors }}</dd>-->
+        </dl>
+		<br>
+		<br>
+		<div class="menu">
+		<p>Menu :</p>
+		<input type="checkbox" id="cbshowEntree"> Entrée
+		<div id="divshowEntree" style="display:none">
+			{{ form.entreeInput }}
+		</div>
+		<br>
+		<input type="checkbox" id="cbshowFirstCourse"> First Course
+		<div id="divshowFirstCourse" style="display:none">
+			{{ form.firstCourseInput }}
+		</div>
+		<br>
+		<input type="checkbox" id="cbshowSecondCourse"> Second Course
+		<div id="divshowSecondCourse" style="display:none">
+			{{ form.secondCourseInput }}
+		</div>
+		<br>
+		<input type="checkbox" id="cbshowDessert"> Dessert
+		<div id="divshowDessert" style="display:none">
+			{{ form.dessertInput }}
+		</div>
+		</div>
+		<br>
+		<dl>
+            <dt> Number of Participants : </dt>
+            <dd>{{ form.participantNumber }}</dd>
             <!--<dd>{{ form.date.errors }}</dd>-->
         </dl>
 		<table align = "right">
