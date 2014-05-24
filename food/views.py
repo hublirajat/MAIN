@@ -13,6 +13,7 @@ from django.contrib import messages
 from django.db import models
 from django.core.urlresolvers import reverse
 from food.forms import EventCreationForm
+from food.forms import ReviewForm
 from food.forms import RegistrationForm
 from datetime import datetime
 
@@ -22,14 +23,6 @@ from datetime import datetime
 def logout_user(request):
 	logout(request)
 	return render_to_response("index.html")
-
-def indexview(request):
-	variables = {"members" : "Rajat"}
-	return render_to_response("index.html", variables)
-
-def myFirstview(request):
-	variables = {"members" : "Rajat"}
-	return render_to_response("myfirst.html", variables)
 
 #@login_required
 def insertview(request):
@@ -64,6 +57,18 @@ def registerNewUser(request):
 		return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 	return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 
+def viewUserProfile(request, event_id):
+	event1 = Event.objects.get(pk=event_id)
+	eventChef = event1.chef
+	print eventChef
+	user1 = User.objects.get(username = eventChef)
+	myEvents = user1.event_chef.all()
+	firstname = user1.get_profile().firstName
+	lastname = user1.get_profile().lastName
+	variables = { "firstname" : firstname, "lastname" : lastname, "user" : user1, "events" : myEvents}
+	return render_to_response('viewUserProfile.html',variables)
+
+
 # method to create a new event on the dashboard
 def createEvent(request):
 	if request.method == 'POST':
@@ -92,10 +97,35 @@ def createEvent(request):
 	return form # return empty form if everything goes wrong
 
 def viewEvent(request, event_id):
+	flag = False
 	e2 = Event.objects.get(pk=event_id)
 	guests2 = e2.guests.all()
-	variables = {"event" : e2, "guests" : guests2}
+	numberOfGuests = e2.guests.count()
+	reviews = e2.review_set.all()
+	variables = {"event" : e2, "guests" : guests2, "NumberOfGuests" : numberOfGuests, "reviews" : reviews}
 	return render_to_response('viewEvent.html', variables)
+
+def reviewEvent(request, event_id):
+	e2 = Event.objects.get(pk=event_id)
+	print e2.chef
+	if request.method == 'POST':
+		form = ReviewForm(request.POST)
+		if form.is_valid():
+			comment = form.cleaned_data['comment']
+
+			#we retrieve the username which will be the chef
+			theReviewer = User.objects.get(username=request.user.username)
+
+			#we create an event and save it in the db
+			review = Review.objects.create(comment=comment, event=e2, reviewer=theReviewer, review_timestamp=datetime.now())
+			review.save()
+
+	guests2 = e2.guests.all()
+	reviews = e2.review_set.all()
+	numberOfGuests = e2.guests.count()
+	variables = {"event" : e2, "guests" : guests2, "NumberOfGuests" : numberOfGuests, "reviews" : reviews}
+	return render_to_response('viewEvent.html',variables)
+
 
 def searchEvents(request):
 
@@ -115,6 +145,10 @@ def participateInEvents(request, event_id):
 	variables = { "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "event" : e3, "guests" : guests}
 	return render_to_response('joinResult.html',variables)
 
+def acceptGuestsInEvents(request,event_id):
+	event1 = Event.objects.get(pk=event_id)
+
+	#View All the Guests
 def deleteEvent(request, event_id):
 	Event.objects.filter(pk=event_id).delete()
 

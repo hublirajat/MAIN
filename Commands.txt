@@ -1,4 +1,4 @@
->>> 
+>>>
 >>> from django.contrib.auth.models import User
 >>> e1 = Event(title='Lunch', description='Indian Lunch at 1400h', chef = User.objects.get(username='john'))
 >>> e1.save()
@@ -55,4 +55,19 @@ root@rajat-VirtualBox:~/Documents/Workspace# cp -r RCT /home/rajat/
 root@rajat-VirtualBox:~/Documents/Workspace# cd /home/rajat/
 root@rajat-VirtualBox:/home/rajat# la
 ls: cannot access .gvfs: Permission denied
+
+>>> User.objects.get_queryset()
+[<User: cmarques>, <User: chris>, <User: tonysoprano>, <User: soukaina>, <User: boris>, <User: rajhub>, <User: jon>, <User: cyprien>, <User: dan>, <User: cyp>]
+>>> User.objects.get(username="rajhub")
+<User: rajhub>
+>>> u1 = User.objects.get(username="rajhub")
+>>> u1.event_set.all()
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: 'User' object has no attribute 'event_set'
+>>> u1.event_
+u1.event_chef    u1.event_guests  u1.event_liker
+>>> u1.event_chef.all()
+[<Event: going to cook some delicious stuff!>, <Event: Pasta and Pizza>, <Event: Typical Swedish Expensive Dinner>]
+
 
