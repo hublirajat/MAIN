@@ -13,13 +13,14 @@ from django.contrib import messages
 from django.db import models
 from django.core.urlresolvers import reverse
 from food.forms import EventCreationForm
+from food.forms import ReviewForm
 from food.forms import RegistrationForm
 from datetime import datetime
 import urllib
 import urllib2
 import settings
 import json
-from django.db.models import Q 
+from django.db.models import Q
 
 ############################################################################################################################################
 # These methods are not being used (yet) ###################################################################################################
@@ -28,26 +29,18 @@ def logout_user(request):
 	logout(request)
 	return render_to_response("index.html")
 
-def indexview(request):
-	variables = {"members" : "Rajat"}
-	return render_to_response("index.html", variables)
-
-def myFirstview(request):
-	variables = {"members" : "Rajat"}
-	return render_to_response("myfirst.html", variables)
-
 #@login_required
 def insertview(request):
 	#we retrieve the username which will be the chef
 	theUser = User.objects.get(username=request.user.username)
-	
+
 	#we retrieve all events associated to the user to pass it to the frontend
 	e = Event.objects.filter(chef=theUser)
 
 	allEvents = Event.objects.all()
-	
+
 	form = EventCreationForm()
-	
+
 	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
 	return render_to_response("insert.html", variables)
 
@@ -79,6 +72,18 @@ def registerNewUser(request):
 		return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 	return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 
+def viewUserProfile(request, event_id):
+	event1 = Event.objects.get(pk=event_id)
+	eventChef = event1.chef
+	print eventChef
+	user1 = User.objects.get(username = eventChef)
+	myEvents = user1.event_chef.all()
+	firstname = user1.get_profile().firstName
+	lastname = user1.get_profile().lastName
+	variables = { "firstname" : firstname, "lastname" : lastname, "user" : user1, "events" : myEvents}
+	return render_to_response('viewUserProfile.html',variables)
+
+
 # method to create a new event on the dashboard
 def createEvent(request):
 	if request.method == 'POST':
@@ -98,10 +103,10 @@ def createEvent(request):
 			secondCourseInput = form.cleaned_data['secondCourseInput']
 			dessertInput = form.cleaned_data['dessertInput']
 			participantNumber = form.cleaned_data['participantNumber']
-			
+
 			#we retrieve the username which will be the chef
 			theUser = User.objects.get(username=request.user.username)
-		
+
 			#retrieve the coordinates of the given address
 			coordinates = get_coordinates(request,address,zipCode,country)
 			print coordinates
@@ -112,9 +117,9 @@ def createEvent(request):
 			allEvents = Event.objects.all()
 			#we fill out the variables dictionary to pass it to the frontend
 			variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
-			
+
 			fullAddress = address + ", " + zipCode + ", " + country
-			
+
 			#we create an event and save it in the db
 			if(coordinates[0] != 0 or coordinates [1] != 0):
 				event = Event.objects.create(title=title, description=description, chef=theUser, creation_timestamp=datetime.now(), dateOfEvent=date, address=fullAddress, latitude=coordinates[0], longitude=coordinates[1],cuisineType=cuisineType,mealType=mealType,menuEntree=entreeInput,menuFirstCourse=firstCourseInput,menuSecondCourse=secondCourseInput,menuDessert=dessertInput,numberOfParticipants=participantNumber)
@@ -130,11 +135,38 @@ def createEvent(request):
 	return form # return empty form if everything goes wrong
 
 def viewEvent(request, event_id):
+	flag = False
 	e2 = Event.objects.get(pk=event_id)
 	allEvents = Event.objects.all()
 	guests2 = e2.guests.all()
-	variables = {"event" : e2, "guests" : guests2, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "user" : request.user, "allEvents" : allEvents}
+	numberOfGuests = e2.guests.count()
+	reviews = e2.review_set.all()
+	firstname = request.user.get_profile().firstName
+	lastname = request.user.get_profile().lastName
+	variables = {"event" : e2, "guests" : guests2, "firstname" : firstname, "lastname" : lastname, "userId" : request.user.id, "user" : request.user, "allEvents" : allEvents, "NumberOfGuests" : numberOfGuests, "reviews" : reviews}
 	return render_to_response('viewEvent.html', variables)
+
+def reviewEvent(request, event_id):
+	e2 = Event.objects.get(pk=event_id)
+	print e2.chef
+	if request.method == 'POST':
+		form = ReviewForm(request.POST)
+		if form.is_valid():
+			comment = form.cleaned_data['comment']
+
+			#we retrieve the username which will be the chef
+			theReviewer = User.objects.get(username=request.user.username)
+
+			#we create an event and save it in the db
+			review = Review.objects.create(comment=comment, event=e2, reviewer=theReviewer, review_timestamp=datetime.now())
+			review.save()
+
+	guests2 = e2.guests.all()
+	reviews = e2.review_set.all()
+	numberOfGuests = e2.guests.count()
+	variables = {"event" : e2, "guests" : guests2, "NumberOfGuests" : numberOfGuests, "reviews" : reviews}
+	return render_to_response('viewEvent.html',variables)
+
 
 def searchEvents(request):
 
@@ -154,6 +186,10 @@ def participateInEvents(request, event_id):
 	variables = { "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "event" : e3, "guests" : guests}
 	return render_to_response('joinResult.html',variables)
 
+def acceptGuestsInEvents(request,event_id):
+	event1 = Event.objects.get(pk=event_id)
+
+	#View All the Guests
 def deleteEvent(request, event_id):
 	Event.objects.filter(pk=event_id).delete()
 
@@ -163,7 +199,7 @@ def deleteEvent(request, event_id):
 	e = Event.objects.filter(chef=theUser)
 	# create an empty form
 	form = createEvent(request)
-	
+
 	allEvents = Event.objects.all()
 	# fill out the variables dictionary to pass to the front end
 	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
@@ -198,11 +234,11 @@ def login_user(request):
 					e = Event.objects.filter(chef=user).order_by('dateOfEvent')
 					e1 = Event.objects.filter(guests=user).order_by('dateOfEvent')
 					e2 = e | e1
-				
-					
+
+
 					# create an empty form
 					form = createEvent(request)
-					
+
 					allEvents = Event.objects.all()
 
 					# fill out the variables dictionary to pass to the front end
@@ -211,7 +247,7 @@ def login_user(request):
 			else:
 				messages.error(request, 'Wrong password for user ' + username)
 	return render_to_response('index.html', context_instance=RequestContext(request))
-	
+
 def get_coordinates(request,address,zipCode,country):
 	coordinates = (0,0)
 	address = urllib.quote_plus(address)

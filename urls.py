@@ -5,13 +5,13 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', 'food.views.indexview', name='index'),
-	(r'indexview', 'food.views.indexview'),
-	(r'myFirstview', 'food.views.myFirstview'),
+    #url(r'^$', 'food.views.indexview', name='index'),
     url(r'^insertview/$', 'food.views.insertview', name='insertview'),
 	url(r'^register/$', 'food.views.registerNewUser', name='register'),
 	url(r'^createEvent/$', 'food.views.createEvent', name='createEvent'),
+    url(r'^reviewEvent/(?P<event_id>[\d]+)$', 'food.views.reviewEvent', name='reviewEvent'),
     url(r'^viewEvent/(?P<event_id>[\d]+)$', 'food.views.viewEvent', name='viewEvent'),
+    url(r'^viewUserProfile/(?P<event_id>[\d]+)$', 'food.views.viewUserProfile', name='viewUserProfile'),
     url(r'^searchEvents/$', 'food.views.searchEvents', name='searchEvents'),
     url(r'^participateInEvents/(?P<event_id>[\d]+)$', 'food.views.participateInEvents', name='participateInEvents'),
 	url(r'^deleteEvent/(?P<event_id>[\d]+)$', 'food.views.deleteEvent', name='deleteEvent'),
