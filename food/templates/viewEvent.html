@@ -34,20 +34,41 @@
     </section>
 </div>
 <div class = "welcomeHeader">
-<h2> Hello {{ firstname }} {{ lastname }}! Welcome to the Fooding Dashboard </h2>
+<h2>  Welcome to the Fooding Dashboard </h2>
 </div>
 <div class ="viewEvent">
 <p> Here are some details for the Event : </p>
 <ul>
 <li>{{ event.title }} - {{event.description}}</li>
 <td>Date and Time of the Event: {{ event.dateOfEvent }}</td><br>
-<td>Created by {{event.chef}}</td><br>
+<td>Created by {{event.chef}}<a href="{% url "food.views.viewUserProfile" event_id=event.pk%}"> View Owner </a></td><br>
+<td>Number of Guests who wish to Join: {{ NumberOfGuests }} </td><br>
 {% for guest in guests %}
     <td>Participants: {{guest}}</td><br>
 {% endfor %}
-<td><a href="{% url "food.views.participateInEvents" event_id=event.pk %}">Participate</a></td>
+<td><a href="{% url "food.views.participateInEvents" event_id=event.pk %}">Participate</a></td><br>
+<td>Accepted Guests:  </td><br>
+<p>Event Reviews and Comments: </p><br>
+{% for review in reviews %}
+    <li>{{review.comment}} : By {{review.reviewer}}</li><br>
+{% endfor %}
 
 </ul>
+</div>
+<div class="reviewEvent">
+    <h3> Review an Event </h3>
+    <form id="reviewEvent" action="{% url "food.views.reviewEvent" event_id=event.pk %}" method="post" class="niceform" novalidate>
+        <label for="comment">Review or Comment:</label>
+        <input type="text" name="comment" id="comment">
+        <dl>
+            <dd></dd>
+            <dd>
+            <div class="registerButtons">
+                <input type="submit" value="Review Event" class="button" />
+            </div>
+            </dd>
+        </dl>
+    </form>
 </div>
 </body>
 </html>
