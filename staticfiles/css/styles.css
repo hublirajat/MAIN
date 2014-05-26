@@ -84,7 +84,7 @@ abbr {
 	font-family: 'Montserrat', sans-serif;
 	font-size:100%;
 	text-align:justify;
-	margin-left:90%;
+	margin-left:85%;
 	color: #7D775C;
 }
 
@@ -239,6 +239,24 @@ width: 35%;
 .viewEvent p {
 font: italic 1.1em/2.2 georgia; 
 text-align: left;
+}
+
+.notifications {
+position:absolute;
+top: 25%;
+left: 20%;
+width: 50%;
+border-style:solid;
+border-width:1px;
+padding: 1% 1%;
+}
+.notifications p {
+font: italic 0.9em/2.2 georgia; 
+text-align: left;
+animation-name: blinker;
+animation-duration: 1s;
+animation-timing-function: linear;
+animation-iteration-count: infinite;
 }
 
 .welcomeHeader {
@@ -547,4 +565,26 @@ background: url('/site_media/img/facebook.png') no-repeat;
 
 .show_hide {
     display:none;
+}
+
+.blink_me {
+	position:relative;
+	float:left;
+	color:fireBrick;
+	font-size:70%;
+	 
+    -webkit-animation-name: blinker;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+
+    -moz-animation-name: blinker;
+    -moz-animation-duration: 1s;
+    -moz-animation-timing-function: linear;
+    -moz-animation-iteration-count: infinite;
+
+    animation-name: blinker;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
 }

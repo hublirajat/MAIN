@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response
-from food.models import Event, Review, UserProfile
+from food.models import Event, Review, UserProfile, Notify
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.forms.widgets import Input
@@ -34,14 +34,20 @@ def insertview(request):
 	#we retrieve the username which will be the chef
 	theUser = User.objects.get(username=request.user.username)
 
-	#we retrieve all events associated to the user to pass it to the frontend
-	e = Event.objects.filter(chef=theUser)
+	# get all events associated to the user
+	e1 = Event.objects.filter(chef=theUser).order_by('dateOfEvent')
+	e2 = Event.objects.filter(guests=theUser).order_by('dateOfEvent')
+	e3 = e2 | e1
+	e = e3.distinct()
 
 	allEvents = Event.objects.all()
 
 	form = EventCreationForm()
+	
+	notifications = Notify.objects.filter(user=request.user)
 
-	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
+	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents, "notifications" : notifications}
+	
 	return render_to_response("insert.html", variables)
 
 ############################################################################################################################################
@@ -143,7 +149,8 @@ def viewEvent(request, event_id):
 	reviews = e2.review_set.all()
 	firstname = request.user.get_profile().firstName
 	lastname = request.user.get_profile().lastName
-	variables = {"event" : e2, "guests" : guests2, "firstname" : firstname, "lastname" : lastname, "userId" : request.user.id, "user" : request.user, "allEvents" : allEvents, "NumberOfGuests" : numberOfGuests, "reviews" : reviews}
+	notifications = Notify.objects.filter(user=request.user)
+	variables = {"event" : e2, "guests" : guests2, "firstname" : firstname, "lastname" : lastname, "userId" : request.user.id, "user" : request.user, "allEvents" : allEvents, "NumberOfGuests" : numberOfGuests, "reviews" : reviews, "notifications" : notifications}
 	return render_to_response('viewEvent.html', variables)
 
 def reviewEvent(request, event_id):
@@ -169,41 +176,88 @@ def reviewEvent(request, event_id):
 
 
 def searchEvents(request):
-
+	notifications = Notify.objects.filter(user=request.user)
 	e1 = Event.objects.filter()
-	variables = { "outputEvents" : e1, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id}
+	variables = { "outputEvents" : e1, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "notifications" : notifications}
 	return render_to_response('searchEventsResults.html',variables)
+	
+def viewNotifications(request):
 
-def participateInEvents(request, event_id):
+	notifications = Notify.objects.filter(user=request.user)
+	
+	variables = { "notifications" : notifications, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id}
+	return render_to_response('viewNotifications.html',variables)
 
+def participateInEvents(request,event_id):
 	e3 = Event.objects.get(pk=event_id)
-	theUser = User.objects.get(username=request.user.username)
+	message = "The user " + str(request.user.username) + " has just requested participation in your event!"
+	
+	notification = Notify.objects.create(event=e3,sender=request.user,user=e3.chef,text=message, type="ApprovalRequest")
+	
+	variables = { "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "notification" : notification}
+	return render_to_response('joinResult.html',variables)
+	
+def approveRequest(request, notification_id):
+	notification = Notify.objects.get(pk=notification_id)
+	e3 = Event.objects.get(pk=notification.event.pk)
+	theUser = User.objects.get(username=notification.sender)
 	e3.guests.add(theUser)
 	e3.save()
+	
+	message = "The user " + str(request.user.username) + " has approved your request for the event!"
+	
+	notification = Notify.objects.create(event=e3,sender=request.user,user=notification.sender,text=message, type="ApprovalReply")
+	
+	Notify.objects.filter(pk=notification_id).delete()
+	
+	notifications = Notify.objects.filter(user=request.user)
+	
+	print e3.numberOfParticipants
+	print e3.guests.all().count()
+	if(e3.guests.all().count() >= e3.numberOfParticipants):
+		message = "Your event is now full and closed for participation!"
+		notification = Notify.objects.create(event=e3,sender=request.user,user=request.user,text=message, type="FullEvent")
+		print notification
 
 	guests = e3.guests.all()
-	#e33 = Event.objects.filter(pk=event_id)
-	variables = { "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "event" : e3, "guests" : guests}
-	return render_to_response('joinResult.html',variables)
+	
+	variables = { "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "event" : e3, "guests" : guests, "notifications" : notifications}
+	return render_to_response('viewNotifications.html',variables)
 
 def acceptGuestsInEvents(request,event_id):
 	event1 = Event.objects.get(pk=event_id)
 
 	#View All the Guests
 def deleteEvent(request, event_id):
-	Event.objects.filter(pk=event_id).delete()
-
 	#we retrieve the username which will be the chef
 	theUser = User.objects.get(username=request.user.username)
 	# get all events associated to the user
 	e = Event.objects.filter(chef=theUser)
 	# create an empty form
 	form = createEvent(request)
+	
+	event = Event.objects.get(pk=event_id)
+	
+	#notify everyone involved of the deletion of the event
+	for guest in event.guests.all():
+		message = "The event has been deleted by the owner."	
+		notification = Notify.objects.create(event=event,sender=request.user,user=guest,text=message, type="DeleteEvent")
+		print notification
 
 	allEvents = Event.objects.all()
+	
+	Event.objects.filter(pk=event_id).delete()
 	# fill out the variables dictionary to pass to the front end
 	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
 	return render_to_response('insert.html', variables)
+	
+def deleteNotification(request, notification_id):
+	Notify.objects.filter(pk=notification_id).delete()
+
+	notifications = Notify.objects.filter(user=request.user)
+	
+	variables = { "notifications" : notifications, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id}
+	return render_to_response('viewNotifications.html',variables)
 
 # generic success method, not being used at all
 def success(request):
@@ -231,18 +285,20 @@ def login_user(request):
 					login(request, user)
 
 					# get all events associated to the user
-					e = Event.objects.filter(chef=user).order_by('dateOfEvent')
-					e1 = Event.objects.filter(guests=user).order_by('dateOfEvent')
-					e2 = e | e1
-
+					e1 = Event.objects.filter(chef=user).order_by('dateOfEvent')
+					e2 = Event.objects.filter(guests=user).order_by('dateOfEvent')
+					e3 = e2 | e1
+					e = e3.distinct()
 
 					# create an empty form
 					form = createEvent(request)
 
 					allEvents = Event.objects.all()
+					
+					notifications = Notify.objects.filter(user=user)
 
 					# fill out the variables dictionary to pass to the front end
-					variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e2, "form" : form, "allEvents" : allEvents}
+					variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents, "notifications" : notifications}
 					return render_to_response('insert.html', variables)
 			else:
 				messages.error(request, 'Wrong password for user ' + username)

@@ -48,6 +48,13 @@
 		   $('#divshowDessert').toggle(this.checked);
 		});
         });
+		
+		function blinker() {
+			$('.blink_me').fadeOut(500);
+			$('.blink_me').fadeIn(500);
+		}
+
+		setInterval(blinker, 1000);
 
 	</script>
 
@@ -60,6 +67,17 @@
 		<header role="banner">
 			<h1></h1>
 			<div class="user_panel">
+				{% if notifications %}
+				<a href="{% url food.views.viewNotifications %}">
+				<input type="image" id="myimage" src="/site_media/img/notificationOn.png" title="Notifications" style="display: block;"/><div class="blink_me"> Notifications! </div></a>
+				
+				{% else %}
+				<a href="{% url food.views.viewNotifications %}">
+				<input type="image" id="myimage" src="/site_media/img/notificationOff.png" title="Notifications" style="display: block;"/>
+				</a>
+				{% endif %}
+				<br>
+				<br>
 				<a href="/logout/">Logout</a>
 			</div>
 		</header>

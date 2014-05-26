@@ -10,6 +10,16 @@
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+	<script type="text/javascript">
+		
+		function blinker() {
+			$('.blink_me').fadeOut(500);
+			$('.blink_me').fadeIn(500);
+		}
+
+		setInterval(blinker, 1000);
+
+	</script>
 </head>
 <body id="css-zen-garden">
 <div class="page-wrapper">
@@ -17,9 +27,18 @@
         <header role="banner">
             <h1></h1>
             <div class="user_panel">
-                <a href="/logout/">Logout</a>
+                {% if notifications %}
+				<a href="{% url food.views.viewNotifications %}">
+				<input type="image" id="myimage" src="/site_media/img/notificationOn.png" title="Notifications" style="display: block;"/><div class="blink_me"> Notifications! </div></a>
+				
+				{% else %}
+				<a href="{% url food.views.viewNotifications %}">
+				<input type="image" id="myimage" src="/site_media/img/notificationOff.png" title="Notifications" style="display: block;"/>
+				</a>
+				{% endif %}
 				<br>
 				<br>
+                <a href="/logout/">Logout</a> | 
 				<a href="/insertview/">Home</a>
             </div>
         </header>
@@ -86,7 +105,7 @@
 {% if event.chef.id != userId  %}
 	{% if event.guests.count < event.numberOfParticipants %}
 	{% if user not in guests %}
-<td><a href="{% url food.views.participateInEvents event_id=event.pk %}">Participate</a></td>
+<td><a href="{% url food.views.participateInEvents event_id=event.pk%}">Participate</a></td>
 	{% endif %}
 	{% else %}
 <p style="color: red"> This event has reached the limit of participants. </p> 

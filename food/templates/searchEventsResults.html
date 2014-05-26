@@ -9,17 +9,16 @@
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <link rel="stylesheet" href="/resources/demos/style.css">
-    <script type="text/javascript">
-      $(function() {
-        $( ".datepicker" ).datepicker({
-          changeMonth: true,
-          changeYear: true,
-          yearRange: "1900:2012",
-          // You can put more options here.
+	<script type="text/javascript">
+		
+		function blinker() {
+			$('.blink_me').fadeOut(500);
+			$('.blink_me').fadeIn(500);
+		}
 
-        });
-      });
-    </script>
+		setInterval(blinker, 1000);
+
+	</script>
 </head>
 <body id="css-zen-garden">
 <div class="page-wrapper">
@@ -27,9 +26,18 @@
         <header role="banner">
             <h1></h1>
             <div class="user_panel">
-                <a href="/logout/">Logout</a>
+				{% if notifications %}
+				<a href="{% url food.views.viewNotifications %}">
+				<input type="image" id="myimage" src="/site_media/img/notificationOn.png" title="Notifications" style="display: block;"/><div class="blink_me"> Notifications! </div></a>
+				
+				{% else %}
+				<a href="{% url food.views.viewNotifications %}">
+				<input type="image" id="myimage" src="/site_media/img/notificationOff.png" title="Notifications" style="display: block;"/>
+				</a>
+				{% endif %}
 				<br>
 				<br>
+                <a href="/logout/">Logout</a> | 
 				<a href="/insertview/">Home</a>
             </div>
         </header>

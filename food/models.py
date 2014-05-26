@@ -56,13 +56,14 @@ class Likes(models.Model):
 
 # this class models a notification
 class Notify(models.Model):
-    event = models.ForeignKey(Event)
-    sender = models.ForeignKey(User, related_name="sender")
-    user = models.ForeignKey(User, related_name="userid")
-    text = models.CharField(max_length=200)
+	event = models.ForeignKey(Event)
+	sender = models.ForeignKey(User, related_name="sender")
+	user = models.ForeignKey(User, related_name="userid")
+	text = models.CharField(max_length=200)
+	type = models.CharField(max_length=100)
 
-    def __unicode__(self):
-        return self.text
+	def __unicode__(self):
+		return self.text + self.type + str(self.user) + str(self.sender)
 
 # this class models the user profile - it extends the regular User class, in order to add more fields
 class UserProfile(models.Model):  

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fooding Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/site_media/css/styles.css">
+    <meta charset="utf-8">
+    <title>jQuery UI Datepicker - Default functionality</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+</head>
+<body id="css-zen-garden">
+<div class="page-wrapper">
+    <section class="intro" id="zen-intro">
+        <header role="banner">
+            <h1></h1>
+            <div class="user_panel">
+                <a href="/logout/">Logout</a>
+				<br>
+				<br>
+				<a href="/insertview/">Home</a>
+            </div>
+        </header>
+        </div>
+    </section>
+</div>
+<div class = "welcomeHeader">
+<h2> Notifications for {{ firstname }} {{ lastname }}! </h2>
+</div>
+<div class ="notifications">
+{% if notifications %}
+{% for notification in notifications %} 
+<p> Sent by : {{ notification.sender }} </p>
+<p> Event : {{ notification.event }} </p>
+<br>
+<p> {{ notification.text }} </p>
+<br>
+{% if notification.type == "ApprovalRequest" %}
+<td><a href="{% url food.views.approveRequest notification_id=notification.pk|event_id=event_id %}">Approve Request</a></td>
+{% endif %}
+&nbsp; | &nbsp;
+<td><a href="{% url food.views.deleteNotification notification_id=notification.pk %}">Delete Notification</a></td>
+{% endfor %}
+{% else %} 
+<p style="text-align:center"> You have no new notifications! <p>
+{% endif %}
+</div>
+</body>
+</html>
