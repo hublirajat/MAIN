@@ -65,7 +65,7 @@
 
 {% if event.menuEntree != '' %} 
 
-<td> Entrée : {{event.menuEntree}} </td>
+<td> Entrée : <a href={{entreeWikiUrl}}>{{event.menuEntree}}</a> </td>
 
 {% endif %}
 
@@ -73,7 +73,7 @@
 
 {% if event.menuFirstCourse != '' %} 
 
-<td> First Course : {{event.menuFirstCourse}} </td>
+<td> First Course : <a href={{firstCourseWikiUrl}}>{{event.menuFirstCourse}}</a> </td>
 
 {% endif %}
 
@@ -81,7 +81,7 @@
 
 {% if event.menuSecondCourse != '' %} 
 
-<td> Second Course : {{event.menuSecondCourse}} </td>
+<td> Second Course : <a href={{secondCourseWikiUrl}}>{{event.menuSecondCourse}}</a> </td>
 
 {% endif %}
 
@@ -89,7 +89,7 @@
 
 {% if event.menuDessert != '' %} 
 
-<td> Dessert : {{event.menuDessert}} </td>
+<td> Dessert : <a href={{dessertWikiUrl}}>{{event.menuDessert}}</a> </td>
 
 {% endif %}
 

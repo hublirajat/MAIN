@@ -141,6 +141,7 @@ def createEvent(request):
 	return form # return empty form if everything goes wrong
 
 def viewEvent(request, event_id):
+
 	flag = False
 	e2 = Event.objects.get(pk=event_id)
 	allEvents = Event.objects.all()
@@ -150,7 +151,37 @@ def viewEvent(request, event_id):
 	firstname = request.user.get_profile().firstName
 	lastname = request.user.get_profile().lastName
 	notifications = Notify.objects.filter(user=request.user)
-	variables = {"event" : e2, "guests" : guests2, "firstname" : firstname, "lastname" : lastname, "userId" : request.user.id, "user" : request.user, "allEvents" : allEvents, "NumberOfGuests" : numberOfGuests, "reviews" : reviews, "notifications" : notifications}
+	
+	#get entree wiki article
+	httpRequest = "http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" + e2.menuEntree
+	data = urllib2.urlopen(httpRequest)
+	djson = data.read()
+	myData = json.loads(djson)
+	entreeWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
+	
+	#get firstCourse wiki article
+	httpRequest = "http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" + e2.menuFirstCourse
+	data = urllib2.urlopen(httpRequest)
+	djson = data.read()
+	myData = json.loads(djson)
+	firstCourseWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
+	
+	#get secondCourse wiki article
+	httpRequest = "http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" + e2.menuSecondCourse
+	data = urllib2.urlopen(httpRequest)
+	djson = data.read()
+	myData = json.loads(djson)
+	secondCourseWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
+	
+	#get dessert wiki article
+	httpRequest = "http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" + e2.menuDessert
+	data = urllib2.urlopen(httpRequest)
+	djson = data.read()
+	myData = json.loads(djson)
+	dessertWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
+	
+	variables = {"event" : e2, "guests" : guests2, "firstname" : firstname, "lastname" : lastname, "userId" : request.user.id, "user" : request.user, "allEvents" : allEvents, "NumberOfGuests" : numberOfGuests, "reviews" : reviews, "notifications" : notifications, "entreeWikiUrl" : entreeWikiUrl, "firstCourseWikiUrl" : firstCourseWikiUrl, "secondCourseWikiUrl" : secondCourseWikiUrl, "dessertWikiUrl" : dessertWikiUrl }
+	
 	return render_to_response('viewEvent.html', variables)
 
 def reviewEvent(request, event_id):

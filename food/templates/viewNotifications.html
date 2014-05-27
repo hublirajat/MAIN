@@ -38,7 +38,7 @@
 <p> {{ notification.text }} </p>
 <br>
 {% if notification.type == "ApprovalRequest" %}
-<td><a href="{% url food.views.approveRequest notification_id=notification.pk|event_id=event_id %}">Approve Request</a></td>
+<td><a href="{% url food.views.approveRequest notification_id=notification.pk %}">Approve Request</a></td>
 {% endif %}
 &nbsp; | &nbsp;
 <td><a href="{% url food.views.deleteNotification notification_id=notification.pk %}">Delete Notification</a></td>
