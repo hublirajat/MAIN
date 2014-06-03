@@ -17,9 +17,7 @@
         <header role="banner">
             <h1></h1>
             <div class="user_panel">
-                <a href="/logout/">Logout</a>
-				<br>
-				<br>
+                <a href="/logout/">Logout</a> | <a href="{% url food.views.viewUserProfile user_id=userId %}">Profile</a> |
 				<a href="/insertview/">Home</a>
             </div>
         </header>

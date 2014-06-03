@@ -9,16 +9,6 @@
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <link rel="stylesheet" href="/resources/demos/style.css">
-	<script type="text/javascript">
-		
-		function blinker() {
-			$('.blink_me').fadeOut(500);
-			$('.blink_me').fadeIn(500);
-		}
-
-		setInterval(blinker, 1000);
-
-	</script>
 </head>
 <body id="css-zen-garden">
 <div class="page-wrapper">
@@ -37,7 +27,7 @@
 				{% endif %}
 				<br>
 				<br>
-                <a href="/logout/">Logout</a> | 
+                <a href="/logout/">Logout</a> | <a href="{% url food.views.viewUserProfile user_id=userId %}">Profile</a> |
 				<a href="/insertview/">Home</a>
             </div>
         </header>

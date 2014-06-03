@@ -19,7 +19,7 @@
 </div>
 <div class="summary">
 	<h2> Register </h2>
-    <form id="register" action="{% url register %}" method="post" class="niceform" novalidate>{% csrf_token %}
+    <form id="register" action="{% url register %}" method="post" class="niceform" enctype="multipart/form-data" novalidate>{% csrf_token %}
         <dl>
             <dt> Username : </dt>
             <dd>{{ form.username }}</dd>
@@ -50,6 +50,31 @@
             <dd>{{ form.passwordConfirmation }}</dd>
             <dd>{{ form.passwordConfirmation.errors }}</dd>
         </dl>
+		<dl>
+			<dt>Profile Picture : </dt>
+			 <dd>{{ form.profilePicture }}</dd>
+			 <dd>{{ form.profilePicture.errors }}</dd>
+		</dl>
+		<dl>
+			<dt>Gender : </dt>
+			 <dd>{{ form.gender }}</dd>
+			 <dd>{{ form.gender.errors }}</dd>
+		</dl>
+		<dl>
+			<dt>Address : </dt>
+			 <dd>{{ form.address }}</dd>
+			 <dd>{{ form.address.errors }}</dd>
+		</dl>
+		<dl>
+			<dt>Zip Code : </dt>
+			 <dd>{{ form.zipCode }}</dd>
+			 <dd>{{ form.zipCode.errors }}</dd>
+		</dl>
+		<dl>
+			<dt>Country : </dt>
+			 <dd>{{ form.country }}</dd>
+			 <dd>{{ form.country.errors }}</dd>
+		</dl>
         <br>
 		<br>
 		<br>

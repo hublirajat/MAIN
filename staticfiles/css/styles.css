@@ -563,6 +563,14 @@ background: url('/site_media/img/facebook.png') no-repeat;
 	margin-left:50%;
 }
 
+.profilePicture{ 
+	height: 23%; 
+	width: 23%; 
+	position:relative; 
+	margin-top:7%; 
+	margin-left:60%;
+}
+
 .show_hide {
     display:none;
 }

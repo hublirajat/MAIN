@@ -38,7 +38,7 @@
 				{% endif %}
 				<br>
 				<br>
-                <a href="/logout/">Logout</a> | 
+                <a href="/logout/">Logout</a> | <a href="{% url food.views.viewUserProfile user_id=userId %}">Profile</a> |
 				<a href="/insertview/">Home</a>
             </div>
         </header>
@@ -55,7 +55,7 @@
 <td> This event is a {{event.mealType}}, of {{event.cuisineType}} cuisine</td><br>
 <td>Date and Time of the Event: {{ event.dateOfEvent }}</td><br>
 <td>Address : {{ event.address }}</td><br>
-<td>Created by {{event.chef}} on {{event.creation_timestamp}}</td><br>
+<td>Created by <a href="{% url food.views.viewUserProfile user_id=event.chef.pk %}">{{event.chef}}</a> on {{event.creation_timestamp}}</td><br>
 
 <br>
 
@@ -100,7 +100,7 @@
  <td>Participants: {{ event.guests.count }} out of {{ event.numberOfParticipants}} </td>
  <br>
 {% for guest in guests %}
-    <td> {{guest}} </td><br>
+    <td><a href="{% url food.views.viewUserProfile user_id=guest.pk %}"> {{guest}} </a></td><br>
 {% endfor %}
 {% if event.chef.id != userId  %}
 	{% if event.guests.count < event.numberOfParticipants %}

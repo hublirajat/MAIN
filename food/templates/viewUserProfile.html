@@ -9,17 +9,6 @@
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <link rel="stylesheet" href="/resources/demos/style.css">
-    <script type="text/javascript">
-      $(function() {
-        $( ".datepicker" ).datepicker({
-          changeMonth: true,
-          changeYear: true,
-          yearRange: "1900:2012",
-          // You can put more options here.
-
-        });
-      });
-    </script>
 </head>
 <body id="css-zen-garden">
 <div class="page-wrapper">
@@ -27,27 +16,40 @@
         <header role="banner">
             <h1></h1>
             <div class="user_panel">
-                <a href="/logout/">Logout</a>
+                <a href="/logout/">Logout</a> |
+				<a href="/insertview/">Home</a>
             </div>
         </header>
         </div>
     </section>
 </div>
 <div class = "welcomeHeader">
-<h2> Checking  {{ firstname }} {{ lastname }} </h2>
+<h2> User Profile of {{ firstname }} {{ lastname }} </h2>
 </div>
 <div class ="viewEvent">
 <p> Here are some details of the user : </p>
 <ul>
-<td>{{ firstname }}</td><br>
-<td>{{ lastname }}</td><br>
+<td>User Name : {{ user.username }}</td><br>
+<td>First Name : {{ firstname }}</td><br>
+<td>Last Name : {{ lastname }}</td><br>
+<td>Gender : {{ user.get_profile.gender }}</td><br>
+<td>Address : {{ user.get_profile.address }}, {{ user.get_profile.zipCode }}, {{ user.get_profile.country }}</td><br>
+<br>
+<br>
 <p> Here are some Events Hosted by the user : </p>
 <ul>
 {% for event in events %}
     <li>on {{ event.dateOfEvent }} : {{ event.title }} - {{event.description}}</li>
-    <td><a href="{% url "food.views.viewEvent" event_id=event.pk %}">See Event</a></td>
+    <td><a href="{% url food.views.viewEvent event_id=event.pk %}">See Event</a></td>
 {% endfor %}
 </ul>
+</div>
+<div class="profilePicture">
+{% ifequal object.image None %}
+    <img src="/site_media/img/default_profile.jpg" width="150px" height="150px"/>
+{% else %}
+   <img src="{{ user.get_profile.profilePicture.image.path }} width="150px" height="150px"/>
+{% endifequal %}
 </div>
 </body>
 </html>

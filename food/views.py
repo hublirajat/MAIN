@@ -59,7 +59,8 @@ class Html5EmailInput(Input):
 # method to register a new user - first checks if the form is valid and then registers a new user
 def registerNewUser(request):
 	if request.method == 'POST': # If the form has been submitted...
-		form = RegistrationForm(request.POST) # A form bound to the POST data
+		form = RegistrationForm(request.POST,request.FILES) # A form bound to the POST data
+		print form.errors
 		if form.is_valid(): # All validation rules pass
 			username = form.cleaned_data['username']
 			firstname = form.cleaned_data['firstname']
@@ -67,10 +68,15 @@ def registerNewUser(request):
 			email = form.cleaned_data['email']
 			password = form.cleaned_data['password']
 			passwordConfirmation = form.cleaned_data['passwordConfirmation']
+			gender = form.cleaned_data['gender']
+			profilePicture = form.cleaned_data['profilePicture']
+			address = form.cleaned_data['address']
+			zipCode = form.cleaned_data['zipCode']
+			country = form.cleaned_data['country']
 
 			# we now register the user
 			user = User.objects.create_user(username=username,email=email,password=password)
-			profile = UserProfile.objects.create(user=user,firstName=firstname,lastName=lastname)
+			profile = UserProfile.objects.create(user=user,firstName=firstname,lastName=lastname,gender=gender,profilePicture=profilePicture,address=address,zipCode=zipCode,country=country)
 
 			return render_to_response('index.html', context_instance=RequestContext(request))
 	else:
@@ -78,15 +84,13 @@ def registerNewUser(request):
 		return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 	return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 
-def viewUserProfile(request, event_id):
-	event1 = Event.objects.get(pk=event_id)
-	eventChef = event1.chef
-	print eventChef
-	user1 = User.objects.get(username = eventChef)
-	myEvents = user1.event_chef.all()
-	firstname = user1.get_profile().firstName
-	lastname = user1.get_profile().lastName
-	variables = { "firstname" : firstname, "lastname" : lastname, "user" : user1, "events" : myEvents}
+def viewUserProfile(request, user_id):
+	user = User.objects.get(pk = user_id)
+	userEvents = Event.objects.filter(chef=user)
+	firstname = user.get_profile().firstName
+	lastname = user.get_profile().lastName
+
+	variables = { "firstname" : firstname, "lastname" : lastname, "user" : user, "events" : userEvents}
 	return render_to_response('viewUserProfile.html',variables)
 
 
@@ -225,7 +229,7 @@ def participateInEvents(request,event_id):
 	
 	notification = Notify.objects.create(event=e3,sender=request.user,user=e3.chef,text=message, type="ApprovalRequest")
 	
-	variables = { "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "notification" : notification}
+	variables = { "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "notification" : notification}
 	return render_to_response('joinResult.html',variables)
 	
 def approveRequest(request, notification_id):
@@ -252,7 +256,7 @@ def approveRequest(request, notification_id):
 
 	guests = e3.guests.all()
 	
-	variables = { "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "event" : e3, "guests" : guests, "notifications" : notifications}
+	variables = { "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "event" : e3, "guests" : guests, "notifications" : notifications}
 	return render_to_response('viewNotifications.html',variables)
 
 def acceptGuestsInEvents(request,event_id):
