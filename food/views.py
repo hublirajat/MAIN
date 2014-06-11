@@ -21,6 +21,8 @@ import urllib2
 import settings
 import json
 from django.db.models import Q
+from django.core import serializers
+from django.contrib.auth.models import AnonymousUser
 
 ############################################################################################################################################
 # These methods are not being used (yet) ###################################################################################################
@@ -48,7 +50,7 @@ def insertview(request):
 
 	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents, "notifications" : notifications}
 	
-	return render_to_response("insert.html", variables)
+	return render_to_response("insert.html", variables, context_instance=RequestContext(request))
 
 ############################################################################################################################################
 
@@ -91,7 +93,7 @@ def viewUserProfile(request, user_id):
 	lastname = user.get_profile().lastName
 
 	variables = { "firstname" : firstname, "lastname" : lastname, "user" : user, "events" : userEvents}
-	return render_to_response('viewUserProfile.html',variables)
+	return render_to_response('viewUserProfile.html',variables, context_instance=RequestContext(request))
 
 
 # method to create a new event on the dashboard
@@ -114,6 +116,8 @@ def createEvent(request):
 			dessertInput = form.cleaned_data['dessertInput']
 			participantNumber = form.cleaned_data['participantNumber']
 
+			print request.user.username
+			
 			#we retrieve the username which will be the chef
 			theUser = User.objects.get(username=request.user.username)
 
@@ -188,6 +192,7 @@ def viewEvent(request, event_id):
 	
 	return render_to_response('viewEvent.html', variables)
 
+# this method represents the act of reviewing a given event
 def reviewEvent(request, event_id):
 	e2 = Event.objects.get(pk=event_id)
 	print e2.chef
@@ -207,22 +212,24 @@ def reviewEvent(request, event_id):
 	reviews = e2.review_set.all()
 	numberOfGuests = e2.guests.count()
 	variables = {"event" : e2, "guests" : guests2, "NumberOfGuests" : numberOfGuests, "reviews" : reviews}
-	return render_to_response('viewEvent.html',variables)
+	return render_to_response('viewEvent.html',variables, context_instance=RequestContext(request))
 
 
 def searchEvents(request):
 	notifications = Notify.objects.filter(user=request.user)
 	e1 = Event.objects.filter()
 	variables = { "outputEvents" : e1, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "notifications" : notifications}
-	return render_to_response('searchEventsResults.html',variables)
-	
+	return render_to_response('searchEventsResults.html',variables, context_instance=RequestContext(request))
+
+# this method is showing all the users notifications	
 def viewNotifications(request):
 
 	notifications = Notify.objects.filter(user=request.user)
 	
 	variables = { "notifications" : notifications, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id}
-	return render_to_response('viewNotifications.html',variables)
+	return render_to_response('viewNotifications.html',variables, context_instance=RequestContext(request))
 
+# this method is treating the functionality of a user requesting participation in a given event
 def participateInEvents(request,event_id):
 	e3 = Event.objects.get(pk=event_id)
 	message = "The user " + str(request.user.username) + " has just requested participation in your event!"
@@ -230,8 +237,9 @@ def participateInEvents(request,event_id):
 	notification = Notify.objects.create(event=e3,sender=request.user,user=e3.chef,text=message, type="ApprovalRequest")
 	
 	variables = { "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "notification" : notification}
-	return render_to_response('joinResult.html',variables)
-	
+	return render_to_response('joinResult.html',variables, context_instance=RequestContext(request))
+
+# this method represents the functionality of accepting a request for participation in a given event	
 def approveRequest(request, notification_id):
 	notification = Notify.objects.get(pk=notification_id)
 	e3 = Event.objects.get(pk=notification.event.pk)
@@ -257,13 +265,14 @@ def approveRequest(request, notification_id):
 	guests = e3.guests.all()
 	
 	variables = { "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "event" : e3, "guests" : guests, "notifications" : notifications}
-	return render_to_response('viewNotifications.html',variables)
+	return render_to_response('viewNotifications.html',variables, context_instance=RequestContext(request))
 
 def acceptGuestsInEvents(request,event_id):
 	event1 = Event.objects.get(pk=event_id)
 
 	#View All the Guests
 def deleteEvent(request, event_id):
+	print str(request.user)
 	#we retrieve the username which will be the chef
 	theUser = User.objects.get(username=request.user.username)
 	# get all events associated to the user
@@ -284,15 +293,16 @@ def deleteEvent(request, event_id):
 	Event.objects.filter(pk=event_id).delete()
 	# fill out the variables dictionary to pass to the front end
 	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
-	return render_to_response('insert.html', variables)
-	
+	return render_to_response('insert.html', variables, context_instance=RequestContext(request))
+
+# this method deletes a given notification	
 def deleteNotification(request, notification_id):
 	Notify.objects.filter(pk=notification_id).delete()
 
 	notifications = Notify.objects.filter(user=request.user)
 	
 	variables = { "notifications" : notifications, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id}
-	return render_to_response('viewNotifications.html',variables)
+	return render_to_response('viewNotifications.html',variables, context_instance=RequestContext(request))
 
 # generic success method, not being used at all
 def success(request):
@@ -328,7 +338,10 @@ def login_user(request):
 					# create an empty form
 					form = createEvent(request)
 
-					allEvents = Event.objects.all()
+					userCoordinates = get_coordinates(request, user.get_profile().address, user.get_profile().zipCode, user.get_profile().country)
+					
+					#allEvents = Event.objects.all()
+					allEvents = returnEventsInRange(userCoordinates[0],userCoordinates[1],10,request)
 					
 					notifications = Notify.objects.filter(user=user)
 
@@ -339,21 +352,58 @@ def login_user(request):
 				messages.error(request, 'Wrong password for user ' + username)
 	return render_to_response('index.html', context_instance=RequestContext(request))
 
+# this method gives back coordinates [latitude,longitude] for a given address
+# it is using google maps geocoding API for the request
 def get_coordinates(request,address,zipCode,country):
+	print 'inside coordinates'
 	coordinates = (0,0)
 	address = urllib.quote_plus(address)
 	httpRequest = "http://maps.google.com/maps/api/geocode/json?address=" + address + "," + zipCode + "," + country
-	print httpRequest
 	data = urllib2.urlopen(httpRequest)
 	djson = data.read()
 	myData = json.loads(djson)
-	print myData
-	print 'before'
 	if(myData['status'] == 'OK'):
 		latitude = myData['results'][0]['geometry']['location']['lat']
 		longitude = myData['results'][0]['geometry']['location']['lng']
 		coordinates = (latitude,longitude)
-		print coordinates
 		return coordinates
 	else:
 		return coordinates
+
+# this method takes a latitude, longitude and zoom factor, and returns the events in a given range
+# returning them in JSON format if the call is AJAX and as a queryset otherwise
+def returnEventsInRange(latitude,longitude,zoomFactor,request):
+	#this dictionary has the correspondance between the zoom factor and the coordinate degrees
+	zoomFactorDictionary = {'0': 360, '1': 180, '2': 90, '3': 45, '4': 22.5, '5': 11.25, '6': 5.625, '7': 2.813, '8': 1.406, '9': 0.703, '10': 0.352, '11': 0.176, '12': 0.088, '13': 0.044, '14': 0.022, '15': 0.011, '16': 0.005, '17': 0.003, '18': 0.001, '19': 0.0005}
+	
+	degreeFactor = zoomFactorDictionary[str(zoomFactor)]
+		
+	latitude = float(latitude)
+	longitude = float(longitude)
+	
+	eventsInRangeList = {}
+	
+	try:
+		latitudeLTE = latitude+degreeFactor
+		latitudeGTE = latitude-degreeFactor
+		longitudeLTE = longitude+degreeFactor
+		longitudeGTE = longitude-degreeFactor
+		eventsInRange = Event.objects.filter(latitude__lte=(latitudeLTE)).filter(latitude__gte=(latitudeGTE)).filter(longitude__lte=(longitudeLTE)).filter(longitude__gte=(longitudeGTE))
+		eventsInRangeJSON = serializers.serialize('json', eventsInRange, fields=('pk','title','description','address','chef','latitude','longitude','cuisineType'))
+	except Exception as e:
+		print '%s (%s)' % (e.message, type(e))
+	
+	if(request.is_ajax()):
+		return eventsInRangeJSON
+	else:
+		return eventsInRange
+
+# this method is managing the asynchronous calls to the map and retrieving only the events in focus (in a given range, depending on the zoom factor)
+def ajaxMapRefresh(request):
+	if request.is_ajax():
+		zoomFactor = request.POST['zoomFactor']
+		userLatitude = request.POST['userLatitude']
+		userLongitude = request.POST['userLongitude']
+		userId = request.POST['userId']
+		allEvents = returnEventsInRange(userLatitude,userLongitude,zoomFactor,request)                                                                 
+		return HttpResponse(json.dumps(allEvents,ensure_ascii=False), mimetype='application/javascript')

@@ -205,6 +205,122 @@
 	 * This code is representing a map mashup on the HTML page
 	 */
 	
+function refreshMarkersWithAJAXData(data,map,markerArray,layerGroup){
+	//remove all markers
+		
+	var json = $.parseJSON(data);
+	console.log(data);
+	//var markerArray = new Array();
+	var marker;
+		
+	layerGroup.clearLayers();
+	
+	$(json).each(function(index,element){
+	// for each event on the DB we draw a new marker
+	
+		var lat = element['fields']['latitude'];
+		var lon = element['fields']['longitude'];
+		var pk = element['pk'];
+		var title = element['fields']['title'];
+		var cuisine = element['fields']['cuisineType'];
+		
+		if(element['fields']['chef'] == {{userId}})
+		{
+		marker = L.marker([lat, lon],{icon: homeIcon}).bindPopup(" This event is yours! <br> <a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "African")
+		{
+		marker = L.marker([lat, lon],{icon: africanMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Anglo-Saxon")
+		{
+		marker = L.marker([lat, lon],{icon: angloSaxonMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Arab")
+		{
+		marker = L.marker([lat, lon],{icon: arabMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Asian")
+		{
+		marker = L.marker([lat, lon],{icon: asianMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Barbecue")
+		{
+		marker = L.marker([lat, lon],{icon: bbqMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Continental")
+		{
+		marker = L.marker([lat, lon],{icon: continentalMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Experimental")
+		{
+		marker = L.marker([lat, lon],{icon: experimentalMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Fusion")
+		{
+		marker = L.marker([lat, lon],{icon: fusionMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Indian")
+		{
+		marker = L.marker([lat, lon],{icon: indianMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Italian")
+		{
+		marker = L.marker([lat, lon],{icon: italianMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Kosher")
+		{
+		marker = L.marker([lat, lon],{icon: kosherMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Mediterranean")
+		{
+		marker = L.marker([lat, lon],{icon: mediterraneanMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Mexican")
+		{
+		marker = L.marker([lat, lon],{icon: mexicanMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Middle-East")
+		{
+		marker = L.marker([lat, lon],{icon: middleEastMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Nordic")
+		{
+		marker = L.marker([lat, lon],{icon: nordicMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Nouvelle")
+		{
+		marker = L.marker([lat, lon],{icon: nouvelleMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Oceanian")
+		{
+		marker = L.marker([lat, lon],{icon: oceanianMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Sushi")
+		{
+		marker = L.marker([lat, lon],{icon: sushiMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Vegetarian")
+		{
+		marker = L.marker([lat, lon],{icon: vegetarianMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else if(cuisine == "Vegan")
+		{
+		marker = L.marker([lat, lon],{icon: veganMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		else{
+		marker =	L.marker([lat, lon]).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/"+pk+"'>"+title+"</a>");
+		}
+		
+	layerGroup.addLayer(marker).addTo(map);
+	});
+
+	
+	console.log(layerGroup.getLayers().length);
+	console.log(" marker array size  " + markerArray.length);
+	
+}
+	
 	//Representing the user icon on the map
 	var userIcon = L.icon({
 		iconUrl: '/site_media/img/markers/userMarker.png',
@@ -253,6 +369,7 @@
 	// This function returns the user location (coordinates) from the browser itself
 	function getLocation()
 	{
+	markerArray = new Array();
 	if (navigator.geolocation)
 		{
 			navigator.geolocation.getCurrentPosition(drawMap);
@@ -280,117 +397,100 @@
 	L.marker([latitude, longitude], {icon: userIcon}).addTo(map)
 		.bindPopup("You are here!").openPopup();
 		
+	var marker;
+	
 	// for each event on the DB we draw a new marker
 	{% for event in allEvents %}
 		if({{event.chef.id}} == {{userId}})
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: homeIcon}).addTo(map)
-		.bindPopup(" This event is yours! <br> <a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: homeIcon}).bindPopup(" This event is yours! <br> <a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "African")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: africanMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: africanMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Anglo-Saxon")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: angloSaxonMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: angloSaxonMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Arab")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: arabMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: arabMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Asian")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: asianMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: asianMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Barbecue")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: bbqMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: bbqMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Continental")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: continentalMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: continentalMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Experimental")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: experimentalMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: experimentalMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Fusion")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: fusionMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: fusionMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Indian")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: indianMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: indianMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Italian")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: italianMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: italianMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Kosher")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: kosherMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: kosherMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Mediterranean")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: mediterraneanMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: mediterraneanMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Mexican")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: mexicanMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: mexicanMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Middle-East")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: middleEastMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: middleEastMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Nordic")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: nordicMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: nordicMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Nouvelle")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: nouvelleMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: nouvelleMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Oceanian")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: oceanianMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: oceanianMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Sushi")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: sushiMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: sushiMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Vegetarian")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: vegetarianMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: vegetarianMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else if("{{ event.cuisineType }}" == "Vegan")
 		{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: veganMarker}).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker = L.marker([{{ event.latitude }}, {{ event.longitude }}],{icon: veganMarker}).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
 		else{
-			L.marker([{{ event.latitude }}, {{ event.longitude }}]).addTo(map)
-		.bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
+		marker =	L.marker([{{ event.latitude }}, {{ event.longitude }}]).bindPopup("<a href='http://ncegcolnx323:8080/viewEvent/{{event.id}}'>{{ event.title }}</a>");
 		}
+		
+	layerGroup.addLayer(marker).addTo(map);
+		
 	{% endfor %}
 
 	var popup = L.popup();
@@ -402,11 +502,45 @@
 			.setContent("You clicked the map at " + e.latlng.toString())
 			.openOn(map);
 	}
+	
+	// this function deals with the zoom event
+	function onMapZoom(e) {
+		{% csrf_token %}
+		console.log(layerGroup.getLayers().length);
+		console.log({% csrf_token %});
+				
+		var input_string = map.getZoom();
+		var userLatitude = map.getCenter().lat;
+		var userLongitude = map.getCenter().lng;
+		
+		$.ajax({
+        type: "POST",
+        url: "/ajaxMapRefresh/", 
+		dataType: "json",
+        data: { zoomFactor: input_string , userLatitude: userLatitude , userLongitude: userLongitude, userId : {{ userId }}, csrfmiddlewaretoken: '{{ csrf_token }}' },
+        success: function(data) {
+            refreshMarkersWithAJAXData(data,map,markerArray,layerGroup);
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            alert("Please report this error: "+errorThrown+xhr.status+xhr.responseText);
+        }
+		});;
+	}		
 
 	map.on('click', onMapClick);
+	
+	
+	map.on('zoomend', onMapZoom);
+	
+	map.on('dragend', onMapZoom);
+	
 	}
-
-	getLocation();
+	
+	
+	var markerArray;
+	var layerGroup =  L.layerGroup();
+	layerGroup.clearLayers();
+	onload = getLocation;
 	
 	</script>
 
