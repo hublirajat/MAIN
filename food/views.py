@@ -23,6 +23,8 @@ import json
 from django.db.models import Q
 from django.core import serializers
 from django.contrib.auth.models import AnonymousUser
+import re
+import unicodedata
 
 ############################################################################################################################################
 # These methods are not being used (yet) ###################################################################################################
@@ -62,7 +64,7 @@ class Html5EmailInput(Input):
 def registerNewUser(request):
 	if request.method == 'POST': # If the form has been submitted...
 		form = RegistrationForm(request.POST,request.FILES) # A form bound to the POST data
-		print form.errors
+
 		if form.is_valid(): # All validation rules pass
 			username = form.cleaned_data['username']
 			firstname = form.cleaned_data['firstname']
@@ -104,7 +106,7 @@ def createEvent(request):
 			title = form.cleaned_data['title']
 			description = form.cleaned_data['description']
 			date = form.cleaned_data['date']
-			print date
+
 			address = form.cleaned_data['address']
 			zipCode = form.cleaned_data['zipCode']
 			country = form.cleaned_data['country']
@@ -115,15 +117,12 @@ def createEvent(request):
 			secondCourseInput = form.cleaned_data['secondCourseInput']
 			dessertInput = form.cleaned_data['dessertInput']
 			participantNumber = form.cleaned_data['participantNumber']
-
-			print request.user.username
 			
 			#we retrieve the username which will be the chef
 			theUser = User.objects.get(username=request.user.username)
 
 			#retrieve the coordinates of the given address
 			coordinates = get_coordinates(request,address,zipCode,country)
-			print coordinates
 
 			#we retrieve all events associated to the user to pass it to the frontend
 			e = Event.objects.filter(chef=theUser)
@@ -159,34 +158,47 @@ def viewEvent(request, event_id):
 	firstname = request.user.get_profile().firstName
 	lastname = request.user.get_profile().lastName
 	notifications = Notify.objects.filter(user=request.user)
+	entreeWikiUrl = ""
+	firstCourseWikiUrl = ""
+	secondCourseWikiUrl = ""
+	dessertWikiUrl = ""
 	
 	#get entree wiki article
-	httpRequest = "http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" + e2.menuEntree
-	data = urllib2.urlopen(httpRequest)
-	djson = data.read()
-	myData = json.loads(djson)
-	entreeWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
+	if(e2.menuEntree):
+		entree = normalizeWikiLink(e2.menuEntree)
+		httpRequest = "http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" + entree
+		data = urllib2.urlopen(httpRequest)
+		djson = data.read()
+		myData = json.loads(djson)
+		entreeWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
 	
-	#get firstCourse wiki article
-	httpRequest = "http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" + e2.menuFirstCourse
-	data = urllib2.urlopen(httpRequest)
-	djson = data.read()
-	myData = json.loads(djson)
-	firstCourseWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
+	if(e2.menuFirstCourse):
+		#get firstCourse wiki article
+		firstCourse = normalizeWikiLink(e2.menuFirstCourse)
+		httpRequest = "http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" + firstCourse
+		data = urllib2.urlopen(httpRequest)
+		djson = data.read()
+		myData = json.loads(djson)
+		firstCourseWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
 	
-	#get secondCourse wiki article
-	httpRequest = "http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" + e2.menuSecondCourse
-	data = urllib2.urlopen(httpRequest)
-	djson = data.read()
-	myData = json.loads(djson)
-	secondCourseWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
+	if(e2.menuSecondCourse):
+		#get secondCourse wiki article
+		secondCourse = normalizeWikiLink(e2.menuSecondCourse)
+		httpRequest = "http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" + secondCourse
+
+		data = urllib2.urlopen(httpRequest)
+		djson = data.read()
+		myData = json.loads(djson)
+		secondCourseWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
 	
-	#get dessert wiki article
-	httpRequest = "http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" + e2.menuDessert
-	data = urllib2.urlopen(httpRequest)
-	djson = data.read()
-	myData = json.loads(djson)
-	dessertWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
+	if(e2.menuDessert):
+		#get dessert wiki article
+		dessert = normalizeWikiLink(e2.menuDessert)
+		httpRequest = "http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" + dessert
+		data = urllib2.urlopen(httpRequest)
+		djson = data.read()
+		myData = json.loads(djson)
+		dessertWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
 	
 	variables = {"event" : e2, "guests" : guests2, "firstname" : firstname, "lastname" : lastname, "userId" : request.user.id, "user" : request.user, "allEvents" : allEvents, "NumberOfGuests" : numberOfGuests, "reviews" : reviews, "notifications" : notifications, "entreeWikiUrl" : entreeWikiUrl, "firstCourseWikiUrl" : firstCourseWikiUrl, "secondCourseWikiUrl" : secondCourseWikiUrl, "dessertWikiUrl" : dessertWikiUrl }
 	
@@ -195,7 +207,7 @@ def viewEvent(request, event_id):
 # this method represents the act of reviewing a given event
 def reviewEvent(request, event_id):
 	e2 = Event.objects.get(pk=event_id)
-	print e2.chef
+
 	if request.method == 'POST':
 		form = ReviewForm(request.POST)
 		if form.is_valid():
@@ -255,12 +267,10 @@ def approveRequest(request, notification_id):
 	
 	notifications = Notify.objects.filter(user=request.user)
 	
-	print e3.numberOfParticipants
-	print e3.guests.all().count()
+
 	if(e3.guests.all().count() >= e3.numberOfParticipants):
 		message = "Your event is now full and closed for participation!"
 		notification = Notify.objects.create(event=e3,sender=request.user,user=request.user,text=message, type="FullEvent")
-		print notification
 
 	guests = e3.guests.all()
 	
@@ -272,7 +282,7 @@ def acceptGuestsInEvents(request,event_id):
 
 	#View All the Guests
 def deleteEvent(request, event_id):
-	print str(request.user)
+
 	#we retrieve the username which will be the chef
 	theUser = User.objects.get(username=request.user.username)
 	# get all events associated to the user
@@ -286,7 +296,6 @@ def deleteEvent(request, event_id):
 	for guest in event.guests.all():
 		message = "The event has been deleted by the owner."	
 		notification = Notify.objects.create(event=event,sender=request.user,user=guest,text=message, type="DeleteEvent")
-		print notification
 
 	allEvents = Event.objects.all()
 	
@@ -355,7 +364,7 @@ def login_user(request):
 # this method gives back coordinates [latitude,longitude] for a given address
 # it is using google maps geocoding API for the request
 def get_coordinates(request,address,zipCode,country):
-	print 'inside coordinates'
+
 	coordinates = (0,0)
 	address = urllib.quote_plus(address)
 	httpRequest = "http://maps.google.com/maps/api/geocode/json?address=" + address + "," + zipCode + "," + country
@@ -407,3 +416,12 @@ def ajaxMapRefresh(request):
 		userId = request.POST['userId']
 		allEvents = returnEventsInRange(userLatitude,userLongitude,zoomFactor,request)                                                                 
 		return HttpResponse(json.dumps(allEvents,ensure_ascii=False), mimetype='application/javascript')
+		
+def normalizeWikiLink(string):
+
+	string = unicodedata.normalize('NFKD', string).encode('ascii', 'ignore')
+	# Remove all non-word characters (everything except numbers and letters)
+	string = re.sub(r"[^\w\s]", '', string)
+	# Replace all runs of whitespace with a single dash
+	string = re.sub(r"\s+", '_', string)
+	return string

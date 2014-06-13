@@ -28,10 +28,10 @@ class EventCreationForm(forms.Form):
 	address = forms.CharField(max_length=200)
 	zipCode = forms.CharField(max_length=5)
 	country = forms.ChoiceField(choices=countryList, initial='France', required = True,)
-	entreeInput = forms.CharField(max_length=100)
-	firstCourseInput = forms.CharField(max_length=100)
-	secondCourseInput = forms.CharField(max_length=100)
-	dessertInput = forms.CharField(max_length=100)
+	entreeInput = forms.CharField(max_length=100,required=False)
+	firstCourseInput = forms.CharField(max_length=100,required=False)
+	secondCourseInput = forms.CharField(max_length=100,required=False)
+	dessertInput = forms.CharField(max_length=100,required=False)
 	participantNumber = forms.ChoiceField(choices=((str(x), x) for x in range(1,100)))
 	
 	def clean_zipCode(self):
