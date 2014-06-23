@@ -17,7 +17,7 @@
         <header role="banner">
             <h1></h1>
             <div class="user_panel">
-                <a href="/logout/">Logout</a> | <a href="{% url food.views.viewUserProfile user_id=userId %}">Profile</a> |
+                <a href="/logout/">Logout</a> | <a href="{% url 'food.views.viewUserProfile' user_id=userId %}">Profile</a> |
 				<a href="/insertview/">Home</a>
             </div>
         </header>
@@ -30,16 +30,16 @@
 <div class ="notifications">
 {% if notifications %}
 {% for notification in notifications %} 
-<p> Sent by : {{ notification.sender }} </p>
+<p> Sent by : {{ notification.notificationSender }} </p>
 <p> Event : {{ notification.event }} </p>
 <br>
 <p> {{ notification.text }} </p>
 <br>
 {% if notification.type == "ApprovalRequest" %}
-<td><a href="{% url food.views.approveRequest notification_id=notification.pk %}">Approve Request</a></td>
+<td><a href="{% url 'food.views.approveRequest' notification_id=notification.pk %}">Approve Request</a></td>
 {% endif %}
 &nbsp; | &nbsp;
-<td><a href="{% url food.views.deleteNotification notification_id=notification.pk %}">Delete Notification</a></td>
+<td><a href="{% url 'food.views.deleteNotification' notification_id=notification.pk %}">Delete Notification</a></td>
 {% endfor %}
 {% else %} 
 <p style="text-align:center"> You have no new notifications! <p>

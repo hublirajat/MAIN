@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response
-from food.models import Event, Review, UserProfile, Notify
+from food.models import Event, Review, UserProfile, Notify, Message
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.forms.widgets import Input
@@ -12,10 +12,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import models
 from django.core.urlresolvers import reverse
-from food.forms import EventCreationForm
-from food.forms import ReviewForm
-from food.forms import RegistrationForm
+from food.forms import EventCreationForm, ReviewForm, RegistrationForm
 from datetime import datetime
+import os
+os.environ['http_proxy']=''
 import urllib
 import urllib2
 import settings
@@ -25,6 +25,8 @@ from django.core import serializers
 from django.contrib.auth.models import AnonymousUser
 import re
 import unicodedata
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 ############################################################################################################################################
 # These methods are not being used (yet) ###################################################################################################
@@ -78,9 +80,17 @@ def registerNewUser(request):
 			zipCode = form.cleaned_data['zipCode']
 			country = form.cleaned_data['country']
 
-			# we now register the user
-			user = User.objects.create_user(username=username,email=email,password=password)
-			profile = UserProfile.objects.create(user=user,firstName=firstname,lastName=lastname,gender=gender,profilePicture=profilePicture,address=address,zipCode=zipCode,country=country)
+			try:
+				thePic = request.FILES['profilePicture']
+				thePath = settings.MEDIA_ROOT+'/uploadedPics/'+str(profilePicture)
+				path = default_storage.save(thePath, ContentFile(thePic.read()))		
+					
+				# we now register the user
+				user = User.objects.create_user(username=username,email=email,password=password)
+				profile = UserProfile.objects.create(user=user,firstName=firstname,lastName=lastname,gender=gender,profilePicture=path,address=address,zipCode=zipCode,country=country)
+				
+			except Exception as e:
+				print '%s (%s)' % (e.message, type(e))
 
 			return render_to_response('index.html', context_instance=RequestContext(request))
 	else:
@@ -93,8 +103,18 @@ def viewUserProfile(request, user_id):
 	userEvents = Event.objects.filter(chef=user)
 	firstname = user.get_profile().firstName
 	lastname = user.get_profile().lastName
+	
+	#very ugly solution, needs to be re-thinked
+	profilePicture = user.get_profile().profilePicture.path
+	splitProf = profilePicture.split('/')
+	splitProf.pop(0)
+	splitProf.pop(0)
+	splitProf.pop(0)
+	splitProf.pop(0)
+	myString = "/".join(splitProf)
+	myString = '/'+myString
 
-	variables = { "firstname" : firstname, "lastname" : lastname, "user" : user, "events" : userEvents}
+	variables = { "firstname" : firstname, "lastname" : lastname, "user" : user, "events" : userEvents, "profilePicture" : myString}
 	return render_to_response('viewUserProfile.html',variables, context_instance=RequestContext(request))
 
 
@@ -241,6 +261,14 @@ def viewNotifications(request):
 	variables = { "notifications" : notifications, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id}
 	return render_to_response('viewNotifications.html',variables, context_instance=RequestContext(request))
 
+# this method is showing all the users messages	
+def viewMessages(request):
+
+	messages = Message.objects.filter(user=request.user)
+	
+	variables = { "messages" : messages, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id}
+	return render_to_response('viewMessages.html',variables, context_instance=RequestContext(request))
+
 # this method is treating the functionality of a user requesting participation in a given event
 def participateInEvents(request,event_id):
 	e3 = Event.objects.get(pk=event_id)
@@ -365,9 +393,16 @@ def login_user(request):
 # it is using google maps geocoding API for the request
 def get_coordinates(request,address,zipCode,country):
 
+	print address
+	print zipCode
+	print country
+
 	coordinates = (0,0)
 	address = urllib.quote_plus(address)
 	httpRequest = "http://maps.google.com/maps/api/geocode/json?address=" + address + "," + zipCode + "," + country
+	
+	print httpRequest
+	
 	data = urllib2.urlopen(httpRequest)
 	djson = data.read()
 	myData = json.loads(djson)

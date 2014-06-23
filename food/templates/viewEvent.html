@@ -28,17 +28,17 @@
             <h1></h1>
             <div class="user_panel">
                 {% if notifications %}
-				<a href="{% url food.views.viewNotifications %}">
+				<a href="{% url 'food.views.viewNotifications'  %}">
 				<input type="image" id="myimage" src="/site_media/img/notificationOn.png" title="Notifications" style="display: block;"/><div class="blink_me"> Notifications! </div></a>
 				
 				{% else %}
-				<a href="{% url food.views.viewNotifications %}">
+				<a href="{% url 'food.views.viewNotifications' %}">
 				<input type="image" id="myimage" src="/site_media/img/notificationOff.png" title="Notifications" style="display: block;"/>
 				</a>
 				{% endif %}
 				<br>
 				<br>
-                <a href="/logout/">Logout</a> | <a href="{% url food.views.viewUserProfile user_id=userId %}">Profile</a> |
+                <a href="/logout/">Logout</a> | <a href="{% url 'food.views.viewUserProfile' user_id=userId %}">Profile</a> |
 				<a href="/insertview/">Home</a>
             </div>
         </header>
@@ -55,7 +55,7 @@
 <td> This event is a {{event.mealType}}, of {{event.cuisineType}} cuisine</td><br>
 <td>Date and Time of the Event: {{ event.dateOfEvent }}</td><br>
 <td>Address : {{ event.address }}</td><br>
-<td>Created by <a href="{% url food.views.viewUserProfile user_id=event.chef.pk %}">{{event.chef}}</a> on {{event.creation_timestamp}}</td><br>
+<td>Created by <a href="{% url 'food.views.viewUserProfile' user_id=event.chef.pk %}">{{event.chef}}</a> on {{event.creation_timestamp}}</td><br>
 
 <br>
 
@@ -100,12 +100,12 @@
  <td>Participants: {{ event.guests.count }} out of {{ event.numberOfParticipants}} </td>
  <br>
 {% for guest in guests %}
-    <td><a href="{% url food.views.viewUserProfile user_id=guest.pk %}"> {{guest}} </a></td><br>
+    <td><a href="{% url 'food.views.viewUserProfile' user_id=guest.pk %}"> {{guest}} </a></td><br>
 {% endfor %}
 {% if event.chef.id != userId  %}
 	{% if event.guests.count < event.numberOfParticipants %}
 	{% if user not in guests %}
-<td><a href="{% url food.views.participateInEvents event_id=event.pk%}">Participate</a></td>
+<td><a href="{% url 'food.views.participateInEvents' event_id=event.pk%}">Participate</a></td>
 	{% endif %}
 	{% else %}
 <p style="color: red"> This event has reached the limit of participants. </p> 
@@ -114,7 +114,7 @@
 <br>
 <br>
 {% if event.chef.id == userId %}
-	<td><a href="{% url food.views.deleteEvent event_id=event.pk %}">Delete</a></td>
+	<td><a href="{% url 'food.views.deleteEvent' event_id=event.pk %}">Delete</a></td>
 {% endif %} 
 </ul>
 </div>

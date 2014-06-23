@@ -40,16 +40,16 @@
 <ul>
 {% for event in events %}
     <li>on {{ event.dateOfEvent }} : {{ event.title }} - {{event.description}}</li>
-    <td><a href="{% url food.views.viewEvent event_id=event.pk %}">See Event</a></td>
+    <td><a href="{% url 'food.views.viewEvent' event_id=event.pk %}">See Event</a></td>
 {% endfor %}
 </ul>
 </div>
 <div class="profilePicture">
-{% ifequal object.image None %}
+{% if profilePicture == '' %}
     <img src="/site_media/img/default_profile.jpg" width="150px" height="150px"/>
 {% else %}
-   <img src="{{ user.get_profile.profilePicture.image.path }} width="150px" height="150px"/>
-{% endifequal %}
+   <img src="{{ profilePicture }}" width="150px" height="150px"/>
+{% endif %}
 </div>
 </body>
 </html>

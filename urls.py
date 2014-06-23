@@ -1,11 +1,15 @@
-from django.conf.urls.defaults import *
-#from django.conf.urls import patterns, url
+#from django.conf.urls.defaults import *
+from django.conf.urls import patterns, url, include
 from django.contrib import admin
+from food.api import EventResource
+from django.conf import settings
+from django.conf.urls.static import static
 
 admin.autodiscover()
+event_resource = EventResource()
 
 urlpatterns = patterns('',
-    #url(r'^$', 'food.views.indexview', name='index'),
+    url(r'^$', 'food.views.login_user', name='index'),
     url(r'^insertview/$', 'food.views.insertview', name='insertview'),
 	url(r'^register/$', 'food.views.registerNewUser', name='register'),
 	url(r'^createEvent/$', 'food.views.createEvent', name='createEvent'),
@@ -19,10 +23,12 @@ urlpatterns = patterns('',
 	url(r'^deleteNotification/(?P<notification_id>[\d]+)$', 'food.views.deleteNotification', name='deleteNotification'),
     url(r'^success/$', 'food.views.success', name='success'),
 	(r'^site_media/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': '/remote/users/cmarques/dev/fooding/staticfiles/'}),
+        {'document_root': '/home/chris/fooding/staticfiles/'}),
 	(r'^login/$', 'food.views.login_user'),
 	(r'^ajaxMapRefresh/$', 'food.views.ajaxMapRefresh'),
 	(r'^logout/$', 'food.views.logout_user'),
 	(r'^accounts/login/$', 'django.contrib.auth.views.login'),
 	url(r'^viewNotifications/$', 'food.views.viewNotifications', name='viewNotifications'),
-)
+	url(r'^viewMessages/$', 'food.views.viewMessages', name='viewMessages'),
+	(r'^api/', include(event_resource.urls)),
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

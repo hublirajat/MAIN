@@ -57,10 +57,19 @@ class Likes(models.Model):
 # this class models a notification
 class Notify(models.Model):
 	event = models.ForeignKey(Event)
-	sender = models.ForeignKey(User, related_name="sender")
-	user = models.ForeignKey(User, related_name="userid")
+	notificationSender = models.ForeignKey(User, related_name="notificationSender")
+	user = models.ForeignKey(User, related_name="notificationUser")
 	text = models.CharField(max_length=200)
 	type = models.CharField(max_length=100)
+
+	def __unicode__(self):
+		return self.text + self.type + str(self.user) + str(self.sender)
+		
+# this class models a message
+class Message(models.Model):
+	messageSender = models.ForeignKey(User, related_name="messageSender")
+	user = models.ForeignKey(User, related_name="messageUser")
+	text = models.CharField(max_length=200)
 
 	def __unicode__(self):
 		return self.text + self.type + str(self.user) + str(self.sender)
@@ -72,7 +81,7 @@ class UserProfile(models.Model):
 	lastName = models.CharField(max_length=30)
 	address = models.CharField(max_length=140)  
 	gender = models.CharField(max_length=140)  
-	profilePicture = models.ImageField(upload_to='/site_media/uploadedPics/', blank=True,null=True, default="/site_media/img/default_profile.jpg")
+	profilePicture = models.ImageField(upload_to='/staticfiles/uploadedPics/', default="/staticfiles/img/default_profile.jpg")
 	address = models.CharField(max_length=200)
 	zipCode = models.CharField(max_length=5)
 	country = models.CharField(max_length=100)

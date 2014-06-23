@@ -42,6 +42,7 @@ INSTALLED_APPS = (
 	#'social_auth',
     #'django.contrib.staticfiles',
     'food',
+    'tastypie',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -53,10 +54,10 @@ MIDDLEWARE_CLASSES = (
     #'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'fooding.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
-	'/remote/users/cmarques/dev/fooding/food/templates'
+	BASE_DIR+'fooding/food/templates'
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -66,29 +67,33 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	'django.contrib.messages.context_processors.messages',
 )
 
-WSGI_APPLICATION = 'fooding.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
+DB_PATH = BASE_DIR+'fooding/fooding.db'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/remote/users/cmarques/dev/fooding/fooding.db',
+        'NAME': '/home/chris/fooding/fooding.db',
     }
 }
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+BASE_DIR = '/home/chris/'
+
+MEDIA_ROOT = BASE_DIR+'fooding/media/'
 
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = BASE_DIR+'fooding/static/'
 
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'staticfiles'),
+    BASE_DIR+'fooding/staticfiles/',
 )
 
 # Internationalization

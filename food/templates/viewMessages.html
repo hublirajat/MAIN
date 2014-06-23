@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
 </head>
 <body id="css-zen-garden">
 <div class="page-wrapper">
@@ -23,11 +25,21 @@
     </section>
 </div>
 <div class = "welcomeHeader">
-<h2> {{ firstname }} {{ lastname }} </h2>
+<h2> Messages for {{ firstname }} {{ lastname }}! </h2>
 </div>
 <div class ="notifications">
-<p> A notification requesting approval has been sent to the owner of the event! <p>
-<p> Now you just have to wait for his reply! </p>
+{% if messages %}
+{% for message in messages %} 
+<p> Sent by : {{ message.messageSender }} </p>
+<br>
+<p> {{ message.text }} </p>
+<br>
+&nbsp; | &nbsp;
+<td><a href="{% url 'food.views.deleteNotification' notification_id=notification.pk %}">Delete Message</a></td>
+{% endfor %}
+{% else %} 
+<p style="text-align:center"> You have no new messages! <p>
+{% endif %}
 </div>
 </body>
 </html>
