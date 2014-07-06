@@ -1,5 +1,9 @@
 from django.shortcuts import render_to_response
+<<<<<<< HEAD
 from food.models import Event, Review, UserProfile, Notify, Message
+=======
+from food.models import Event, Review, UserProfile, UserReviews
+>>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.forms.widgets import Input
@@ -12,7 +16,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import models
 from django.core.urlresolvers import reverse
+<<<<<<< HEAD
 from food.forms import EventCreationForm, ReviewForm, RegistrationForm
+=======
+from food.forms import EventCreationForm, ReviewForm, UserReviewForm
+from food.forms import RegistrationForm
+>>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1
 from datetime import datetime
 import os
 os.environ['http_proxy']=''
@@ -62,6 +71,7 @@ def insertview(request):
 class Html5EmailInput(Input):
     input_type = 'email'
 
+# Following views are all User Related Views
 # method to register a new user - first checks if the form is valid and then registers a new user
 def registerNewUser(request):
 	if request.method == 'POST': # If the form has been submitted...
@@ -98,6 +108,7 @@ def registerNewUser(request):
 		return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 	return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 
+<<<<<<< HEAD
 def viewUserProfile(request, user_id):
 	user = User.objects.get(pk = user_id)
 	userEvents = Event.objects.filter(chef=user)
@@ -116,8 +127,74 @@ def viewUserProfile(request, user_id):
 
 	variables = { "firstname" : firstname, "lastname" : lastname, "user" : user, "events" : userEvents, "profilePicture" : myString}
 	return render_to_response('viewUserProfile.html',variables, context_instance=RequestContext(request))
+=======
+def viewUserProfile(request, event_id):
+
+	# Getting the Chef of the Event
+	event1 = Event.objects.get(pk=event_id)
+	eventChef = event1.chef
+
+	# Getting the user from User who is the Event Chef
+	# User does not contain the same attributes as UserProfile
+	user1 = User.objects.get(username = eventChef)
+
+	# Getting All Events for the User
+	# Result stored in an Event object namely myEvents
+	myEvents = user1.event_chef.all()
+
+	# Getting User Details from User Profile for the User
+	# userprofile contains all details such as:
+	# - userReview
+	# - ratingStars
+	userprofile = UserProfile.objects.get(user = user1)
+
+	userreviews = UserReviews.objects.get(user = user1)
+
+	# Sending 2 objects to the html page, namely:
+	# - userprofile: UserProfile
+	# - events: Event
+	# - user: User
+
+	variables = { "userprofile" : userprofile, "userreviews" : userreviews, "events" : myEvents}
+	return render_to_response('viewUserProfile.html',variables)
+>>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1
+
+def reviewUser(request, user_id):
+	#e2 = Event.objects.get(pk=event_id)
+	print user_id
+	userprofile = UserProfile.objects.get(id = user_id)
+	user1 = User.objects.get(username = userprofile.user)
+	if request.method == 'POST':
+		print "Check"
+		form = UserReviewForm(request.POST)
+		if form.is_valid():
+			print "Check"
+			rating = form.cleaned_data['rating']
+			textReview = form.cleaned_data['userReview']
+
+			# Get the user reviews from UserReviews userprofile
+			# ToDo: Calculate accurately User Review
+
+			userreviews = UserReviews.objects.get(user = user1)
+			oldrating = userreviews.ratingStars
+			newrating = (oldrating + rating)/2
+			userreviews.ratingStars = newrating
+			userreviews.userReview = textReview
 
 
+			#Get the Reviewer who reviews User Profile
+			theReviewer = User.objects.get(username=request.user.username)
+			userreviews.reviewer = theReviewer
+
+			userreviews.save()
+
+	user1 = User.objects.get(username = userprofile.user)
+	myEvents = user1.event_chef.all()
+
+	variables = { "userreviews" : userreviews, "events" : myEvents, "userprofile" : userprofile}
+	return render_to_response('viewUserProfile.html',variables)
+
+# Following views are all Event Related Views
 # method to create a new event on the dashboard
 def createEvent(request):
 	if request.method == 'POST':
@@ -224,9 +301,20 @@ def viewEvent(request, event_id):
 	
 	return render_to_response('viewEvent.html', variables)
 
+<<<<<<< HEAD
 # this method represents the act of reviewing a given event
 def reviewEvent(request, event_id):
 	e2 = Event.objects.get(pk=event_id)
+=======
+# - Get the corresponding event from Events for event_id
+# - Creation of ReviewForm in forms.py
+# - Defining comment as an attribute of ReviewForm
+# - Get Reviewer and then create review in Review for the reviewer
+
+def reviewEvent(request, event_id):
+	e2 = Event.objects.get(pk=event_id)
+	print e2.chef
+>>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1
 
 	if request.method == 'POST':
 		form = ReviewForm(request.POST)

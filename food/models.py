@@ -25,7 +25,7 @@ class Event(models.Model):
 	def __unicode__(self):
 		return self.description
 
-# this class models a review 
+# this class models a review
 class Review(models.Model):
     comment = models.CharField(max_length=500)
     event = models.ForeignKey(Event)
@@ -75,10 +75,11 @@ class Message(models.Model):
 		return self.text + self.type + str(self.user) + str(self.sender)
 
 # this class models the user profile - it extends the regular User class, in order to add more fields
-class UserProfile(models.Model):  
+class UserProfile(models.Model):
 	user = models.ForeignKey(User, unique=True)
 	firstName = models.CharField(max_length=30)
 	lastName = models.CharField(max_length=30)
+<<<<<<< HEAD
 	address = models.CharField(max_length=140)  
 	gender = models.CharField(max_length=140)  
 	profilePicture = models.ImageField(upload_to='/staticfiles/uploadedPics/', default="/staticfiles/img/default_profile.jpg")
@@ -88,3 +89,21 @@ class UserProfile(models.Model):
 
 	def __unicode__(self):
 		return u'Profile of user: %s' % self.user.username
+=======
+	#profile_picture = models.ImageField(upload_to='thumbpath', blank=True)
+
+	def __unicode__(self):
+		return u'Profile of user: %s' % self.user.username
+
+class UserReviews(models.Model):
+	reviewer = models.OneToOneField(User, related_name="user_reviewer", unique=True)
+	user = models.ForeignKey(User)
+	userReview = models.CharField(max_length=500)
+	ratingStars = models.PositiveIntegerField(null=True, blank=True)
+	popularityPoints = models.PositiveIntegerField(null=True, blank=True)
+
+	def __unicode__(self):
+		u'Review for the User: %s' % self.userReview
+
+
+>>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1

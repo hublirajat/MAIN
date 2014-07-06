@@ -15,7 +15,12 @@ urlpatterns = patterns('',
 	url(r'^createEvent/$', 'food.views.createEvent', name='createEvent'),
     url(r'^reviewEvent/(?P<event_id>[\d]+)$', 'food.views.reviewEvent', name='reviewEvent'),
     url(r'^viewEvent/(?P<event_id>[\d]+)$', 'food.views.viewEvent', name='viewEvent'),
+<<<<<<< HEAD
     url(r'^viewUserProfile/(?P<user_id>[\d]+)$', 'food.views.viewUserProfile', name='viewUserProfile'),
+=======
+    url(r'^reviewUser/(?P<user_id>[\d]+)$', 'food.views.reviewUser', name='reviewUser'),
+    url(r'^viewUserProfile/(?P<event_id>[\d]+)$', 'food.views.viewUserProfile', name='viewUserProfile'),
+>>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1
     url(r'^searchEvents/$', 'food.views.searchEvents', name='searchEvents'),
     url(r'^participateInEvents/(?P<event_id>[\d]+)$', 'food.views.participateInEvents', name='participateInEvents'),
 	url(r'^approveRequest/(?P<notification_id>[\d]+)$', 'food.views.approveRequest', name='approveRequest'),
