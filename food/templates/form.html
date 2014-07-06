@@ -19,7 +19,7 @@
 </div>
 <div class="summary">
 	<p> Register </p>
-    <form id="register" action="{% url register %}" method="post" class="niceform" novalidate>{% csrf_token %}
+    <form id="register" action="{% url "register" %}" method="post" class="niceform" novalidate>{% csrf_token %}
         <dl>
             <dt> Username : </dt>
             <dd>{{ form.username }}</dd>

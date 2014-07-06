@@ -15,7 +15,7 @@ class Event(models.Model):
 	def __unicode__(self):
 		return self.description
 
-# this class models a review 
+# this class models a review
 class Review(models.Model):
     comment = models.CharField(max_length=500)
     event = models.ForeignKey(Event)
@@ -55,13 +55,23 @@ class Notify(models.Model):
         return self.text
 
 # this class models the user profile - it extends the regular User class, in order to add more fields
-class UserProfile(models.Model):  
+class UserProfile(models.Model):
 	user = models.ForeignKey(User, unique=True)
 	firstName = models.CharField(max_length=30)
 	lastName = models.CharField(max_length=30)
-	#location = models.CharField(max_length=140)  
-	#gender = models.CharField(max_length=140)  
 	#profile_picture = models.ImageField(upload_to='thumbpath', blank=True)
 
 	def __unicode__(self):
 		return u'Profile of user: %s' % self.user.username
+
+class UserReviews(models.Model):
+	reviewer = models.OneToOneField(User, related_name="user_reviewer", unique=True)
+	user = models.ForeignKey(User)
+	userReview = models.CharField(max_length=500)
+	ratingStars = models.PositiveIntegerField(null=True, blank=True)
+	popularityPoints = models.PositiveIntegerField(null=True, blank=True)
+
+	def __unicode__(self):
+		u'Review for the User: %s' % self.userReview
+
+

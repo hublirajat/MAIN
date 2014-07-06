@@ -36,11 +36,14 @@
 <div class = "welcomeHeader">
 <h2> Checking  {{ firstname }} {{ lastname }} </h2>
 </div>
-<div class ="viewEvent">
-<p> Here are some details of the user : </p>
+<div class ="viewUser">
+<p> User Details : </p>
 <ul>
-<td>{{ firstname }}</td><br>
-<td>{{ lastname }}</td><br>
+<td>Name: {{ userprofile.firstName }} {{ userprofile.lastName }}</td><br>
+<td>User Rating: {{ userreviews.ratingStars }}</td><br>
+<td>User Reviews: {{ userreviews.userReview }}</td><br>
+</div>
+<div class ="viewEvent">
 <p> Here are some Events Hosted by the user : </p>
 <ul>
 {% for event in events %}
@@ -48,6 +51,23 @@
     <td><a href="{% url "food.views.viewEvent" event_id=event.pk %}">See Event</a></td>
 {% endfor %}
 </ul>
+</div>
+<div class="reviewUser">
+    <h3> Review the User </h3>
+    <form id="reviewUser" action="{% url "food.views.reviewUser" user_id=userprofile.pk %}" method="post" class="niceform" novalidate>
+        <label for="rating">Rate the User between 1 and 10:</label>
+        <input type="number" name="rating" min="1" max="10">
+        <label for="userReview">Write a Review:</label>
+        <input type="text" name="userReview" id="userReview">
+        <dl>
+            <dd></dd>
+            <dd>
+            <div class="registerButtons">
+                <input type="submit" value="Review User" class="button" />
+            </div>
+            </dd>
+        </dl>
+    </form>
 </div>
 </body>
 </html>

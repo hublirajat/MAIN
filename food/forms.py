@@ -16,6 +16,9 @@ class EventCreationForm(forms.Form):
 class ReviewForm(forms.Form):
     comment = forms.CharField(max_length=300)
 
+class UserReviewForm(forms.Form):
+    rating = forms.IntegerField(min_value=1, max_value=10)
+    userReview = forms.CharField(max_length=300)
 
 #this class represents the registration form and its validation methods
 class RegistrationForm(forms.Form):
