@@ -29,21 +29,20 @@
 <div class ="viewUser">
 <p> User Details : </p>
 <ul>
-<<<<<<< HEAD
 <td>User Name : {{ user.username }}</td><br>
-<td>First Name : {{ firstname }}</td><br>
-<td>Last Name : {{ lastname }}</td><br>
-<td>Gender : {{ user.get_profile.gender }}</td><br>
-<td>Address : {{ user.get_profile.address }}, {{ user.get_profile.zipCode }}, {{ user.get_profile.country }}</td><br>
-<br>
-<br>
-=======
 <td>Name: {{ userprofile.firstName }} {{ userprofile.lastName }}</td><br>
-<td>User Rating: {{ userreviews.ratingStars }}</td><br>
-<td>User Reviews: {{ userreviews.userReview }}</td><br>
+<td>Gender : {{ userprofile.gender }}</td><br>
+<td>Address : {{ userprofile.address }}, {{ userprofile.zipCode }}, {{ userprofile.country }}</td><br>
+<br>
+<br>
+<td>User Rating: {{ globalrating }}</td><br>
+<td>User Reviews: </td><br>
+<br>
+{% for review in userreviews %}
+	<br>{{ review.userReview }}
+{% endfor %}
 </div>
 <div class ="viewEvent">
->>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1
 <p> Here are some Events Hosted by the user : </p>
 <ul>
 {% for event in events %}
@@ -52,14 +51,12 @@
 {% endfor %}
 </ul>
 </div>
-<<<<<<< HEAD
 <div class="profilePicture">
 {% if profilePicture == '' %}
     <img src="/site_media/img/default_profile.jpg" width="150px" height="150px"/>
 {% else %}
    <img src="{{ profilePicture }}" width="150px" height="150px"/>
 {% endif %}
-=======
 <div class="reviewUser">
     <h3> Review the User </h3>
     <form id="reviewUser" action="{% url "food.views.reviewUser" user_id=userprofile.pk %}" method="post" class="niceform" novalidate>
@@ -76,7 +73,6 @@
             </dd>
         </dl>
     </form>
->>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1
 </div>
 </body>
 </html>

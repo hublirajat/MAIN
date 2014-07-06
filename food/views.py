@@ -1,9 +1,5 @@
 from django.shortcuts import render_to_response
-<<<<<<< HEAD
-from food.models import Event, Review, UserProfile, Notify, Message
-=======
-from food.models import Event, Review, UserProfile, UserReviews
->>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1
+from food.models import Event, Review, UserProfile, Notify, Message, UserReviews
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.forms.widgets import Input
@@ -16,12 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import models
 from django.core.urlresolvers import reverse
-<<<<<<< HEAD
-from food.forms import EventCreationForm, ReviewForm, RegistrationForm
-=======
-from food.forms import EventCreationForm, ReviewForm, UserReviewForm
-from food.forms import RegistrationForm
->>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1
+from food.forms import EventCreationForm, ReviewForm, RegistrationForm, UserReviewForm
 from datetime import datetime
 import os
 os.environ['http_proxy']=''
@@ -85,19 +76,19 @@ def registerNewUser(request):
 			password = form.cleaned_data['password']
 			passwordConfirmation = form.cleaned_data['passwordConfirmation']
 			gender = form.cleaned_data['gender']
-			profilePicture = form.cleaned_data['profilePicture']
+			#profilePicture = form.cleaned_data['profilePicture']
 			address = form.cleaned_data['address']
 			zipCode = form.cleaned_data['zipCode']
 			country = form.cleaned_data['country']
 
 			try:
-				thePic = request.FILES['profilePicture']
-				thePath = settings.MEDIA_ROOT+'/uploadedPics/'+str(profilePicture)
-				path = default_storage.save(thePath, ContentFile(thePic.read()))		
+				#thePic = request.FILES['profilePicture']
+				#thePath = settings.MEDIA_ROOT+'/uploadedPics/'+str(profilePicture)
+				#path = default_storage.save(thePath, ContentFile(thePic.read()))		
 					
 				# we now register the user
 				user = User.objects.create_user(username=username,email=email,password=password)
-				profile = UserProfile.objects.create(user=user,firstName=firstname,lastName=lastname,gender=gender,profilePicture=path,address=address,zipCode=zipCode,country=country)
+				profile = UserProfile.objects.create(user=user,firstName=firstname,lastName=lastname,gender=gender,address=address,zipCode=zipCode,country=country)
 				
 			except Exception as e:
 				print '%s (%s)' % (e.message, type(e))
@@ -108,26 +99,6 @@ def registerNewUser(request):
 		return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 	return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 
-<<<<<<< HEAD
-def viewUserProfile(request, user_id):
-	user = User.objects.get(pk = user_id)
-	userEvents = Event.objects.filter(chef=user)
-	firstname = user.get_profile().firstName
-	lastname = user.get_profile().lastName
-	
-	#very ugly solution, needs to be re-thinked
-	profilePicture = user.get_profile().profilePicture.path
-	splitProf = profilePicture.split('/')
-	splitProf.pop(0)
-	splitProf.pop(0)
-	splitProf.pop(0)
-	splitProf.pop(0)
-	myString = "/".join(splitProf)
-	myString = '/'+myString
-
-	variables = { "firstname" : firstname, "lastname" : lastname, "user" : user, "events" : userEvents, "profilePicture" : myString}
-	return render_to_response('viewUserProfile.html',variables, context_instance=RequestContext(request))
-=======
 def viewUserProfile(request, event_id):
 
 	# Getting the Chef of the Event
@@ -148,16 +119,31 @@ def viewUserProfile(request, event_id):
 	# - ratingStars
 	userprofile = UserProfile.objects.get(user = user1)
 
-	userreviews = UserReviews.objects.get(user = user1)
+	userreviews = []
+
+	if UserReviews.objects.filter(user = user1):
+		userreviews = UserReviews.objects.filter(user = user1)
+
+	#very ugly solution, needs to be re-thinked
+	'''profilePicture = user.get_profile().profilePicture.path
+	splitProf = profilePicture.split('/')
+	splitProf.pop(0)
+	splitProf.pop(0)
+	splitProf.pop(0)
+	splitProf.pop(0)
+	myString = "/".join(splitProf)
+	myString = '/'+myString'''
 
 	# Sending 2 objects to the html page, namely:
 	# - userprofile: UserProfile
 	# - events: Event
 	# - user: User
+	
+	globalRating = calculateGlobalRating(userreviews,0)
 
-	variables = { "userprofile" : userprofile, "userreviews" : userreviews, "events" : myEvents}
+	# profilePicture should be sent inside userprofile, but logic needs to be done on the frontend
+	variables = { "userprofile" : userprofile, "userreviews" : userreviews, "events" : myEvents, "user" : request.user, "globalrating" : globalRating}
 	return render_to_response('viewUserProfile.html',variables)
->>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1
 
 def reviewUser(request, user_id):
 	#e2 = Event.objects.get(pk=event_id)
@@ -175,23 +161,20 @@ def reviewUser(request, user_id):
 			# Get the user reviews from UserReviews userprofile
 			# ToDo: Calculate accurately User Review
 
-			userreviews = UserReviews.objects.get(user = user1)
-			oldrating = userreviews.ratingStars
-			newrating = (oldrating + rating)/2
-			userreviews.ratingStars = newrating
-			userreviews.userReview = textReview
-
-
 			#Get the Reviewer who reviews User Profile
 			theReviewer = User.objects.get(username=request.user.username)
-			userreviews.reviewer = theReviewer
 
-			userreviews.save()
+			UserReviews.objects.create(reviewer=theReviewer, user=user1, userReview=textReview, ratingStars=rating)
+			
+			userreviews = UserReviews.objects.get(user = user1)
+			
+			globalRating = calculateGlobalRating(userreviews,rating)
+				
 
 	user1 = User.objects.get(username = userprofile.user)
 	myEvents = user1.event_chef.all()
 
-	variables = { "userreviews" : userreviews, "events" : myEvents, "userprofile" : userprofile}
+	variables = { "userreviews" : userreviews, "events" : myEvents, "userprofile" : userprofile, "globalrating" : globalrating}
 	return render_to_response('viewUserProfile.html',variables)
 
 # Following views are all Event Related Views
@@ -301,20 +284,14 @@ def viewEvent(request, event_id):
 	
 	return render_to_response('viewEvent.html', variables)
 
-<<<<<<< HEAD
 # this method represents the act of reviewing a given event
 def reviewEvent(request, event_id):
-	e2 = Event.objects.get(pk=event_id)
-=======
-# - Get the corresponding event from Events for event_id
-# - Creation of ReviewForm in forms.py
-# - Defining comment as an attribute of ReviewForm
-# - Get Reviewer and then create review in Review for the reviewer
 
-def reviewEvent(request, event_id):
+	# - Get the corresponding event from Events for event_id
+	# - Creation of ReviewForm in forms.py
+	# - Defining comment as an attribute of ReviewForm
+	# - Get Reviewer and then create review in Review for the reviewer
 	e2 = Event.objects.get(pk=event_id)
-	print e2.chef
->>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1
 
 	if request.method == 'POST':
 		form = ReviewForm(request.POST)
@@ -548,3 +525,16 @@ def normalizeWikiLink(string):
 	# Replace all runs of whitespace with a single dash
 	string = re.sub(r"\s+", '_', string)
 	return string
+	
+def calculateGlobalRating(userreviews,rating):
+	globalRating = 0
+			
+	for review in userreviews:
+		oldrating = review.ratingStars
+		if rating==0:
+			globalRating = oldrating
+		else :
+			globalRating = (oldrating + rating)/2
+	
+	return globalRating
+	

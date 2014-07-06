@@ -63,7 +63,7 @@ class RegistrationForm(forms.Form):
 	email = forms.EmailField(max_length=50, widget=Html5EmailInput())
 	password = forms.CharField(max_length=50, widget=forms.PasswordInput())
 	passwordConfirmation = forms.CharField(max_length=50, widget=forms.PasswordInput())
-	profilePicture = forms.ImageField()#required=False,)
+	profilePicture = forms.ImageField(required=False)
 	address = forms.CharField(max_length=100)
 	zipCode = forms.CharField(max_length=5)
 	country = forms.ChoiceField(choices=countryList, initial='France', required = True,)

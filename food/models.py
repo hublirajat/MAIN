@@ -79,18 +79,12 @@ class UserProfile(models.Model):
 	user = models.ForeignKey(User, unique=True)
 	firstName = models.CharField(max_length=30)
 	lastName = models.CharField(max_length=30)
-<<<<<<< HEAD
 	address = models.CharField(max_length=140)  
 	gender = models.CharField(max_length=140)  
-	profilePicture = models.ImageField(upload_to='/staticfiles/uploadedPics/', default="/staticfiles/img/default_profile.jpg")
+	profilePicture = models.ImageField(upload_to='/staticfiles/uploadedPics/', default="/staticfiles/img/default_profile.jpg",null=True, blank=True)
 	address = models.CharField(max_length=200)
 	zipCode = models.CharField(max_length=5)
 	country = models.CharField(max_length=100)
-
-	def __unicode__(self):
-		return u'Profile of user: %s' % self.user.username
-=======
-	#profile_picture = models.ImageField(upload_to='thumbpath', blank=True)
 
 	def __unicode__(self):
 		return u'Profile of user: %s' % self.user.username
@@ -104,6 +98,3 @@ class UserReviews(models.Model):
 
 	def __unicode__(self):
 		u'Review for the User: %s' % self.userReview
-
-
->>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1

@@ -38,7 +38,8 @@
 				{% endif %}
 				<br>
 				<br>
-                <a href="/logout/">Logout</a> | <a href="{% url 'food.views.viewUserProfile' user_id=userId %}">Profile</a> |
+                <a href="/logout/">Logout</a>
+                
 				<a href="/insertview/">Home</a>
             </div>
         </header>
@@ -46,22 +47,25 @@
     </section>
 </div>
 <div class = "welcomeHeader">
-<<<<<<< HEAD
-<h2> Hello {{ firstname }} {{ lastname }}! </h2>
-=======
-<h2>  Welcome to the Fooding Dashboard </h2>
->>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1
+<h2> Hello {{ firstname }} {{ lastname }}! Welcome to the Fooding Dashboard! </h2>
 </div>
 <div class ="viewEvent">
 <p> Here are the details for the Event : </p>
 <ul>
 <li>{{ event.title }} - {{event.description}}</li>
 <td> This event is a {{event.mealType}}, of {{event.cuisineType}} cuisine</td><br>
-<td>Date and Time of the Event: {{ event.dateOfEvent }}</td><br>
-<<<<<<< HEAD
-<td>Address : {{ event.address }}</td><br>
-<td>Created by <a href="{% url 'food.views.viewUserProfile' user_id=event.chef.pk %}">{{event.chef}}</a> on {{event.creation_timestamp}}</td><br>
-
+<td>Date and Time of the Event: {{ event.dateOfEvent }}</td><br><td>Address : {{ event.address }}</td><br>
+<td>Created by {{event.chef}}<a href="{% url "food.views.viewUserProfile" event_id=event.pk%}"> View Owner </a></td><br>
+<td>Number of Guests who wish to Join: {{ NumberOfGuests }} </td><br>
+{% for guest in guests %}
+    <td><a href="{% url 'food.views.viewUserProfile' user_id=guest.pk %}"> {{guest}} </a></td><br>
+{% endfor %}
+<td><a href="{% url "food.views.participateInEvents" event_id=event.pk %}">Participate</a></td><br>
+<td>Accepted Guests:  </td><br>
+<p>Event Reviews and Comments: </p><br>
+{% for review in reviews %}
+    <li>{{review.comment}} : By {{review.reviewer}}</li><br>
+{% endfor %}
 <br>
 
 <br>
@@ -104,14 +108,6 @@
  
  <td>Participants: {{ event.guests.count }} out of {{ event.numberOfParticipants}} </td>
  <br>
-=======
-<td>Created by {{event.chef}}<a href="{% url "food.views.viewUserProfile" event_id=event.pk%}"> View Owner </a></td><br>
-<td>Number of Guests who wish to Join: {{ NumberOfGuests }} </td><br>
->>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1
-{% for guest in guests %}
-    <td><a href="{% url 'food.views.viewUserProfile' user_id=guest.pk %}"> {{guest}} </a></td><br>
-{% endfor %}
-<<<<<<< HEAD
 {% if event.chef.id != userId  %}
 	{% if event.guests.count < event.numberOfParticipants %}
 	{% if user not in guests %}
@@ -169,13 +165,6 @@
 	
 	</script>
 	</div>
-=======
-<td><a href="{% url "food.views.participateInEvents" event_id=event.pk %}">Participate</a></td><br>
-<td>Accepted Guests:  </td><br>
-<p>Event Reviews and Comments: </p><br>
-{% for review in reviews %}
-    <li>{{review.comment}} : By {{review.reviewer}}</li><br>
-{% endfor %}
 
 </ul>
 </div>
@@ -194,6 +183,5 @@
         </dl>
     </form>
 </div>
->>>>>>> 73670066feaea5a7344b01af309732e5dc6b94b1
 </body>
 </html>

@@ -78,7 +78,7 @@ DB_PATH = BASE_DIR+'fooding/fooding.db'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/home/chris/fooding/fooding.db',
+        'NAME': '/Users/chris/fooding/fooding.db',
     }
 }
 
