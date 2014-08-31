@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW"> 
+        <meta name="viewport" content="width=device-width, user-scalable=yes" /> <!-- responsive -->
+        <meta name="viewport" content="initial-scale=1.0" /> <!-- responsive -->
+        <meta charset="utf-8">
+        <title>Titre de la page</title>
+        <link rel="stylesheet" href="/site_media/css/style.css" />
+        <link rel="stylesheet" href="/site_media/css/normalise.css" />
+        <link href="//fonts.googleapis.com/css?family=Muli:300italic,300,400italic,400" rel="stylesheet" type="text/css">
+        <link href="//fonts.googleapis.com/css?family=Comfortaa:300,400,700" rel="stylesheet" type="text/css">
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+        <script type="text/javascript" src="/site_media/modules/menu_user/js/modernizr.custom.79639.js"></script> <!-- debut menu nb credits -->
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript">
+            function DropDown(el) {
+                this.dd = el;
+                this.initEvents();
+            }
+            DropDown.prototype = {
+                initEvents : function() {
+                    var obj = this;
+                    obj.dd.on('click', function(event){
+                        $(this).toggleClass('active');
+                        event.stopPropagation();
+                    });	
+                }
+            }
+            $(function() {
+                var menuUser = new DropDown( $('#menuUser') );
+                $(document).click(function() {
+                    $('.wrapper-dropdown').removeClass('active');
+                });
+            });
+        </script>
+        <link href='/site_media/modules/menu_user/css/style.css' rel='stylesheet' type='text/css' />
+        <noscript><link rel="stylesheet" type="text/css" href="/site_media/modules/menu_user/css/noJS.css" /></noscript> <!--fin menu -->
+        <link rel="stylesheet" type="text/css" href="/site_media/modules/freewall-master/css/style.css" /> <!-- firewall -->
+        <script type="text/javascript" src="/site_media/modules/freewall-master/js/freewall.js"></script>
+        <script type="text/javascript" src="/site_media/modules/freewall-master/js/index.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                app.setup({
+                    share: 1,
+                    color: 1,
+                    layout: 1,
+                    mapage: 1,
+                    moncompte: 1,
+                    infospersos: 1,
+                    messagerie: 1,
+                    mesevenements: 1,
+                    demandes: 1,
+                    preload: 1,
+                    drillhole: 1
+                });
+            });
+        </script>
+        <style type="text/css">
+            .free-wall {margin:15px;}
+        </style> <!-- fin firewall-->
+        <link rel="stylesheet" href="/site_media/modules/accordeon/css/smk-accordion.css" />
+    </head>
+	<body>
+    	<div id="wrapper"> 
+            <header>
+	           	<ul class="reponsive-block">
+                	<li><a class="desktop active" data-width="auto"></a></li> 
+                    <li><a class="tablet-landscape" data-width="1024"></a></li>
+                    <li><a class="tablet-portrait" data-width="768"></a></li>
+                    <li><a class="iphone-landscape" data-width="960"></a></li>
+	                <li><a class="iphone-portrait" data-width="640"></a></li>
+                </ul>	
+                <div class="logo">
+	                <a href="http://fooding.lavieengreene.fr/v2/" title=""><img src="/site_media/img/structure/logo.png" width="346" height="100" alt="logo" /></a>
+    			</div>
+                <nav>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-bell"></i></a></li>
+                        <li id="menuUser" class="wrapper-dropdown" tabindex="1">John Doe
+                            <ul class="dropdown">
+                                <li><a href="profil.html"><i class="fa fa-user"></i>Espace personnel</a></li>
+                                <li><a href="logout.html"><i class="fa fa-times"></i>Deconnexion</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </header>
+            <div class="trouver">
+                <form action="#">
+                    <input type="text" value="Où ?">
+                    <input type="date" value="Quand ?">
+                    <input type="button" value="Rechercher">
+                </form>
+            </div>    
+        <section>    
+            <div class="free-wall">
+<!-- ma page -->
+                <div class="brick size21 mapage">
+                    <div class="cover" id="mapage">
+                        <div class="float-left">
+                            <h2>Ma page</h2>
+                            <div class="read-more"></div>
+                        </div>
+                        <div class='desc'>
+                            <h2>
+                                <span>Ma page</span>
+                            </h2>                            
+                            <div class="contenu contenuProfil">    
+                                <div class="maPage">    
+                                    <section>
+                                        <img class="imgProfil" src="/site_media/img/structure/photoRecherche.jpg" width="160" height="120px" />
+                                        <div>
+                                            <span>Sophie</span>
+                                            <img src="/site_media/img/structure/etoiles.png" width="180" height="37" alt="" /> 
+                                        </div>
+                                        <div>
+                                            <p>
+                                                25ans<br/>
+                                                Nice<br/>
+                                                &Eacute;tudiante 
+                                            </p>   
+                                            <blockquote>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim </blockquote>
+                                        </div>
+                                    </section>
+                                    <hr />    
+                                    <section class="cuisines">
+                                        Sp&eacute;cialit&eacute;s <img src="/site_media/img/structure/drapeaux.png" width="98" height="21" alt="" /> 
+                                    </section>    
+                                    <hr />
+                                    <section>
+                                        <div class="entete">
+                                            <h4>12 participations</h4>
+                                            <p>2<img src="/site_media/img/structure/vote-positif.png" width="17" height="17" alt="" /> | 2<img src="/site_media/img/structure/vote-negatif.png" width="17" height="17" alt="" /></p>
+                                        </div>    
+                                        <div class="champs">
+                                            <p><span>11/06/2014 <strong>Marie</strong> -</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p> 
+                                            <p><span>11/06/2014 <strong>Marie</strong> -</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p> 
+                                            <p><span>11/06/2014 <strong>Marie</strong> -</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p> 
+                                        </div>
+                                    </section>    
+                                    <hr />
+                                    <section>
+                                        <div class="entete">
+                                            <h4>3 &eacute;v&eacute;nements organis&eacute;s</h4>
+                                            <p>2<img src="/site_media/img/structure/vote-positif.png" width="17" height="17" alt="" /> | 2<img src="/site_media/img/structure/vote-negatif.png" width="17" height="17" alt="" /></p>
+                                        </div>    
+                                        <div class="champs">
+                                            <p><span>11/06/2014 <strong>Marie</strong> -</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p> 
+                                            <p><span>11/06/2014 <strong>Marie</strong> -</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p> 
+                                            <p><span>11/06/2014 <strong>Marie</strong> -</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>       
+                                        </div>
+                                    </section>    
+                                </div>
+       						</div>                            
+                        </div>
+                    </div>
+                </div>
+<!-- fin ma page -->
+<!-- mon compte -->  			
+				<div class="brick size21 moncompte">
+                    <div class="cover" id="moncompte">
+                        <div class="float-left">
+                            <h2>mon compte</h2>
+                            <div class="read-more"></div>
+                        </div>
+                        <div class='desc'>
+                            <h2>
+                                <span>Mon compte</span>
+                            </h2>
+                            <div class="contenu contenuProfil">
+                                <form action="#" class="monCompte">
+                                    <span>Statut de votre compte</span>
+                                    <input type="radio" id="actif" value="actif" name="" /><label for="actif">Actif</label>
+                                    <input type="radio" id="intactif" value="inactif" name="" /><label for="inactif">Inactif</label>
+                                    <br/>
+                                    <label for="mdp">Mot de passe</label>
+                                    <input type="password" value="" form="mdp" />
+                                    <br/>
+                                    <label for="mdpVerif">R&eacute;p&eacute;ter le mot de passe</label>
+                                    <input type="password" value="" form="mdpVerif" />
+                                    <br/>
+                                    <input type="button" value="Valider">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<!-- fin mon compte -->
+<!-- informations personnelles -->  			
+				<div class="brick size21 infospersos">
+                    <div class="cover" id="infospersos">
+                        <div class="float-left">
+                            <h2>Information personnelles</h2>
+                            <div class="read-more"></div>
+                        </div>
+                        <div class='desc'>
+                            <h2>
+                                <span>Informations personnelles</span>
+                            </h2>
+                            <div class="contenu contenuProfil">
+                                <form class="infoPersonnelles">
+                                    <label for="prenom">Prenom</label>
+                                    <input name="prenom" type="text" placeholder="Prenom" id="prenom" />
+                                <br/>
+                                    <label for="nom">Nom</label>
+                                    <input name="nom" type="text" placeholder="Nom" id="nom" />
+                                <br/>
+                                    <label for="dateNaissance">Date de naissance</label>
+                                    <input name="dateNaissance" type="text" id="dateNaissance" placeholder="Date de naissance" />
+                                <br/>   
+                                    <label for="email">Email</label>
+                                    <input name="email" type="text" id="email" placeholder="Email" />
+                                <br/> 
+                                    <label for="telephone">Telephone</label>
+                                    <input name="telephone" type="text" placeholder="Telephone" id="telephone" />      
+                                <br/>
+                                    <label for="photo">Photo</label>
+                                    <input name="photo" type="file" id="photo" />
+                                <br/>
+                                    <label for="cuisines">Cuisines</label>
+                                    <input name="cuisines" type="text" id="cuisines" placeholder="Cuisines..." />
+                                <br/>       
+                                    <label for="profession">Profession</label>
+                                    <input name="profession" type="text" id="profession" placeholder="Profession" />
+                                <br/>
+                                    <label for="presentation">Pr&eacute;sentation</label>
+                                    <textarea name="presentation" id="presentation" placeholder="Pr&eacute;sentation"></textarea>    
+                                    
+                                <br/>       
+                                    <input type="button" value="Valider" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<!-- fin informations personnelles -->
+<!-- messagerie -->  			
+				<div class="brick size21 messagerie">
+                    <div class="cover" id="messagerie">
+                        <div class="float-left">
+                            <h2>Messagerie</h2>
+                            <div class="read-more"></div>
+                        </div>
+                        <div class='desc'>
+                            <h2>
+                                <span>Messagerie</span>
+                            </h2>
+                            <div class="contenu contenuProfil">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<!-- fin messagerie -->
+<!-- mes evenements -->  			
+				<div class="brick size21 mesevenements">
+                    <div class="cover" id="mesevenements">
+                        <div class="float-left">
+                            <h2>Mes &eacute;v&eacute;nements</h2>
+                            <div class="read-more"></div>
+                        </div>
+                        <div class='desc'>
+                            <h2>
+                                <span>Mes &eacute;v&eacute;nements</span>
+                            </h2>
+                            <div class="contenu contenuProfil">
+								<section class="resultats mesEvenementsTBD">
+                                    <div class="entete">
+                                        <form action="#">
+                                            <label for="tri">Trier par</label>
+                                            <select name="tri" id="tri">
+                                                <option value="distance">distance</option>
+                                                <option value="experience">experience</option>
+                                                <option value="tarif">tarif</option>
+                                                <option value="avis">avis</option>
+                                            </select>    
+                                        </form>    
+                                    </div>
+                                    <div class="liste">
+                                        <div class="liste accordion_example4">                                        
+                                            <div class="accordion_in">
+                                                <div class="acc_head">
+                                                    <article>
+                                                        <div class="colonne1">
+                                                            <img src="/site_media/img/structure/photoRecherche.jpg" width="100" height="75" alt="portrait" />
+                                                            <p>
+                                                                Sophie<br/>
+                                                                25ans<br/>
+                                                                Confirm&eacute;<br/>
+                                                                <img src="/site_media/img/structure/etoiles.png" width="74" height="15" alt="etoiles" />
+                                                             </p>
+                                                         </div>
+                                                         <div class="colonne2">
+                                                            <img src="/site_media/img/structure/panneau.png" width="24" height="55" alt="panneaux" />
+                                                         </div>
+                                                         <div class="colonne3">
+                                                            <p>
+                                                                <span>Aujourd'hui &agrave; 18h</span><br/>
+                                                                Cuisine ni&ccedil;oise<br/>
+                                                                Nb de place : 8<br/>
+                                                            </p>
+                                                         </div>            	
+                                                         <div class="colonne4">
+                                                            <p><span>7&euro;</span><br/>par participant</p>
+                                                            <p><span>2</span> places restantes</p>
+                                                         </div>
+                                                    </article>                
+                                                </div>
+                                                <div class="acc_content">
+                                                    <div class="colonne1">
+                                                        <h4>Menu</h4>
+                                                        <p><strong>Entrée :</strong> socca</p>
+                                                        <p><strong>Pl&acirc;t :</strong> salade ni&ccedil;oise, farcis.</p>
+                                                        <p><strong>D&eacute;ssert :</strong> tourte de blettes.</p>
+                                                    </div>
+                                                    <div class="colonne2">
+                                                        <h4>Organisation</h4>
+                                                        <p>Je commencerai la préparation à 17h30. Vous pouvez venir m'aider si vous le souhaitez. Le repas devrait commencer vers 20h.</p>
+                                                    </div>
+                                                    <div class="colonne3">
+                                                        <h4>Participants</h4>
+                                                        <ul>
+                                                            <li class="demandeAcceptee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeAcceptee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeAcceptee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeAcceptee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeEnAttente"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeEnAttente"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeRefusee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeRefusee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        </ul>
+                                                     </div>
+                                                </div>
+                                           </div>             
+                                           <div class="accordion_in">
+                                                <div class="acc_head">
+                                                    <article>
+                                                        <div class="colonne1">
+                                                            <img src="/site_media/img/structure/photoRecherche.jpg" width="100" height="75" alt="portrait" />
+                                                            <p>
+                                                                Sophie<br/>
+                                                                25ans<br/>
+                                                                Confirm&eacute;<br/>
+                                                                <img src="/site_media/img/structure/etoiles.png" width="74" height="15" alt="etoiles" />
+                                                             </p>
+                                                         </div>
+                                                         <div class="colonne2">
+                                                            <img src="/site_media/img/structure/panneau.png" width="24" height="55" alt="panneaux" />
+                                                         </div>
+                                                         <div class="colonne3">
+                                                            <p>
+                                                                <span>Aujourd'hui &agrave; 18h</span><br/>
+                                                                Cuisine ni&ccedil;oise<br/>
+                                                                Nb de place : 8<br/>
+                                                            </p>
+                                                         </div>            	
+                                                         <div class="colonne4">
+                                                            <p><span>7&euro;</span><br/>par participant</p>
+                                                            <p><span>2</span> places restantes</p>
+                                                         </div>
+                                                    </article>                
+                                                </div>
+                                                <div class="acc_content">
+                                                    <div class="colonne1">
+                                                        <h4>Menu</h4>
+                                                        <p><strong>Entrée :</strong> socca</p>
+                                                        <p><strong>Pl&acirc;t :</strong> salade ni&ccedil;oise, farcis.</p>
+                                                        <p><strong>D&eacute;ssert :</strong> tourte de blettes.</p>
+                                                    </div>
+                                                    <div class="colonne2">
+                                                        <h4>Organisation</h4>
+                                                        <p>Je commencerai la préparation à 17h30. Vous pouvez venir m'aider si vous le souhaitez. Le repas devrait commencer vers 20h.</p>
+                                                    </div>
+                                                    <div class="colonne3">
+                                                        <h4>Participants</h4>
+                                                        <ul>
+                                                            <li class="demandeAcceptee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeAcceptee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeAcceptee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeAcceptee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeEnAttente"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeEnAttente"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeRefusee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeRefusee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        </ul>
+                                                     </div>
+                                               </div>
+                                           </div>    
+                                            <div class="accordion_in">
+                                                <div class="acc_head">
+                                                    <article>
+                                                        <div class="colonne1">
+                                                            <img src="/site_media/img/structure/photoRecherche.jpg" width="100" height="75" alt="portrait" />
+                                                            <p>
+                                                                Sophie<br/>
+                                                                25ans<br/>
+                                                                Confirm&eacute;<br/>
+                                                                <img src="/site_media/img/structure/etoiles.png" width="74" height="15" alt="etoiles" />
+                                                             </p>
+                                                         </div>
+                                                         <div class="colonne2">
+                                                            <img src="/site_media/img/structure/panneau.png" width="24" height="55" alt="panneaux" />
+                                                         </div>
+                                                         <div class="colonne3">
+                                                            <p>
+                                                                <span>Aujourd'hui &agrave; 18h</span><br/>
+                                                                Cuisine ni&ccedil;oise<br/>
+                                                                Nb de place : 8<br/>
+                                                            </p>
+                                                         </div>            	
+                                                         <div class="colonne4">
+                                                            <p><span>7&euro;</span><br/>par participant</p>
+                                                            <p><span>2</span> places restantes</p>
+                                                         </div>
+                                                    </article>                
+                                                </div>
+                                                <div class="acc_content">
+                                                    <div class="colonne1">
+                                                        <h4>Menu</h4>
+                                                        <p><strong>Entrée :</strong> socca</p>
+                                                        <p><strong>Pl&acirc;t :</strong> salade ni&ccedil;oise, farcis.</p>
+                                                        <p><strong>D&eacute;ssert :</strong> tourte de blettes.</p>
+                                                    </div>
+                                                    <div class="colonne2">
+                                                        <h4>Organisation</h4>
+                                                        <p>Je commencerai la préparation à 17h30. Vous pouvez venir m'aider si vous le souhaitez. Le repas devrait commencer vers 20h.</p>
+                                                    </div>
+                                                    <div class="colonne3">
+                                                        <h4>Participants</h4>
+                                                        <ul>
+                                                            <li class="demandeAcceptee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeAcceptee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeAcceptee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeAcceptee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeEnAttente"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeEnAttente"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeRefusee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                            <li class="demandeRefusee"><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        </ul>
+                                                    </div>                                                                                       
+                                                </div>
+                                            </div>   
+                                       </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<!-- fin mes evenements -->
+<!-- mes demandes -->  			
+				<div class="brick size21 demandes">
+                    <div class="cover" id="demandes">
+                        <div class="float-left">
+                            <h2>Mes demandes</h2>
+                            <div class="read-more"></div>
+                        </div>
+                        <div class='desc'>
+                            <h2>
+                                <span>Mes demandes</span>
+                            </h2>
+                            <div class="contenu contenuProfil">
+                                <section class="resultats mesDemandesTBD">
+                                        <div class="entete">
+                                            <form action="#">
+                                                <label for="tri">Trier par</label>
+                                                <select name="tri" id="tri">
+                                                    <option value="distance">distance</option>
+                                                    <option value="experience">experience</option>
+                                                    <option value="tarif">tarif</option>
+                                                    <option value="avis">avis</option>
+                                                </select>    
+                                            </form>    
+                                        </div>
+                                    <div class="liste accordion_example4">                                        
+                                        <div class="accordion_in">
+                                            <div class="acc_head">
+                                                <article>
+                                                    <div class="colonne1">
+                                                        <img src="/site_media/img/structure/photoRecherche.jpg" width="100" height="75" alt="portrait" />
+                                                        <p>
+                                                            Sophie<br/>
+                                                            25ans<br/>
+                                                            Confirm&eacute;<br/>
+                                                            <img src="/site_media/img/structure/etoiles.png" width="74" height="15" alt="etoiles" />
+                                                         </p>
+                                                     </div>
+                                                     <div class="colonne2">
+                                                        <img src="/site_media/img/structure/panneau.png" width="24" height="55" alt="panneaux" />
+                                                     </div>
+                                                     <div class="colonne3">
+                                                        <p>
+                                                            <span>Aujourd'hui &agrave; 18h</span><br/>
+                                                            Cuisine ni&ccedil;oise<br/>
+                                                            Nb de place : 8<br/>
+                                                        </p>
+                                                     </div>            	
+                                                     <div class="colonne4">
+                                                        <p><span>7&euro;</span><br/>par participant</p>
+                                                        <p><span>2</span> places restantes</p>
+                                                     </div>
+                                                </article>                
+                                            </div>
+                                            <div class="acc_content">
+                                                <div class="colonne1">
+                                                    <h4>Menu</h4>
+                                                    <p><strong>Entrée :</strong> socca</p>
+                                                    <p><strong>Pl&acirc;t :</strong> salade ni&ccedil;oise, farcis.</p>
+                                                    <p><strong>D&eacute;ssert :</strong> tourte de blettes.</p>
+                                                </div>
+                                                <div class="colonne2">
+                                                    <h4>Organisation</h4>
+                                                    <p>Je commencerai la préparation à 17h30. Vous pouvez venir m'aider si vous le souhaitez. Le repas devrait commencer vers 20h.</p>
+                                                </div>
+                                                <div class="colonne3">
+                                                    <h4>Participants</h4>
+                                                    <ul>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                    </ul>
+                                                 </div>                                                                                       
+                                                 <div class="colonne4">
+                                                    <p>Demande<br/><span class="demandeRefusee">refus&eacute;e</span></p>
+                                                 </div>                                                
+                                            </div>
+                                       </div>             
+                                       <div class="accordion_in">
+                                            <div class="acc_head">
+                                                <article>
+                                                    <div class="colonne1">
+                                                        <img src="/site_media/img/structure/photoRecherche.jpg" width="100" height="75" alt="portrait" />
+                                                        <p>
+                                                            Sophie<br/>
+                                
+                                
+                                                            25ans<br/>
+                                                            Confirm&eacute;<br/>
+                                                            <img src="/site_media/img/structure/etoiles.png" width="74" height="15" alt="etoiles" />
+                                                         </p>
+                                                     </div>
+                                                     <div class="colonne2">
+                                                        <img src="/site_media/img/structure/panneau.png" width="24" height="55" alt="panneaux" />
+                                                     </div>
+                                                     <div class="colonne3">
+                                                        <p>
+                                                            <span>Aujourd'hui &agrave; 18h</span><br/>
+                                                            Cuisine ni&ccedil;oise<br/>
+                                                            Nb de place : 8<br/>
+                                                        </p>
+                                                     </div>            	
+                                                     <div class="colonne4">
+                                                        <p><span>7&euro;</span><br/>par participant</p>
+                                                        <p><span>2</span> places restantes</p>
+                                                     </div>
+                                                </article>                
+                                            </div>
+                                            <div class="acc_content">
+                                                <div class="colonne1">
+                                                    <h4>Menu</h4>
+                                                    <p><strong>Entrée :</strong> socca</p>
+                                                    <p><strong>Pl&acirc;t :</strong> salade ni&ccedil;oise, farcis.</p>
+                                                    <p><strong>D&eacute;ssert :</strong> tourte de blettes.</p>
+                                                </div>
+                                                <div class="colonne2">
+                                                    <h4>Organisation</h4>
+                                                    <p>Je commencerai la préparation à 17h30. Vous pouvez venir m'aider si vous le souhaitez. Le repas devrait commencer vers 20h.</p>
+                                                </div>
+                                                <div class="colonne3">
+                                                    <h4>Participants</h4>
+                                                    <ul>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                    </ul>
+                                                 </div>                                                                                       
+                                                 <div class="colonne4">
+                                                    <p>Demande<br/><span class="demandeEnAttente">en attente</span></p>
+                                                 </div>                                                
+                                           </div>
+                                       </div>    
+                                        <div class="accordion_in">
+                                            <div class="acc_head">
+                                                <article>
+                                                    <div class="colonne1">
+                                                        <img src="/site_media/img/structure/photoRecherche.jpg" width="100" height="75" alt="portrait" />
+                                                        <p>
+                                                            Sophie<br/>
+                                                            25ans<br/>
+                                                            Confirm&eacute;<br/>
+                                                            <img src="/site_media/img/structure/etoiles.png" width="74" height="15" alt="etoiles" />
+                                                         </p>
+                                                     </div>
+                                                     <div class="colonne2">
+                                                        <img src="/site_media/img/structure/panneau.png" width="24" height="55" alt="panneaux" />
+                                                     </div>
+                                                     <div class="colonne3">
+                                                        <p>
+                                                            <span>Aujourd'hui &agrave; 18h</span><br/>
+                                                            Cuisine ni&ccedil;oise<br/>
+                                                            Nb de place : 8<br/>
+                                                        </p>
+                                                     </div>            	
+                                                     <div class="colonne4">
+                                                        <p><span>7&euro;</span><br/>par participant</p>
+                                                        <p><span>2</span> places restantes</p>
+                                                     </div>
+                                                </article>                
+                                            </div>
+                                            <div class="acc_content">
+                                                <div class="colonne1">
+                                                    <h4>Menu</h4>
+                                                    <p><strong>Entrée :</strong> socca</p>
+                                                    <p><strong>Pl&acirc;t :</strong> salade ni&ccedil;oise, farcis.</p>
+                                                    <p><strong>D&eacute;ssert :</strong> tourte de blettes.</p>
+                                                </div>
+                                                <div class="colonne2">
+                                                    <h4>Organisation</h4>
+                                                    <p>Je commencerai la préparation à 17h30. Vous pouvez venir m'aider si vous le souhaitez. Le repas devrait commencer vers 20h.</p>
+                                                </div>
+                                                <div class="colonne3">
+                                                    <h4>Participants</h4>
+                                                    <ul>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                        <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                    </ul>
+                                                 </div>                                                                                       
+                                                 <div class="colonne4">
+                                                    <p>Demande<br/><span class="demandeAcceptee">accept&eacute;e</span></p>
+                                                 </div>                                                
+                                             </div>
+                                       </div>   
+                                </section>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<!-- fin demandes -->
+            </div>
+		</section>
+        <div class="back-button">
+			<a href="javascript:void(0)" class="back-icon"></a>
+		</div>
+    </div>    
+	<footer>
+        <div class="content">
+            <blockquote>
+                Fooding a pour 
+                objectif de réunir les personnes autour d’une passion 
+                commune dans une ambiance conviviale.
+            </blockquote>
+            <ul>
+                <li><h4>Infos pratiques</h4></li>
+                <li><a href="" title="">Comment &ccedil;a marche ?</a></li>
+                <li><a href="" title="">Applications Mobile</a></li>
+                <li><a href="" title="">T&eacute;moignages et anecdotes</a></li>
+                <li><a href="" title="">Les avis</a></li>
+                <li><a href="" title="">FAQ / Questions fr&eacute;quentes</a></li>
+            </ul>  
+            <ul>
+                <li><h4>&Agrave; propos</h4></li>
+                <li><a href="" title="">Qui sommes-nous ?</a></li>
+                <li><a href="" title="">Partenaires</a></li>
+                <li><a href="" title="">Charte de bonne conduite</a></li>
+                <li><a href="" title="">Conditions G&eacute;n&eacute;rales</a></li>
+                <li><a href="" title="">Contact</a></li>
+            </ul>
+            <ul class="social">
+                <li><h4>Suivez nous sur</h4></li>
+                <li><a href="" title=""><i class="fa fa-twitter"></i></a></li>
+                <li><a href="" title=""><i class="fa fa-facebook"></i></a></li>
+                <li><a href="" title=""><i class="fa fa-google-plus"></i></a></li>
+            </ul>
+            <ul class="applis">
+                <li><h4>T&eacute;l&eacute;chargez l'appli</h4></li>
+                <li><a href="" title=""><i class="fa fa-android fa-2"></i></a></li>
+                <li><a href="" title=""><i class="fa fa-apple fa-3"></i></a></li>
+                <li><a href="" title=""><i class="fa fa-windows fa-4"></i></a></li>
+            </ul>
+        </div>        
+        <div class="copyright">
+            <p>&copy; Fooding 2014</p>  
+        </div>    
+    </footer>
+	<script type="text/javascript" src="/site_media/modules/accordeon/js/smk-accordion.js"></script>
+        <script type="text/javascript">
+            jQuery(document).ready(function($){
+                $(".accordion_example4").smk_Accordion({
+                    closeAble: true, //boolean
+                    closeOther: false, //boolean
+                });
+               
+            });
+        </script>
+</body>
+</html>

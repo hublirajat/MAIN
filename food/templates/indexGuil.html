@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW"> 
+        <meta name="viewport" content="width=device-width, user-scalable=yes" /> <!-- responsive -->
+        <meta name="viewport" content="initial-scale=1.0" /> <!-- responsive -->
+        <meta charset="utf-8">
+        <title>Titre de la page</title>
+        <link rel="stylesheet" href="/site_media/css/style.css" />
+        <link rel="stylesheet" href="/site_media/css/normalise.css" />
+        <link href="//fonts.googleapis.com/css?family=Muli:300italic,300,400italic,400" rel="stylesheet" type="text/css">
+        <link href="//fonts.googleapis.com/css?family=Comfortaa:300,400,700" rel="stylesheet" type="text/css">
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0//site_media/css/font-awesome.min.css" rel="stylesheet">
+        <script type="text/javascript" src="/site_media/modules/menu_user/js/modernizr.custom.79639.js"></script> <!-- debut menu nb credits -->
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript">
+            function DropDown(el) {
+                this.dd = el;
+                this.initEvents();
+            }
+            DropDown.prototype = {
+                initEvents : function() {
+                    var obj = this;
+                    obj.dd.on('click', function(event){
+                        $(this).toggleClass('active');
+                        event.stopPropagation();
+                    });	
+                }
+            }
+            $(function() {
+                var menuUser = new DropDown( $('#menuUser') );
+                $(document).click(function() {
+                    $('.wrapper-dropdown').removeClass('active');
+                });
+            });
+        </script>
+        <link href='/site_media/modules/menu_user/css/style.css' rel='stylesheet' type='text/css' />
+        <noscript><link rel="stylesheet" type="text/css" href="/site_media/modules/menu_user/css/noJS.css" /></noscript> <!--fin menu -->
+        <link rel="stylesheet" type="text/css" href="/site_media/modules/freewall-master/css/style.css" /> <!-- firewall -->
+        <script type="text/javascript" src="/site_media/modules/freewall-master/js/freewall.js"></script>
+        <script type="text/javascript" src="/site_media/modules/freewall-master/js/index.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                app.setup({
+                    share: 1,
+                    color: 1,
+                    layout: 1,
+                    comment: 1,
+                    proposer: 1,
+                    presdevous: 1,
+                    preload: 1,
+                    drillhole: 1
+                });
+            });
+        </script>
+        <style type="text/css">
+            .free-wall {
+                margin: 15px;
+            }
+        </style> <!-- fin firewall-->
+        <link rel="stylesheet" href="/site_media/modules/accordeon/css/smk-accordion.css" />
+    </head>
+	<body>
+    	<div id="wrapper">
+            <header>
+	           	<ul class="reponsive-block">
+                	<li><a class="desktop active" data-width="auto"></a></li> 
+                    <li><a class="tablet-landscape" data-width="1024"></a></li>
+                    <li><a class="tablet-portrait" data-width="768"></a></li>
+                    <li><a class="iphone-landscape" data-width="960"></a></li>
+	                <li><a class="iphone-portrait" data-width="640"></a></li>
+                </ul>	
+                <div class="logo">
+	                <a href="http://fooding.lavieengreene.fr/v2/" title=""><img src="/site_media/img/structure/logo.png" width="346" height="100" alt="logo" /></a>
+    			</div>
+                <nav>
+                    <ul>
+                        <li><a href="#"><i class="fa fa-bell"></i></a></li>
+                        <li id="menuUser" class="wrapper-dropdown" tabindex="1">John Doe
+                            <ul class="dropdown">
+                                <li><a href="{% url 'food.views.viewUserProfile' event_id=userId %}">Profile</a><i class="fa fa-user"></i>Espace personnel</a></li>
+                                <li><a href="logout.html"><i class="fa fa-times"></i>Deconnexion</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </header>
+            <div class="trouver">
+                <form action="#">
+                    <input type="text" value="Où ?">
+                    <input type="date" value="Quand ?">
+                    <input type="button" value="Rechercher">
+                </form>
+            </div>
+        <section>    
+            <div class="free-wall">
+ <!-- page presdevous  -->               
+                <div class="brick size22 presdevous">
+                    <div class="cover" id="presdevous">
+                        <div class="float-left">
+                            <h2>Pr&egrave;s de chez vous</h2>
+                            <img src="/site_media/img/structure/carto.jpg" width="349" height="211" alt="carto" />
+                            <div class="read-more"></div>
+                        </div>
+                        <div class='desc'>  
+                            <h2>
+                                <span>Rechercher un &eacute;v&eacute;nement Fooding</span>
+                            </h2>
+                            <div class="contenu">             
+                                <div class="carto">
+                                    <img src="/site_media/img/structure/cartoRecherche.jpg" width="954" height="200" alt="carto" />
+                                </div>
+                                <div class="filtres">
+                                    <form action="#">
+                                        <div>
+                                            <label for="cuisine">Cuisine</label>
+                                            <select name="cuisine" id="cuisine">
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                            </select>             
+                                        </div>
+                                        <div>
+                                           <label for="Prix">Prix</label>
+                                            <select name="Prix" id="prix">
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                            </select> 
+                                        </div>
+                                        <div>
+                                           <label for="experience">Exp&eacute;rience</label>
+                                            <select name="experience" id="experience">
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                            </select> 
+                                        </div>
+                                        <div>
+                                           <label for="participants">Participants</label>
+                                            <select name="participants" id="participants">
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                            </select>      
+                                        </div>     
+                                        <div>
+                                           <label for="trancheAge">Tranche d'&acirc;ge</label>
+                                            <select name="trancheAge" id="trancheAge">
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                                <option value="xxx">xxx</option>
+                                            </select>      
+                                        </div>
+                                   </form>                              
+                                </div>
+                                <section class="resultats">
+                                    <div class="entete">
+                                        <h3>3 &eacute;v&eacute;nements Fooding trouv&eacute;s</h3>
+                                        <form action="#">
+                                            <label for="tri">Trier par</label>
+                                            <select name="tri" id="tri">
+                                                <option value="distance">distance</option>
+                                                <option value="experience">experience</option>
+                                                <option value="tarif">tarif</option>
+                                                <option value="avis">avis</option>
+                                            </select>    
+                                        </form>    
+                                    </div>
+                                    <div class="liste accordion_example4">                                        
+                                    	<div class="accordion_in">
+                                        	<div class="acc_head">
+                                                <article>
+                                                    <div class="colonne1">
+                                                       <img src="/site_media/img/structure/photoRecherche.jpg" width="100" height="75" alt="portrait" />
+                                                       <p>
+                                                           Sophie<br/>
+                                                           25ans<br/>
+                                                           Confirm&eacute;<br/>
+                                                           <img src="/site_media/img/structure/etoiles.png" width="74" height="15" alt="etoiles" />
+                                                       </p>
+                                                    </div>
+                                                    <div class="colonne2">
+                                                        <img src="/site_media/img/structure/panneau.png" width="24" height="55" alt="panneaux" />
+                                                    </div>
+                                                    <div class="colonne3">
+                                                        <p><span>Aujourd'hui &agrave; 18h</span><br/>
+                                                            Cuisine ni&ccedil;oise<br/>
+                                                            Nb de place : 8<br/>
+                                                        </p>
+                                                    </div>            	
+                                                    <div class="colonne4">
+                                                        <p><span>7&euro;</span><br/>par participant</p>
+                                                        <p><span>2</span> places restantes</p>
+                                                    </div>
+                                                </article>                
+                                            </div>
+                                            <div class="acc_content">
+                                            	<div class="colonne1">
+                                                	<h4>Menu</h4>
+                                                    <p><strong>Entrée :</strong> socca</p>
+                                                    <p><strong>Pl&acirc;t :</strong> salade ni&ccedil;oise, farcis.</p>
+                                                    <p><strong>D&eacute;ssert :</strong> tourte de blettes.</p>
+												</div>
+                                                <div class="colonne2">
+                                                	<h4>Organisation</h4>
+                                                    <p>Je commencerai la préparation à 17h30. Vous pouvez venir m'aider si vous le souhaitez. Le repas devrait commencer vers 20h.</p>
+                                                </div>
+                                                <div class="colonne3">
+                                                	<h4>Participants</h4>
+                                                    <ul>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+													</ul>
+                                                </div>                                                                                       
+                                                <div class="colonne4">
+                                                	<a class="button" href="" title="">R&eacute;server</a>
+                                            	</div>                                                
+                                            </div>
+                                        </div>            
+                                    	<div class="accordion_in">
+                                        	<div class="acc_head">
+                                                <article>
+                                                    <div class="colonne1">
+                                                       <img src="/site_media/img/structure/photoRecherche.jpg" width="100" height="75" alt="portrait" />
+                                                       <p>
+                                                           Sophie<br/>
+                                                           25ans<br/>
+                                                           Confirm&eacute;<br/>
+                                                           <img src="/site_media/img/structure/etoiles.png" width="74" height="15" alt="etoiles" />
+                                                       </p>
+                                                    </div>
+                                                    <div class="colonne2">
+                                                        <img src="/site_media/img/structure/panneau.png" width="24" height="55" alt="panneaux" />
+                                                    </div>
+                                                    <div class="colonne3">
+                                                        <p><span>Aujourd'hui &agrave; 18h</span><br/>
+                                                            Cuisine ni&ccedil;oise<br/>
+                                                            Nb de place : 8<br/>
+                                                        </p>
+                                                    </div>            	
+                                                    <div class="colonne4">
+                                                        <p><span>7&euro;</span><br/>par participant</p>
+                                                        <p><span>2</span> places restantes</p>
+                                                    </div>
+                                                </article>                
+                                            </div>
+                                            <div class="acc_content">
+                                            	<div class="colonne1">
+                                                	<h4>Menu</h4>
+                                                    <p><strong>Entrée :</strong> socca</p>
+                                                    <p><strong>Pl&acirc;t :</strong> salade ni&ccedil;oise, farcis.</p>
+                                                    <p><strong>D&eacute;ssert :</strong> tourte de blettes.</p>
+												</div>
+                                                <div class="colonne2">
+                                                	<h4>Organisation</h4>
+                                                    <p>Je commencerai la préparation à 17h30. Vous pouvez venir m'aider si vous le souhaitez. Le repas devrait commencer vers 20h.</p>
+                                                </div>
+                                                <div class="colonne3">
+                                                	<h4>Participants</h4>
+                                                    <ul>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+													</ul>
+                                                </div>                                                                                       
+                                                <div class="colonne4">
+                                                	<a class="button" href="" title="">R&eacute;server</a>
+                                            	</div>                                                
+                                            </div>
+                                        </div>   
+                                        <div class="accordion_in">
+                                        	<div class="acc_head">
+                                                <article>
+                                                    <div class="colonne1">
+                                                       <img src="/site_media/img/structure/photoRecherche.jpg" width="100" height="75" alt="portrait" />
+                                                       <p>
+                                                           Sophie<br/>
+                                                           25ans<br/>
+                                                           Confirm&eacute;<br/>
+                                                           <img src="/site_media/img/structure/etoiles.png" width="74" height="15" alt="etoiles" />
+                                                       </p>
+                                                    </div>
+                                                    <div class="colonne2">
+                                                        <img src="/site_media/img/structure/panneau.png" width="24" height="55" alt="panneaux" />
+                                                    </div>
+                                                    <div class="colonne3">
+                                                        <p><span>Aujourd'hui &agrave; 18h</span><br/>
+                                                            Cuisine ni&ccedil;oise<br/>
+                                                            Nb de place : 8<br/>
+                                                        </p>
+                                                    </div>            	
+                                                    <div class="colonne4">
+                                                        <p><span>7&euro;</span><br/>par participant</p>
+                                                        <p><span>2</span> places restantes</p>
+                                                    </div>
+                                                </article>                
+                                            </div>
+                                            <div class="acc_content">
+                                            	<div class="colonne1">
+                                                	<h4>Menu</h4>
+                                                    <p><strong>Entrée :</strong> socca</p>
+                                                    <p><strong>Pl&acirc;t :</strong> salade ni&ccedil;oise, farcis.</p>
+                                                    <p><strong>D&eacute;ssert :</strong> tourte de blettes.</p>
+												</div>
+                                                <div class="colonne2">
+                                                	<h4>Organisation</h4>
+                                                    <p>Je commencerai la préparation à 17h30. Vous pouvez venir m'aider si vous le souhaitez. Le repas devrait commencer vers 20h.</p>
+                                                </div>
+                                                <div class="colonne3">
+                                                	<h4>Participants</h4>
+                                                    <ul>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+                                                       <li><img src="/site_media/img/structure/photoRecherche.jpg" width="70" height="55" alt="portrait" /></li>
+													</ul>
+                                                </div>                                                                                       
+                                                <div class="colonne4">
+                                                	<a class="button" href="" title="">R&eacute;server</a>
+                                            	</div>                                                
+                                            </div>
+                                        </div>   
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+<!-- fin page presdevous -->
+<!-- proposer -->
+                <div class="brick size21 proposer">
+                    <div class="cover" id="proposer">
+                        <div class="float-left">
+                            <h2>Proposer un &eacute;v&eacute;nement</h2>
+                            <div class="read-more"></div>
+                        </div>
+                        <div class='desc'>
+                            <h2>
+                                <span>Organiser un &eacute;v&eacute;nement Fooding</span>
+                            </h2>
+                            <div class="contenu">             
+                                <div class="proposer">
+                                    <form action="#">
+                                        <label for="cuisine">Cuisine</label>
+                                        <select name="cuisine" id="cuisine">
+                                            <option value="xxx">xxx</option>
+                                            <option value="xxx">xxx</option>
+                                            <option value="xxx">xxx</option>
+                                            <option value="xxx">xxx</option>
+                                        </select>             
+                                        <br/><label for="prix">Participation financi&egrave;re par convive</label>
+                                        <input type="text" name="prix" id="prix" />
+                                        <br/><label for="convives">Nombre de onvives</label>
+                                        <input type="text" name="convives" id="convives" />
+                                        <br/><label for="age">Tranche d'&acirc;ge</label>
+                                        entre <input type="text" name="ageMinimum" id="ageMinimum" />
+                                        et <input type="text" name="ageMaximum" id="ageMaximum" />
+                                        <br/><label for="date">Date</label>
+                                        <input type="text" name="date" id="date" />
+                                        <br/><label for="heure">Heure</label>
+                                        <input type="text" name="heure" id="heure" />
+                                        <br/>
+                                        <span>Participation &agrave; la confection des pl&acirc;ts :</span>
+                                        <input type="radio" id="oui" value="oui" name="" /><label for="oui">oui</label>
+                                        <input type="radio" id="non" value="non" name="" /><label for="non">non</label>
+                                        <br/>
+                                        <label for="lieu">Lieu</label>
+                                        <input type="text" name="lieu" id="lieu" />
+                                        <br/>
+                                        <input type="button" value="Valider" />
+                                    </form>            
+                                </div>
+       						</div>
+                        </div>
+                    </div>
+                </div>
+<!-- fin proposer -->
+<!-- comment ca marche -->
+                <div class="brick size22 comment">
+                    <div class="cover" id="comment">
+                        <div class="float-left">
+                            <h2>Comment &ccedil;a marche ?</h2>
+                            <div class="float-left">
+                            	<img src="/site_media/img/structure/commentcamarche.png" width="249" height="235" alt="illustration" />
+                            </div>
+                            <div class="read-more"></div>
+                        </div>
+                        <div class='desc'>
+                            <h2>
+                                <span>illustration de "comment &ccedil;a marche"</span>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+<!-- fin comment ca marche -->
+<!-- faites passer l info -->
+                <div class="brick size21"> 
+                    <div class="cover">
+                    	<h2>Faites passer l'info</h2>
+                        	<form>
+                            	<input type="text" value="adressemail@mail.fr" />
+                            </form>    
+                    </div>
+                </div>
+<!-- fin faites passer l info -->
+            </div>
+		</section>
+        <div class="back-button">
+			<a href="javascript:void(0)" class="back-icon"></a>
+		</div>
+    </div>    
+	<footer>
+        <div class="content">
+            <blockquote>
+                Fooding a pour 
+                objectif de réunir les personnes autour d’une passion 
+                commune dans une ambiance conviviale.
+            </blockquote>
+            <ul>
+                <li><h4>Infos pratiques</h4></li>
+                <li><a href="" title="">Comment &ccedil;a marche ?</a></li>
+                <li><a href="" title="">Applications Mobile</a></li>
+                <li><a href="" title="">T&eacute;moignages et anecdotes</a></li>
+                <li><a href="" title="">Les avis</a></li>
+                <li><a href="" title="">FAQ / Questions fr&eacute;quentes</a></li>
+            </ul>  
+            <ul>
+                <li><h4>&Agrave; propos</h4></li>
+                <li><a href="" title="">Qui sommes-nous ?</a></li>
+                <li><a href="" title="">Partenaires</a></li>
+                <li><a href="" title="">Charte de bonne conduite</a></li>
+                <li><a href="" title="">Conditions G&eacute;n&eacute;rales</a></li>
+                <li><a href="" title="">Contact</a></li>
+            </ul>
+            <ul class="social">
+                <li><h4>Suivez nous sur</h4></li>
+                <li><a href="" title=""><i class="fa fa-twitter"></i></a></li>
+                <li><a href="" title=""><i class="fa fa-facebook"></i></a></li>
+                <li><a href="" title=""><i class="fa fa-google-plus"></i></a></li>
+            </ul>
+            <ul class="applis">
+                <li><h4>T&eacute;l&eacute;chargez l'appli</h4></li>
+                <li><a href="" title=""><i class="fa fa-android fa-2"></i></a></li>
+                <li><a href="" title=""><i class="fa fa-apple fa-3"></i></a></li>
+                <li><a href="" title=""><i class="fa fa-windows fa-4"></i></a></li>
+            </ul>
+        </div>        
+        <div class="copyright">
+            <p>&copy; Fooding 2014</p>  
+        </div>    
+    </footer>
+	<script type="text/javascript" src="/site_media/modules/accordeon/js/smk-accordion.js"></script>
+        <script type="text/javascript">
+            jQuery(document).ready(function($){
+                $(".accordion_example4").smk_Accordion({
+                    closeAble: true, //boolean
+                    closeOther: false, //boolean
+                });
+               
+            });
+        </script>
+	</body>
+</html>

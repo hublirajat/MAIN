@@ -54,7 +54,7 @@ def insertview(request):
 
 	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents, "notifications" : notifications}
 	
-	return render_to_response("insert.html", variables, context_instance=RequestContext(request))
+	return render_to_response("indexGuil.html", variables, context_instance=RequestContext(request))
 
 ############################################################################################################################################
 
@@ -143,7 +143,7 @@ def viewUserProfile(request, event_id):
 
 	# profilePicture should be sent inside userprofile, but logic needs to be done on the frontend
 	variables = { "userprofile" : userprofile, "userreviews" : userreviews, "events" : myEvents, "user" : request.user, "globalrating" : globalRating}
-	return render_to_response('viewUserProfile.html',variables)
+	return render_to_response('profil.html',variables)
 
 def reviewUser(request, user_id):
 	#e2 = Event.objects.get(pk=event_id)
@@ -449,7 +449,7 @@ def login_user(request):
 
 					# fill out the variables dictionary to pass to the front end
 					variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents, "notifications" : notifications}
-					return render_to_response('insert.html', variables)
+					return render_to_response('indexGuil.html', variables)
 			else:
 				messages.error(request, 'Wrong password for user ' + username)
 	return render_to_response('index.html', context_instance=RequestContext(request))
@@ -538,3 +538,17 @@ def calculateGlobalRating(userreviews,rating):
 	
 	return globalRating
 	
+def loadUserProfilePersonalPageAJAX(request):
+	userList = []
+	try:
+		if request.is_ajax():
+			print 'this is the user doing the ajax request' + request.user.username
+			theUser = User.objects.get(username=request.user.username)
+			userList.append(theUser)
+			print userList
+			jsonString = serializers.serialize('json', userList, fields=('username','name','surname','gender','address'))
+			print 'json is : ' +jsonString
+			return HttpResponse(json.dumps(jsonString,ensure_ascii=False), mimetype='application/javascript')
+	except Exception as e:
+		print '%s (%s)' % (e.message, type(e))
+		

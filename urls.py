@@ -32,4 +32,5 @@ urlpatterns = patterns('',
 	url(r'^viewNotifications/$', 'food.views.viewNotifications', name='viewNotifications'),
 	url(r'^viewMessages/$', 'food.views.viewMessages', name='viewMessages'),
 	(r'^api/', include(event_resource.urls)),
+	(r'^loadUserProfilePersonalPageAJAX/$', 'food.views.loadUserProfilePersonalPageAJAX'),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

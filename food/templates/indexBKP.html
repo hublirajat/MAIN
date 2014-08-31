@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fooding Login</title>
+    <link rel="stylesheet" type="text/css" href="/site_media/css/styles.css">
+</head>
+<body>
+<div class="page-wrapper">
+
+	<section class="intro" id="zen-intro">
+		<header role="banner">
+		</header>
+	</section>
+</div>
+
+<h1> Fooding </h1>
+<div class="loginbox">
+{% block main %}
+<form class="form-horizontal" name="LoginForm" action="/login/" method="post">
+{% csrf_token %}
+{% if next %}
+<input type="hidden" name="next" value="{{ next }}" />
+{% endif %}
+<div class="loginParameters">
+<label class="control-label" for="username">Username</label>
+<input type="text" id="username" name="username"  placeholder="Username">
+</div>
+<div class="loginParameters">
+<label class="control-label" for="password">Password</label>
+<input type="password" name="password" id="password" placeholder="Password">
+</div>
+<div class="loginButtons">
+<input type="submit" value="Login" class="button" />
+<a href="/register/" class="button">Register</a>
+</div>
+</form>
+{% endblock %}
+</div>
+<div class="facebookButtons">
+<a class="buttonFB" href="/facebookLogin/"><span></span>Login with Facebook</a>
+</div>
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</div>
+{% endif %}
+</body>
+</html>
