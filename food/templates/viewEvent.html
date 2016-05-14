@@ -11,7 +11,7 @@
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
 	<script type="text/javascript">
-		
+
 		function blinker() {
 			$('.blink_me').fadeOut(500);
 			$('.blink_me').fadeIn(500);
@@ -30,7 +30,7 @@
                 {% if notifications %}
 				<a href="{% url 'food.views.viewNotifications'  %}">
 				<input type="image" id="myimage" src="/site_media/img/notificationOn.png" title="Notifications" style="display: block;"/><div class="blink_me"> Notifications! </div></a>
-				
+
 				{% else %}
 				<a href="{% url 'food.views.viewNotifications' %}">
 				<input type="image" id="myimage" src="/site_media/img/notificationOff.png" title="Notifications" style="display: block;"/>
@@ -39,7 +39,7 @@
 				<br>
 				<br>
                 <a href="/logout/">Logout</a>
-                
+
 				<a href="/insertview/">Home</a>
             </div>
         </header>
@@ -55,12 +55,12 @@
 <li>{{ event.title }} - {{event.description}}</li>
 <td> This event is a {{event.mealType}}, of {{event.cuisineType}} cuisine</td><br>
 <td>Date and Time of the Event: {{ event.dateOfEvent }}</td><br><td>Address : {{ event.address }}</td><br>
-<td>Created by {{event.chef}}<a href="{% url "food.views.viewUserProfile" event_id=event.pk%}"> View Owner </a></td><br>
+<td>Created by {{event.chef}}<a href="{% url 'food.views.viewUserProfile' user_id=chef.id%}"> View Owner </a></td><br>
 <td>Number of Guests who wish to Join: {{ NumberOfGuests }} </td><br>
 {% for guest in guests %}
     <td><a href="{% url 'food.views.viewUserProfile' user_id=guest.pk %}"> {{guest}} </a></td><br>
 {% endfor %}
-<td><a href="{% url "food.views.participateInEvents" event_id=event.pk %}">Participate</a></td><br>
+<td><a href="{% url 'participateInEvents' event_id=event.pk %}">Participate</a></td><br>
 <td>Accepted Guests:  </td><br>
 <p>Event Reviews and Comments: </p><br>
 {% for review in reviews %}
@@ -72,7 +72,7 @@
 
 <td><p> Menu : </p></td>
 
-{% if event.menuEntree != '' %} 
+{% if event.menuEntree != '' %}
 
 <td> Entrée : <a href={{entreeWikiUrl}}>{{event.menuEntree}}</a> </td>
 
@@ -80,7 +80,7 @@
 
 <br>
 
-{% if event.menuFirstCourse != '' %} 
+{% if event.menuFirstCourse != '' %}
 
 <td> First Course : <a href={{firstCourseWikiUrl}}>{{event.menuFirstCourse}}</a> </td>
 
@@ -88,7 +88,7 @@
 
 <br>
 
-{% if event.menuSecondCourse != '' %} 
+{% if event.menuSecondCourse != '' %}
 
 <td> Second Course : <a href={{secondCourseWikiUrl}}>{{event.menuSecondCourse}}</a> </td>
 
@@ -96,7 +96,7 @@
 
 <br>
 
-{% if event.menuDessert != '' %} 
+{% if event.menuDessert != '' %}
 
 <td> Dessert : <a href={{dessertWikiUrl}}>{{event.menuDessert}}</a> </td>
 
@@ -105,7 +105,7 @@
 <br>
 
 <br>
- 
+
  <td>Participants: {{ event.guests.count }} out of {{ event.numberOfParticipants}} </td>
  <br>
 {% if event.chef.id != userId  %}
@@ -114,14 +114,14 @@
 <td><a href="{% url 'food.views.participateInEvents' event_id=event.pk%}">Participate</a></td>
 	{% endif %}
 	{% else %}
-<p style="color: red"> This event has reached the limit of participants. </p> 
-{% endif %} 
-{% endif %} 
+<p style="color: red"> This event has reached the limit of participants. </p>
+{% endif %}
+{% endif %}
 <br>
 <br>
 {% if event.chef.id == userId %}
 	<td><a href="{% url 'food.views.deleteEvent' event_id=event.pk %}">Delete</a></td>
-{% endif %} 
+{% endif %}
 </ul>
 </div>
 <div class="mapEvent">
@@ -132,20 +132,20 @@
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 	<script type="text/javascript">
-	
+
 	var layerGroup =  L.layerGroup();
 	setLayerGroup(layerGroup);
-	
+
 	var markerArray = new Array();
 	setMarkerArray(markerArray);
-	
+
 	setFunctionality("ViewEvent");
-	
+
 	var events = new Array();
 	events = [];
-	
+
 	console.log(events.length);
-	
+
 	var event = {
 	latitude:{{event.latitude}},
 	longitude:{{event.longitude}},
@@ -157,12 +157,12 @@
 	events[0]=event;
 
 	console.log(events.length);
-	
+
 	setUserId({{userId}});
 	setEvents(events);
 	setCsrfToken({{csrfToken}});
 	onload = getLocation();
-	
+
 	</script>
 	</div>
 

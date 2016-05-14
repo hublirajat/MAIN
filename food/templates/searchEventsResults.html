@@ -19,7 +19,7 @@
 				{% if notifications %}
 				<a href="{% url 'food.views.viewNotifications' %}">
 				<input type="image" id="myimage" src="/site_media/img/notificationOn.png" title="Notifications" style="display: block;"/><div class="blink_me"> Notifications! </div></a>
-				
+
 				{% else %}
 				<a href="{% url 'food.views.viewNotifications' %}">
 				<input type="image" id="myimage" src="/site_media/img/notificationOff.png" title="Notifications" style="display: block;"/>
@@ -27,7 +27,7 @@
 				{% endif %}
 				<br>
 				<br>
-                <a href="/logout/">Logout</a> | <a href="{% url 'food.views.viewUserProfile' user_id=userId %}">Profile</a> |
+                <a href="/logout/">Logout</a> | <a href="{% url 'viewUserProfile' user_id=userId %}">Profile</a> |
 				<a href="/insertview/">Home</a>
             </div>
         </header>
@@ -45,7 +45,7 @@
     <td><a href="{% url 'food.views.viewEvent' event_id=event.pk %}">See Event</a></td>
 	 {% if event.chef.id == userId %}
 		<td><a href="{% url 'food.views.deleteEvent' event_id=event.pk %}">Delete</a></td>
-	{% endif %} 
+	{% endif %}
 {% endfor %}
 </ul>
 </div>

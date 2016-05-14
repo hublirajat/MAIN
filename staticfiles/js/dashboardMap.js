@@ -42,10 +42,10 @@ function ajaxCall(map)
 		var input_string = map.getZoom();
 		var userLatitude = map.getCenter().lat;
 		var userLongitude = map.getCenter().lng;
-		
+
 		$.ajax({
         type: "POST",
-        url: "/ajaxMapRefresh/", 
+        url: "/ajaxMapRefresh/",
 		dataType: "json",
         data: { zoomFactor: input_string , userLatitude: userLatitude , userLongitude: userLongitude, userId : userId , csrfmiddlewaretoken: csrfToken },
         success: function(data) {
@@ -64,7 +64,7 @@ function ajaxCall(map)
 		iconSize:     [40, 40], // size of the icon
 		popupAnchor:[0,-20],
 	});
-	
+
 	//Representing the user icon on the map
 	var homeIcon = L.icon({
 		iconUrl: '/site_media/img/markers/homeMarker.png',
@@ -72,7 +72,7 @@ function ajaxCall(map)
 		iconAnchor: [17, 51],
 		popupAnchor:[0,-31],
 	});
-	
+
 	var cuisineIcon = L.Icon.extend({
 		options: {
 		iconSize:     [36, 51],
@@ -80,7 +80,7 @@ function ajaxCall(map)
 		popupAnchor:[0,-31],
 					}
 	});
-	
+
 	var africanMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/africanMarker.png'}),
 	angloSaxonMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/angloSaxonMarker.png'}),
 	arabMarker = new cuisineIcon({iconUrl: '/site_media/img/markers/arabMarker.png'}),
@@ -105,15 +105,15 @@ function ajaxCall(map)
 
 function refreshMarkersWithAJAXData(data,map,userId){
 	//remove all markers
-	
+
 	var json = $.parseJSON(data);
 
 	//var markerArray = new Array();
 	var marker;
-	
+
 	window.layerGroup.clearLayers();
 	window.markerArray=[];
-	
+
 	$(json).each(function(index,element){
 		// for each event on the DB we draw a new marker
 		var lat = element['fields']['latitude'];
@@ -121,7 +121,7 @@ function refreshMarkersWithAJAXData(data,map,userId){
 		var pk = element['pk'];
 		var title = element['fields']['title'];
 		var cuisine = element['fields']['cuisineType'];
-		
+
 		if(element['fields']['chef'] == userId)
 		{
 			marker = L.marker([lat, lon],{icon: homeIcon}).bindPopup(" This event is yours! <br> <a href='viewEvent/"+pk+"'>"+title+"</a>");
@@ -209,11 +209,11 @@ function refreshMarkersWithAJAXData(data,map,userId){
 		else{
 			marker =	L.marker([lat, lon]).bindPopup("<a href='viewEvent/"+pk+"'>"+title+"</a>");
 		}
-		
+
 		window.layerGroup.addLayer(marker).addTo(map);
 	});
 
-	
+
 }
 
 // This function returns the user location (coordinates) from the browser itself
@@ -229,38 +229,38 @@ function refreshMarkersWithAJAXData(data,map,userId){
 
 	// This function is using the geolocation coordinates to draw the map
 	function calculateCoordinates(position) {
-	
+
 	latitude = position.coords.latitude;
 	longitude = position.coords.longitude;
-	
+
 	drawMap(latitude,longitude);
 	}
 
 	function drawMap(latitude,longitude) {
-	
+
 	window.layerGroup.clearLayers();
 	window.markerArray=[];
-	
+
 	// here we define the map with the user's location center and zoom factor of 10
 	var map = L.map('map').setView([latitude, longitude], 10);
-	L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 		maxZoom: 18,
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
 			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
 			'Imagery © <a href="http://mapbox.com">Mapbox</a>',
 		id: 'examples.map-i86knfo3'
 	}).addTo(map);
-	
+
 	// here we add the marker representing the user's location
 	L.marker([latitude, longitude], {icon: userIcon}).addTo(map)
 		.bindPopup("You are here!");
-		
+
 	var marker;
 
 	if(window.functionality!="ViewEvent"){
 		ajaxCall(map);
 	}
-	
+
 	// for each event on the DB we draw a new marker
 	for(var i = 0; i<events.length ; i++){
 	console.log(events.length);
@@ -355,7 +355,7 @@ function refreshMarkersWithAJAXData(data,map,userId){
 			else{
 			marker =	L.marker([event.latitude, event.longitude]).bindPopup("<a href='viewEvent/"+event.id+"'>"+event.title+"</a>");
 			}
-			
+
 		window.layerGroup.addLayer(marker).addTo(map);
 			}
 		//{% endfor %}
@@ -370,18 +370,18 @@ function refreshMarkersWithAJAXData(data,map,userId){
 			.setContent("You clicked the map at " + e.latlng.toString())
 			.openOn(map);
 	}
-	
+
 	// this function deals with the zoom event
 	function onMapZoom(e) {
 			if(window.functionality!="ViewEvent"){
-				ajaxCall(map);	
+				ajaxCall(map);
 			}
-	}		
+	}
 
 	map.on('click', onMapClick);
-	
+
 	map.on('zoomend', onMapZoom);
-	
+
 	map.on('dragend', onMapZoom);
-	
+
 	}

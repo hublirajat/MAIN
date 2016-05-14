@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Fooding Dashboard</title>
     <link rel="stylesheet" type="text/css" href="/site_media/css/styles.css">
 	<meta charset="utf-8">
@@ -22,18 +23,18 @@
 	  });
 	</script>
 	<script type="text/javascript">
-	 
+
 	$(document).ready(function(){
-	 
+
 			$(".createEvent").hide();
 			$(".show_hide").show();
-	 
+
 		$('.show_hide').click(function(){
 		$(".createEvent").slideToggle();
 		});
-	 
+
 	});
-	
+
 	$(function() {
 		$('#cbshowEntree').click(function(){
 		   $('#divshowEntree').toggle(this.checked);
@@ -48,7 +49,7 @@
 		   $('#divshowDessert').toggle(this.checked);
 		});
         });
-		
+
 		function blinker() {
 			$('.blink_me').fadeOut(500);
 			$('.blink_me').fadeIn(500);
@@ -58,7 +59,7 @@
 
 	</script>
 
- 
+
 </head>
 <body id="css-zen-garden">
 <div class="page-wrapper">
@@ -68,18 +69,18 @@
 			<h1></h1>
 			<div class="user_panel">
 				{% if notifications %}
-				<a href="{% url 'food.views.viewNotifications' %}">
+				<a href="{% url 'viewNotifications' %}">
 				<input type="image" id="myimage" src="/site_media/img/notificationOn.png" title="Notifications" style="display: block;"/><div class="blink_me"> Notifications! </div></a>
-				
+
 				{% else %}
-				<a href="{% url 'food.views.viewNotifications' %}">
+				<a href="{% url 'viewNotifications' %}">
 				<input type="image" id="myimage" src="/site_media/img/notificationOff.png" title="Notifications" style="display: block;"/>
 				</a>
 				{% endif %}
 				<br>
 				<br>
-				<a href="/logout/">Logout</a> | 
-				<!-- <a href="{% url 'food.views.viewUserProfile' event_id=userId %}">Profile</a> | <a href="{% url 'food.views.viewMessages' %}">Messages</a>	-->
+				<a href="/logout/">Logout</a> |
+				<a href="{% url 'food.views.viewUserProfile' user_id=userId %}">Profile</a> | <a href="{% url 'food.views.viewMessages' %}">Messages</a>
 			</div>
 		</header>
 		</div>
@@ -102,16 +103,16 @@
 	{% else %}
 	<li>on {{ event.dateOfEvent }} : {{ event.title }} - {{event.address}}</li>
 	{% endif %}
-    <td><a href="{% url 'food.views.viewEvent' event_id=event.pk %}">See Event</a></td>
+    <td><a href="{% url 'viewEvent' event_id=event.pk %}">See Event</a></td>
 	{% if event.chef.id == userId %}
-	<td><a href="{% url 'food.views.deleteEvent' event_id=event.pk %}">Delete</a></td>
+	<td><a href="{% url 'deleteEvent' event_id=event.pk %}">Delete</a></td>
 	{% endif %}
 {% endfor %}
 </ul>
 </div>
 <div class="createEvent">
 	<h2> Create an Event </h2>
-    <form id="createEvent" action="{% url 'food.views.createEvent' %}" method="post" class="niceform" novalidate>{% csrf_token %}
+    <form id="createEvent" action="{% url 'createEvent' %}" method="post" class="niceform" novalidate>{% csrf_token %}
         <dl>
             <dt> Title : </dt>
             <dd>{{ form.title }}</dd>
@@ -168,7 +169,7 @@
             <!--<dd>{{ form.date.errors }}</dd>-->
         </dl>
 		<table align = "right">
-            <tr> 
+            <tr>
 			<td > Address : </td>
 			</tr>
 			<br>
@@ -205,12 +206,12 @@
 	<script type="text/javascript">
 	/*
 	 * This code is representing a map mashup on the HTML page
-	 */	
+	 */
 	var layerGroup =  L.layerGroup();
 	layerGroup.clearLayers();
-	
+
 	var events = new Array();
-	
+
 	{% for event in events %}
 		var event = {
 		latitude:{{event.latitude}},
@@ -221,13 +222,13 @@
 		title:"{{event.title}}"
 		};
 		events[{{event.pk}}]=event;
-	{% endfor %} 
-	
+	{% endfor %}
+
 	setUserId({{userId}});
 	setEvents(events);
 	setCsrfToken({{csrfToken}});
 	onload = getLocation();
-	
+
 	</script>
 
 {% if messages %}

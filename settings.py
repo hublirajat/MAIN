@@ -57,7 +57,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
-	BASE_DIR+'fooding/food/templates'
+	BASE_DIR+'fooding/food/templates',
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -78,11 +78,11 @@ DB_PATH = BASE_DIR+'fooding/fooding.db'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/Users/chris/fooding/fooding.db',
+        'NAME': '/Users/christianmarques/MAIN/fooding.db',
     }
 }
 
-BASE_DIR = '/home/chris/'
+BASE_DIR = '/home/christianmarques/'
 
 MEDIA_ROOT = BASE_DIR+'fooding/media/'
 

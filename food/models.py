@@ -1,3 +1,4 @@
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -20,7 +21,7 @@ class Event(models.Model):
 	menuFirstCourse = models.CharField(max_length=100)
 	menuSecondCourse = models.CharField(max_length=100)
 	menuDessert = models.CharField(max_length=100)
-	numberOfParticipants = models.IntegerField(max_length=100)
+	numberOfParticipants = models.IntegerField()
 
 	def __unicode__(self):
 		return self.description
@@ -64,7 +65,7 @@ class Notify(models.Model):
 
 	def __unicode__(self):
 		return self.text + self.type + str(self.user) + str(self.sender)
-		
+
 # this class models a message
 class Message(models.Model):
 	messageSender = models.ForeignKey(User, related_name="messageSender")
@@ -76,11 +77,11 @@ class Message(models.Model):
 
 # this class models the user profile - it extends the regular User class, in order to add more fields
 class UserProfile(models.Model):
-	user = models.ForeignKey(User, unique=True)
+	user = models.ForeignKey(User)
 	firstName = models.CharField(max_length=30)
 	lastName = models.CharField(max_length=30)
-	address = models.CharField(max_length=140)  
-	gender = models.CharField(max_length=140)  
+	address = models.CharField(max_length=140)
+	gender = models.CharField(max_length=140)
 	profilePicture = models.ImageField(upload_to='/staticfiles/uploadedPics/', default="/staticfiles/img/default_profile.jpg",null=True, blank=True)
 	address = models.CharField(max_length=200)
 	zipCode = models.CharField(max_length=5)

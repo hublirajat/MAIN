@@ -39,6 +39,8 @@ def logout_user(request):
 def insertview(request):
 	#we retrieve the username which will be the chef
 	theUser = User.objects.get(username=request.user.username)
+	userprofile = UserProfile.objects.get(user = request.user)
+
 
 	# get all events associated to the user
 	e1 = Event.objects.filter(chef=theUser).order_by('dateOfEvent')
@@ -49,11 +51,11 @@ def insertview(request):
 	allEvents = Event.objects.all()
 
 	form = EventCreationForm()
-	
+
 	notifications = Notify.objects.filter(user=request.user)
 
-	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents, "notifications" : notifications}
-	
+	variables = {"firstname" : userprofile.firstName, "lastname" : userprofile.lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents, "notifications" : notifications}
+
 	return render_to_response("insert.html", variables, context_instance=RequestContext(request))
 
 ############################################################################################################################################
@@ -84,13 +86,15 @@ def registerNewUser(request):
 			try:
 				#thePic = request.FILES['profilePicture']
 				#thePath = settings.MEDIA_ROOT+'/uploadedPics/'+str(profilePicture)
-				#path = default_storage.save(thePath, ContentFile(thePic.read()))		
-					
+				#path = default_storage.save(thePath, ContentFile(thePic.read()))
+
 				# we now register the user
 				user = User.objects.create_user(username=username,email=email,password=password)
 				profile = UserProfile.objects.create(user=user,firstName=firstname,lastName=lastname,gender=gender,address=address,zipCode=zipCode,country=country)
-				
+
+				print 'fim'
 			except Exception as e:
+				print 'erro'
 				print '%s (%s)' % (e.message, type(e))
 
 			return render_to_response('index.html', context_instance=RequestContext(request))
@@ -99,15 +103,15 @@ def registerNewUser(request):
 		return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 	return render_to_response('register.html', {'form' : form}, context_instance=RequestContext(request))
 
-def viewUserProfile(request, event_id):
+def viewUserProfile(request, user_id):
 
 	# Getting the Chef of the Event
-	event1 = Event.objects.get(pk=event_id)
-	eventChef = event1.chef
+	#event1 = Event.objects.get(pk=event_id)
+	#eventChef = event1.chef
 
 	# Getting the user from User who is the Event Chef
 	# User does not contain the same attributes as UserProfile
-	user1 = User.objects.get(username = eventChef)
+	user1 = User.objects.get(pk = user_id)
 
 	# Getting All Events for the User
 	# Result stored in an Event object namely myEvents
@@ -117,7 +121,7 @@ def viewUserProfile(request, event_id):
 	# userprofile contains all details such as:
 	# - userReview
 	# - ratingStars
-	userprofile = UserProfile.objects.get(user = user1)
+	userprofile = UserProfile.objects.get(pk = user_id)
 
 	userreviews = []
 
@@ -138,7 +142,7 @@ def viewUserProfile(request, event_id):
 	# - userprofile: UserProfile
 	# - events: Event
 	# - user: User
-	
+
 	globalRating = calculateGlobalRating(userreviews,0)
 
 	# profilePicture should be sent inside userprofile, but logic needs to be done on the frontend
@@ -165,11 +169,11 @@ def reviewUser(request, user_id):
 			theReviewer = User.objects.get(username=request.user.username)
 
 			UserReviews.objects.create(reviewer=theReviewer, user=user1, userReview=textReview, ratingStars=rating)
-			
+
 			userreviews = UserReviews.objects.get(user = user1)
-			
+
 			globalRating = calculateGlobalRating(userreviews,rating)
-				
+
 
 	user1 = User.objects.get(username = userprofile.user)
 	myEvents = user1.event_chef.all()
@@ -197,9 +201,11 @@ def createEvent(request):
 			secondCourseInput = form.cleaned_data['secondCourseInput']
 			dessertInput = form.cleaned_data['dessertInput']
 			participantNumber = form.cleaned_data['participantNumber']
-			
+
 			#we retrieve the username which will be the chef
 			theUser = User.objects.get(username=request.user.username)
+
+			userprofile = UserProfile.objects.get(user = theUser.id)
 
 			#retrieve the coordinates of the given address
 			coordinates = get_coordinates(request,address,zipCode,country)
@@ -209,7 +215,7 @@ def createEvent(request):
 
 			allEvents = Event.objects.all()
 			#we fill out the variables dictionary to pass it to the frontend
-			variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
+			variables = {"firstname" : userprofile.firstName, "lastname" : userprofile.lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
 
 			fullAddress = address + ", " + zipCode + ", " + country
 
@@ -228,21 +234,22 @@ def createEvent(request):
 	return form # return empty form if everything goes wrong
 
 def viewEvent(request, event_id):
-
+	userprofile = UserProfile.objects.get(user = request.user.id)
 	flag = False
 	e2 = Event.objects.get(pk=event_id)
 	allEvents = Event.objects.all()
 	guests2 = e2.guests.all()
 	numberOfGuests = e2.guests.count()
 	reviews = e2.review_set.all()
-	firstname = request.user.get_profile().firstName
-	lastname = request.user.get_profile().lastName
+	firstname = userprofile.firstName
+	lastname = userprofile.lastName
 	notifications = Notify.objects.filter(user=request.user)
+	chef = User.objects.get(id=e2.chef.id)
 	entreeWikiUrl = ""
 	firstCourseWikiUrl = ""
 	secondCourseWikiUrl = ""
 	dessertWikiUrl = ""
-	
+
 	#get entree wiki article
 	if(e2.menuEntree):
 		entree = normalizeWikiLink(e2.menuEntree)
@@ -251,7 +258,7 @@ def viewEvent(request, event_id):
 		djson = data.read()
 		myData = json.loads(djson)
 		entreeWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
-	
+
 	if(e2.menuFirstCourse):
 		#get firstCourse wiki article
 		firstCourse = normalizeWikiLink(e2.menuFirstCourse)
@@ -260,7 +267,7 @@ def viewEvent(request, event_id):
 		djson = data.read()
 		myData = json.loads(djson)
 		firstCourseWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
-	
+
 	if(e2.menuSecondCourse):
 		#get secondCourse wiki article
 		secondCourse = normalizeWikiLink(e2.menuSecondCourse)
@@ -270,7 +277,7 @@ def viewEvent(request, event_id):
 		djson = data.read()
 		myData = json.loads(djson)
 		secondCourseWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
-	
+
 	if(e2.menuDessert):
 		#get dessert wiki article
 		dessert = normalizeWikiLink(e2.menuDessert)
@@ -279,9 +286,9 @@ def viewEvent(request, event_id):
 		djson = data.read()
 		myData = json.loads(djson)
 		dessertWikiUrl = "http://en.wikipedia.org/wiki?curid=" + str(myData['query']['pages'].items()[0][0])
-	
-	variables = {"event" : e2, "guests" : guests2, "firstname" : firstname, "lastname" : lastname, "userId" : request.user.id, "user" : request.user, "allEvents" : allEvents, "NumberOfGuests" : numberOfGuests, "reviews" : reviews, "notifications" : notifications, "entreeWikiUrl" : entreeWikiUrl, "firstCourseWikiUrl" : firstCourseWikiUrl, "secondCourseWikiUrl" : secondCourseWikiUrl, "dessertWikiUrl" : dessertWikiUrl }
-	
+
+	variables = {"event" : e2,"chef" : chef, "guests" : guests2, "firstname" : firstname, "lastname" : lastname, "userId" : request.user.id, "user" : request.user, "allEvents" : allEvents, "NumberOfGuests" : numberOfGuests, "reviews" : reviews, "notifications" : notifications, "entreeWikiUrl" : entreeWikiUrl, "firstCourseWikiUrl" : firstCourseWikiUrl, "secondCourseWikiUrl" : secondCourseWikiUrl, "dessertWikiUrl" : dessertWikiUrl }
+
 	return render_to_response('viewEvent.html', variables)
 
 # this method represents the act of reviewing a given event
@@ -308,66 +315,72 @@ def reviewEvent(request, event_id):
 	guests2 = e2.guests.all()
 	reviews = e2.review_set.all()
 	numberOfGuests = e2.guests.count()
-	variables = {"event" : e2, "guests" : guests2, "NumberOfGuests" : numberOfGuests, "reviews" : reviews}
+	variables = {"event" : e2, "guests" : guests2, "NumberOfGuests" : numberOfGuests, "reviews" : reviews,"userId" : request.user.id}
 	return render_to_response('viewEvent.html',variables, context_instance=RequestContext(request))
 
 
 def searchEvents(request):
 	notifications = Notify.objects.filter(user=request.user)
+	userprofile = UserProfile.objects.get(user = request.user)
 	e1 = Event.objects.filter()
-	variables = { "outputEvents" : e1, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "notifications" : notifications}
+	variables = { "outputEvents" : e1, "firstname" : userprofile.firstName, "lastname" : userprofile.lastName, "userId" : request.user.id, "notifications" : notifications}
 	return render_to_response('searchEventsResults.html',variables, context_instance=RequestContext(request))
 
-# this method is showing all the users notifications	
+# this method is showing all the users notifications
 def viewNotifications(request):
 
 	notifications = Notify.objects.filter(user=request.user)
-	
-	variables = { "notifications" : notifications, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id}
+	userprofile = UserProfile.objects.get(user = request.user)
+
+	variables = { "notifications" : notifications, "firstname" : userprofile.firstName, "lastname" : userprofile.lastName, "userId" : request.user.id}
 	return render_to_response('viewNotifications.html',variables, context_instance=RequestContext(request))
 
-# this method is showing all the users messages	
+# this method is showing all the users messages
 def viewMessages(request):
 
 	messages = Message.objects.filter(user=request.user)
-	
-	variables = { "messages" : messages, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id}
+	userprofile = UserProfile.objects.get(user = request.user)
+
+	variables = { "messages" : messages, "firstname" : userprofile.firstName, "lastname" : userprofile.lastName, "userId" : request.user.id}
 	return render_to_response('viewMessages.html',variables, context_instance=RequestContext(request))
 
 # this method is treating the functionality of a user requesting participation in a given event
 def participateInEvents(request,event_id):
+
+	userprofile = UserProfile.objects.get(user = request.user)
 	e3 = Event.objects.get(pk=event_id)
 	message = "The user " + str(request.user.username) + " has just requested participation in your event!"
-	
-	notification = Notify.objects.create(event=e3,sender=request.user,user=e3.chef,text=message, type="ApprovalRequest")
-	
-	variables = { "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "notification" : notification}
+
+	notification = Notify.objects.create(event=e3,notificationSender=request.user,user=e3.chef,text=message, type="ApprovalRequest")
+
+	variables = { "firstname" : userprofile.firstName, "lastname" : userprofile.lastName, "userId" : request.user.id, "notification" : notification}
 	return render_to_response('joinResult.html',variables, context_instance=RequestContext(request))
 
-# this method represents the functionality of accepting a request for participation in a given event	
+# this method represents the functionality of accepting a request for participation in a given event
 def approveRequest(request, notification_id):
+	userprofile = UserProfile.objects.get(user = request.user)
 	notification = Notify.objects.get(pk=notification_id)
 	e3 = Event.objects.get(pk=notification.event.pk)
-	theUser = User.objects.get(username=notification.sender)
+	theUser = User.objects.get(username=notification.notificationSender)
 	e3.guests.add(theUser)
 	e3.save()
-	
+
 	message = "The user " + str(request.user.username) + " has approved your request for the event!"
-	
-	notification = Notify.objects.create(event=e3,sender=request.user,user=notification.sender,text=message, type="ApprovalReply")
-	
+
+	notification = Notify.objects.create(event=e3,notificationSender=request.user,user=notification.notificationSender,text=message, type="ApprovalReply")
+
 	Notify.objects.filter(pk=notification_id).delete()
-	
+
 	notifications = Notify.objects.filter(user=request.user)
-	
+
 
 	if(e3.guests.all().count() >= e3.numberOfParticipants):
 		message = "Your event is now full and closed for participation!"
-		notification = Notify.objects.create(event=e3,sender=request.user,user=request.user,text=message, type="FullEvent")
+		notification = Notify.objects.create(event=e3,notificationSender=request.user,user=request.user,text=message, type="FullEvent")
 
 	guests = e3.guests.all()
-	
-	variables = { "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "event" : e3, "guests" : guests, "notifications" : notifications}
+
+	variables = { "firstname" : userprofile.firstName, "lastname" : userprofile.lastName, "userId" : request.user.id, "event" : e3, "guests" : guests, "notifications" : notifications}
 	return render_to_response('viewNotifications.html',variables, context_instance=RequestContext(request))
 
 def acceptGuestsInEvents(request,event_id):
@@ -376,34 +389,36 @@ def acceptGuestsInEvents(request,event_id):
 	#View All the Guests
 def deleteEvent(request, event_id):
 
+	userprofile = UserProfile.objects.get(user = request.user)
 	#we retrieve the username which will be the chef
 	theUser = User.objects.get(username=request.user.username)
 	# get all events associated to the user
 	e = Event.objects.filter(chef=theUser)
 	# create an empty form
 	form = createEvent(request)
-	
+
 	event = Event.objects.get(pk=event_id)
-	
+
 	#notify everyone involved of the deletion of the event
 	for guest in event.guests.all():
-		message = "The event has been deleted by the owner."	
+		message = "The event has been deleted by the owner."
 		notification = Notify.objects.create(event=event,sender=request.user,user=guest,text=message, type="DeleteEvent")
 
 	allEvents = Event.objects.all()
-	
+
 	Event.objects.filter(pk=event_id).delete()
 	# fill out the variables dictionary to pass to the front end
-	variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
+	variables = {"firstname" : userprofile.firstName, "lastname" : userprofile.lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents}
 	return render_to_response('insert.html', variables, context_instance=RequestContext(request))
 
-# this method deletes a given notification	
+# this method deletes a given notification
 def deleteNotification(request, notification_id):
+	userprofile = UserProfile.objects.get(user = request.user)
 	Notify.objects.filter(pk=notification_id).delete()
 
 	notifications = Notify.objects.filter(user=request.user)
-	
-	variables = { "notifications" : notifications, "firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id}
+
+	variables = { "notifications" : notifications, "firstname" : userprofile.firstName, "lastname" : userprofile.lastName, "userId" : request.user.id}
 	return render_to_response('viewNotifications.html',variables, context_instance=RequestContext(request))
 
 # generic success method, not being used at all
@@ -428,8 +443,10 @@ def login_user(request):
 
 			if user is not None:
 				if user.is_active:
+					print request.user
 					# login user
 					login(request, user)
+					userprofile = UserProfile.objects.get(user = user)
 
 					# get all events associated to the user
 					e1 = Event.objects.filter(chef=user).order_by('dateOfEvent')
@@ -440,15 +457,15 @@ def login_user(request):
 					# create an empty form
 					form = createEvent(request)
 
-					userCoordinates = get_coordinates(request, user.get_profile().address, user.get_profile().zipCode, user.get_profile().country)
-					
+					userCoordinates = get_coordinates(request, userprofile.address, userprofile.zipCode, userprofile.country)
+
 					#allEvents = Event.objects.all()
 					allEvents = returnEventsInRange(userCoordinates[0],userCoordinates[1],10,request)
-					
+
 					notifications = Notify.objects.filter(user=user)
 
 					# fill out the variables dictionary to pass to the front end
-					variables = {"firstname" : request.user.get_profile().firstName, "lastname" : request.user.get_profile().lastName, "userId" : request.user.id, "events" : e, "form" : form, "allEvents" : allEvents, "notifications" : notifications}
+					variables = {"firstname" : userprofile.firstName, "lastname" : userprofile.lastName, "userId" : userprofile.id, "events" : e, "form" : form, "allEvents" : allEvents, "notifications" : notifications}
 					return render_to_response('insert.html', variables)
 			else:
 				messages.error(request, 'Wrong password for user ' + username)
@@ -465,9 +482,9 @@ def get_coordinates(request,address,zipCode,country):
 	coordinates = (0,0)
 	address = urllib.quote_plus(address)
 	httpRequest = "http://maps.google.com/maps/api/geocode/json?address=" + address + "," + zipCode + "," + country
-	
+
 	print httpRequest
-	
+
 	data = urllib2.urlopen(httpRequest)
 	djson = data.read()
 	myData = json.loads(djson)
@@ -484,14 +501,14 @@ def get_coordinates(request,address,zipCode,country):
 def returnEventsInRange(latitude,longitude,zoomFactor,request):
 	#this dictionary has the correspondance between the zoom factor and the coordinate degrees
 	zoomFactorDictionary = {'0': 360, '1': 180, '2': 90, '3': 45, '4': 22.5, '5': 11.25, '6': 5.625, '7': 2.813, '8': 1.406, '9': 0.703, '10': 0.352, '11': 0.176, '12': 0.088, '13': 0.044, '14': 0.022, '15': 0.011, '16': 0.005, '17': 0.003, '18': 0.001, '19': 0.0005}
-	
+
 	degreeFactor = zoomFactorDictionary[str(zoomFactor)]
-		
+
 	latitude = float(latitude)
 	longitude = float(longitude)
-	
+
 	eventsInRangeList = {}
-	
+
 	try:
 		latitudeLTE = latitude+degreeFactor
 		latitudeGTE = latitude-degreeFactor
@@ -501,7 +518,7 @@ def returnEventsInRange(latitude,longitude,zoomFactor,request):
 		eventsInRangeJSON = serializers.serialize('json', eventsInRange, fields=('pk','title','description','address','chef','latitude','longitude','cuisineType'))
 	except Exception as e:
 		print '%s (%s)' % (e.message, type(e))
-	
+
 	if(request.is_ajax()):
 		return eventsInRangeJSON
 	else:
@@ -514,9 +531,9 @@ def ajaxMapRefresh(request):
 		userLatitude = request.POST['userLatitude']
 		userLongitude = request.POST['userLongitude']
 		userId = request.POST['userId']
-		allEvents = returnEventsInRange(userLatitude,userLongitude,zoomFactor,request)                                                                 
-		return HttpResponse(json.dumps(allEvents,ensure_ascii=False), mimetype='application/javascript')
-		
+		allEvents = returnEventsInRange(userLatitude,userLongitude,zoomFactor,request)
+		return HttpResponse(json.dumps(allEvents,ensure_ascii=False))
+
 def normalizeWikiLink(string):
 
 	string = unicodedata.normalize('NFKD', string).encode('ascii', 'ignore')
@@ -525,16 +542,15 @@ def normalizeWikiLink(string):
 	# Replace all runs of whitespace with a single dash
 	string = re.sub(r"\s+", '_', string)
 	return string
-	
+
 def calculateGlobalRating(userreviews,rating):
 	globalRating = 0
-			
+
 	for review in userreviews:
 		oldrating = review.ratingStars
 		if rating==0:
 			globalRating = oldrating
 		else :
 			globalRating = (oldrating + rating)/2
-	
+
 	return globalRating
-	
