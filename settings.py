@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 AUTH_PROFILE_MODULE = "food.UserProfile"
 
@@ -40,7 +40,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
 	#'social_auth',
-    #'django.contrib.staticfiles',
     'food',
     'tastypie',
 )
@@ -73,28 +72,14 @@ WSGI_APPLICATION = 'wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-DB_PATH = BASE_DIR+'fooding/fooding.db'
+DB_PATH = BASE_DIR+'/fooding.db'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/Users/christianmarques/MAIN/fooding.db',
+        'NAME': 'fooding.db',
     }
 }
-
-BASE_DIR = '/home/christianmarques/'
-
-MEDIA_ROOT = BASE_DIR+'fooding/media/'
-
-MEDIA_URL = '/media/'
-
-STATIC_ROOT = BASE_DIR+'fooding/static/'
-
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (
-    BASE_DIR+'fooding/staticfiles/',
-)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -112,5 +97,3 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-
-STATIC_URL = '/static/'
