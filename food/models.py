@@ -1,6 +1,8 @@
 
 from django.db import models
 from django.contrib.auth.models import User
+from tastypie.utils.timezone import now
+from django.utils.text import slugify
 
 # Create your models here.
 # this class models an Event
@@ -10,6 +12,7 @@ class Event(models.Model):
 	chef = models.ForeignKey(User, related_name='event_chef')
 	guests = models.ManyToManyField(User, related_name='event_guests')
     #reviews = models.ForeignKey('Review')
+	#slug = models.SlugField(null=True, blank=True)
 	creation_timestamp = models.DateTimeField(auto_now_add=True)
 	dateOfEvent = models.DateTimeField()
 	address = models.CharField(max_length=200)
@@ -25,6 +28,11 @@ class Event(models.Model):
 
 	def __unicode__(self):
 		return self.description
+	'''def save(self, *args, **kwargs):
+		# For automatic slug generation.
+		if not self.slug:
+			self.slug = slugify(self.title)[:50]
+		return super(Entry, self).save(*args, **kwargs)'''
 
 # this class models a review
 class Review(models.Model):

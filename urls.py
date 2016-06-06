@@ -1,16 +1,21 @@
 #from django.conf.urls.defaults import *
 from django.conf.urls import patterns, url, include
 from django.contrib import admin
-from food.api import EventResource
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views
 from django.views.static import serve
+from tastypie.api import Api
+from food.api.resources import EventResource, UserResource
+from food.api.resources import UserProfileResource
 import food.views
 
 
 admin.autodiscover()
+
 event_resource = EventResource()
+user_resource = UserResource()
+userprofile_resource = UserProfileResource()
 
 urlpatterns = patterns('',
     url(r'^$', food.views.login_user),
@@ -36,4 +41,6 @@ urlpatterns = patterns('',
 	url(r'^viewNotifications/$', food.views.viewNotifications, name='viewNotifications'),
 	url(r'^viewMessages/$', food.views.viewMessages, name='viewMessages'),
 	url(r'^api/', include(event_resource.urls)),
+    url(r'^api/', include(user_resource.urls)),
+	url(r'^api/', include(userprofile_resource.urls)),
 )
