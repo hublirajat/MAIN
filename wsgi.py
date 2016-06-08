@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 import os
 import sys
 
-path = '/remote/users/rhubli/stableProject/fooding'
+path = ''
 if path not in sys.path:
     sys.path.append(path)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')

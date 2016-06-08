@@ -6,8 +6,8 @@ from django.conf.urls.static import static
 from django.contrib.auth import views
 from django.views.static import serve
 from tastypie.api import Api
-from food.api.resources import EventResource, UserResource
-from food.api.resources import UserProfileResource
+from food.resources import EventResource, UserResource
+from food.resources import UserProfileResource
 import food.views
 
 
